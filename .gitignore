@@ -2,4 +2,5 @@
 data/
 src/__pycache__/
 config/*
+src/output/*
 !/config/sample_config.json
