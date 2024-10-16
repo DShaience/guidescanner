@@ -1,3 +1,4 @@
 openai
 azure-identity
 beautifulsoup4~=4-4.12
+graphrag~=0.3.6
