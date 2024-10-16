@@ -1,0 +1,7 @@
+{
+  "subscription": "",
+  "endpoint_url": "",
+  "api_version": "2023-03-15-preview",
+  "model": "gpt-4o-mini",
+  "deployment_name": "gpt-4o-mini"
+}
