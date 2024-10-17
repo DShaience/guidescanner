@@ -12,6 +12,11 @@ Common pitfalls: when the API version is a shortdate (YYYY-MM-DD) such as 2023-0
 ```python -m graphrag.index --root /workspaces/guidescanner/graphrag```<br>
 to index the data.
 
+4. Query locally or globally:<br>
+```python -m graphrag.query --root ./ragtest --method local "Who is Scrooge, and what are his main relationships?"``` <br>
+```python -m graphrag.query --root ./ragtest --method global "What are the top themes in this story?"```<br>
+
+
 
 References: 
 * https://microsoft.github.io/graphrag/get_started/

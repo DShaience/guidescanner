@@ -4,4 +4,4 @@ src/__pycache__/
 config/*
 src/output/*
 !/config/sample_config.json
-graphrag/*
+graphrag_tests/*

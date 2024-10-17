@@ -33,8 +33,8 @@ def parse_json_to_text(input_dir: Path, output_dir: Path, encoding: str = 'utf-8
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parse JSON files to text files.")
-    parser.add_argument('--input_dir', type=Path, default="/workspaces/guidescanner/data/testing", help="Directory containing JSON files.")
-    parser.add_argument('--output_dir', type=Path, default="/workspaces/guidescanner/graphrag/input", help="Directory to save the output text files.")
+    parser.add_argument('--input_dir', type=Path, default="/workspaces/guidescanner/src/output/ign", help="Directory containing JSON files.")
+    parser.add_argument('--output_dir', type=Path, default="/workspaces/guidescanner/dev/full_bg3/input", help="Directory to save the output text files.")
     args = parser.parse_args()
     
     parse_json_to_text(args.input_dir, args.output_dir)
