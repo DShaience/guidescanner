@@ -1,3 +1,4 @@
+import argparse
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -87,13 +88,22 @@ class WebScraper:
     
 
 if __name__ == "__main__":
-    # parent_url = "https://gamerant.com/complete-guide-baldurs-gate-3-combat-quests-choices-companions-builds-classes-story-bg3"
-    parent_subdomain = "https://www.ign.com/wikis/baldurs-gate-3"
-    parent_url = "https://www.ign.com/wikis/baldurs-gate-3/Walkthrough"
-    # get the project's parent directory
-    project_dir = Path(__file__).resolve().parents[1]
-    output_dir = project_dir / 'output'
-    scraper = WebScraper(parent_subdomain, output_dir)
-    scraper.scrape_page(parent_url)
+    # parent_subdomain = "https://www.ign.com/wikis/baldurs-gate-3"  # filter out URLs that don't contain this substring to avoid scraping the entire website / external links / ads
+    # parent_url = "https://www.ign.com/wikis/baldurs-gate-3/Walkthrough"  # start scraping from this URL
 
+    # get the project's parent directory
+    # project_dir = Path(__file__).resolve().parents[1]
+    # output_dir = project_dir / 'raw-output'
+    # scraper = WebScraper(parent_subdomain, output_dir)
+    # scraper.scrape_page(parent_url)
+
+    parser = argparse.ArgumentParser(description="Web scraper for extracting data from a website.")
+    parser.add_argument("--parent_subdomain", type=str, default='http://www.mysite.com/biology/cell-biology', help="Stay within this subdomain when scraping.")
+    parser.add_argument("--parent_url", type=str, default='http://www.mysite.com/biology/cell-biology/course-lectures', help="The URL to start scraping from.")
+    parser.add_argument("--output_dir", type=Path, default='/workspace/data/raw-scraped-data', help="The directory to save the scraped data.")
+    parser.add_argument("--debug", action="store_true", help="Enable debug mode for detailed output.")
+    args = parser.parse_args()
+
+    scraper = WebScraper(args.parent_subdomain, Path(args.output_dir), args.debug)
+    scraper.scrape_page(args.parent_url)
 
