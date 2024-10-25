@@ -7,6 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from graphrag.query.cli import run_local_search, run_global_search
+import uvicorn
 
 
 app = FastAPI()
@@ -36,13 +37,26 @@ async def post_query(config_filepath, data_dir, root_dir, community_level, respo
     return result
 
 
+# @app.get("/", response_class=HTMLResponse)
+# async def home(request: Request):
+#     return templates.TemplateResponse("index.html", {"request": request})
+
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
+async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/search", response_class=HTMLResponse)
-async def search(request: Request, query: str):
-    results = await post_query(config_path, graphrag_data, graphrag_root, community_level, response_type, streaming, query)  # Perform search based on query
-    return templates.TemplateResponse("results.html", {"request": request, "results": results})
+# @app.get("/search", response_class=HTMLResponse)
+# async def search(request: Request, query: str):
+#     results = await post_query(config_path, graphrag_data, graphrag_root, community_level, response_type, streaming, query)  # Perform search based on query
+#     return templates.TemplateResponse("results.html", {"request": request, "results": results})
+
+@app.get("/search")
+async def search(query: str):
+    results = await post_query(config_path, graphrag_data, graphrag_root, community_level, response_type, streaming, query)
+    return {"results": results}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 

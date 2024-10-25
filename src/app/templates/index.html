@@ -1,14 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Search App</title>
+    <title>Search Results</title>
 </head>
 <body>
-    <h1>Search Page</h1>
-    <form action="/search" method="get">
-        <input type="text" name="query" placeholder="Enter search term">
+    <h1>Search</h1>
+    <form id="searchForm">
+        <input type="text" id="searchQuery" name="query" required>
         <button type="submit">Search</button>
     </form>
+    <h1>Search Results</h1>
+    <ul id="resultsList">
+        <!-- Results will be inserted here -->
+    </ul>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const query = document.getElementById('searchQuery').value;
+            fetch(`/search?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsList = document.getElementById('resultsList');
+                    resultsList.innerHTML = '';
+                    data.results.forEach(result => {
+                        const li = document.createElement('li');
+                        li.textContent = result;
+                        resultsList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 </html>
-
