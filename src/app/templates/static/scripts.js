@@ -23,6 +23,7 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 
+/*
 function updateResultsList(results) {
     const resultsList = document.getElementById('resultsList');
     resultsList.innerHTML = '';
@@ -30,6 +31,25 @@ function updateResultsList(results) {
         const li = document.createElement('li');
         li.textContent = result;
         resultsList.appendChild(li);
+    });
+}
+*/
+function updateResultsList(results) {
+    const resultsList = document.getElementById('resultsList');
+    resultsList.innerHTML = '';
+    results.forEach(result => {
+        let element;
+        if (result.type === 'main-header') {
+            element = document.createElement('h2');
+            element.textContent = result.content;
+        } else if (result.type === 'sub-header1') {
+            element = document.createElement('h3');
+            element.textContent = result.content;
+        } else if (result.type === 'paragraph') {
+            element = document.createElement('p');
+            element.textContent = result.content;
+        }
+        resultsList.appendChild(element);
     });
 }
 

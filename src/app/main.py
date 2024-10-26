@@ -1,8 +1,10 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+import re
 
 
+from async_lru import alru_cache
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -42,9 +44,29 @@ async def read_root(request: Request):
 
 
 @app.get("/search")
+@alru_cache(maxsize=128)
 async def search(query: str):
     results = await post_query(config_path, graphrag_data, graphrag_root, community_level, response_type, streaming, query)
-    return {"results": results}
+    formatted_results = format_results(results)
+    return {"results": formatted_results}
+
+
+def format_results(results):
+    formatted = []
+    text = results[0]
+    lines = re.split(r'[\r\n]+', text)
+    clean_lines = [line for line in lines if line.strip()]
+
+    for line in clean_lines:
+        if line.startswith("## "):
+            formatted.append({"type": "main-header", "content": line[3:].strip()})
+        elif line.startswith("### "):
+            formatted.append({"type": "sub-header1", "content": line[4:].strip()})
+        elif line.strip() == "":
+            continue
+        else:
+            formatted.append({"type": "paragraph", "content": line.strip()})
+    return formatted
 
 
 if __name__ == "__main__":
