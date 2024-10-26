@@ -5,3 +5,4 @@ config/*
 src/output/*
 !/config/sample_config.json
 graphrag_tests/*
+*.pyc
