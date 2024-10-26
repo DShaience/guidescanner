@@ -13,12 +13,10 @@ from graphrag.query.cli import run_local_search, run_global_search
 
 
 app = FastAPI()
-# templates = Jinja2Templates(directory="app/templates")
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="templates/static"), name="static")
 
-graphrag_root = Path("/workspaces/guidescanner/graphrag_tests/mafia_autotune")
-# graphrag_root = Path("/workspaces/guidescanner/graphrag_tests/bg3_shadowheart_tuning")
+graphrag_root = Path("/workspaces/guidescanner/src/app/graphrag_data/bg3_shadowheart_tuning")
 
 graphrag_data = graphrag_root / "output"
 config_path = graphrag_root / "settings.yaml"
@@ -72,4 +70,3 @@ def format_results(results):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
