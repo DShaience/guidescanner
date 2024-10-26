@@ -1,0 +1,39 @@
+/* styles.css */
+.paragraph-style {
+    width: 60%; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the paragraph */
+    margin-top: 0px;
+    margin-left: 0;
+    line-height: 1.05; /* Adjust line height for readability */
+    font-family: Arial, sans-serif; /* Set font family */
+    padding: 10px; /* Add padding for better spacing */
+    word-wrap: break-word; /* Ensure long words are wrapped */
+    text-align: left;
+}
+#searchButton {
+    display: block;
+    width: 5%;
+    padding: 5px;
+    font-size: 16px;
+    margin-top: 12px;
+    font-family: Arial;
+}
+#searchingText {
+    display: none;
+    width: 5%;
+    padding: 5px;
+    font-size: 16px;
+    margin-top: 12px;
+    background-color: lightgray;
+    color: black;
+    border: darkgray;
+    border-radius: 4px;
+    cursor: not-allowed;
+    text-align: left;
+    font-family: Arial;
+}
+#searchQuery {
+    width: 30%;
+    padding: 5px;
+    font-size: 16px;
+}
