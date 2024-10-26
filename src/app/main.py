@@ -5,6 +5,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from graphrag.query.cli import run_local_search, run_global_search
 
@@ -12,6 +13,8 @@ from graphrag.query.cli import run_local_search, run_global_search
 app = FastAPI()
 # templates = Jinja2Templates(directory="app/templates")
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="templates/static"), name="static")
+
 graphrag_root = Path("/workspaces/guidescanner/graphrag_tests/mafia_autotune")
 # graphrag_root = Path("/workspaces/guidescanner/graphrag_tests/bg3_shadowheart_tuning")
 

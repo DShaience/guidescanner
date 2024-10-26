@@ -1,65 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Search Results</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide-Scanner Search</title>
     <style>
-        #searchQuery {
-            width: 30%;
-            padding: 5px;
-            font-size: 16px;
-        }
+        /* Your existing styles */
         #searchButton {
             display: block;
             width: 5%;
             padding: 5px;
             font-size: 16px;
-            margin-top: 10px;
+            margin-top: 12px;
+            font-family: Arial;
+        }
+        #searchingText {
+            display: none;
+            width: 5%;
+            padding: 5px;
+            font-size: 16px;
+            margin-top: 12px;
+            background-color: lightgray;
+            color: black;
+            border: darkgray;
+            border-radius: 4px;
+            cursor: not-allowed;
+            text-align: left;
+            font-family: Arial;
+        }
+        #searchQuery {
+            width: 30%;
+            padding: 5px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <h1>Search</h1>
+    <h2>Guide-Scanner Search</h2>
     <form id="searchForm">
         <input type="text" id="searchQuery" name="query" required>
         <button type="submit" id="searchButton">Search</button>
+        <button id="searchingText" disabled>Searching<span id="dots">.</span></button>
     </form>
-    <h1>Search Results</h1>
+    <h2>Search Results</h2>
     <ul id="resultsList">
         <!-- Results will be inserted here -->
     </ul>
 
-    <script>
-        let storedResults = null;
-
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const query = document.getElementById('searchQuery').value;
-            fetch(`/search?query=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    storedResults = data.results;
-                    if (!document.hidden) {
-                        updateResultsList(storedResults);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
-
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden && storedResults) {
-                updateResultsList(storedResults);
-            }
-        });
-
-        function updateResultsList(results) {
-            const resultsList = document.getElementById('resultsList');
-            resultsList.innerHTML = '';
-            results.forEach(result => {
-                const li = document.createElement('li');
-                li.textContent = result;
-                resultsList.appendChild(li);
-            });
-        }
-    </script>
+    <script src="static/scripts.js"></script>
 </body>
 </html>
