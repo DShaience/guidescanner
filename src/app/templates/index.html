@@ -2,12 +2,26 @@
 <html lang="en">
 <head>
     <title>Search Results</title>
+    <style>
+        #searchQuery {
+            width: 30%;
+            padding: 5px;
+            font-size: 16px;
+        }
+        #searchButton {
+            display: block;
+            width: 5%;
+            padding: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Search</h1>
     <form id="searchForm">
         <input type="text" id="searchQuery" name="query" required>
-        <button type="submit">Search</button>
+        <button type="submit" id="searchButton">Search</button>
     </form>
     <h1>Search Results</h1>
     <ul id="resultsList">
@@ -15,22 +29,37 @@
     </ul>
 
     <script>
+        let storedResults = null;
+
         document.getElementById('searchForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('searchQuery').value;
             fetch(`/search?query=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
-                    const resultsList = document.getElementById('resultsList');
-                    resultsList.innerHTML = '';
-                    data.results.forEach(result => {
-                        const li = document.createElement('li');
-                        li.textContent = result;
-                        resultsList.appendChild(li);
-                    });
+                    storedResults = data.results;
+                    if (!document.hidden) {
+                        updateResultsList(storedResults);
+                    }
                 })
                 .catch(error => console.error('Error:', error));
         });
+
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && storedResults) {
+                updateResultsList(storedResults);
+            }
+        });
+
+        function updateResultsList(results) {
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = '';
+            results.forEach(result => {
+                const li = document.createElement('li');
+                li.textContent = result;
+                resultsList.appendChild(li);
+            });
+        }
     </script>
 </body>
 </html>
