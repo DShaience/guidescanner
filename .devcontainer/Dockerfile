@@ -13,6 +13,8 @@ WORKDIR /guidescanner
 COPY src/requirements.txt ./requirements.txt
 RUN pip3 install -r requirements.txt
 
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
 ADD src/app app
 RUN mkdir output
 
