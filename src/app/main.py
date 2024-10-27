@@ -1,5 +1,6 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
+import os
 from pathlib import Path
 import re
 
@@ -13,10 +14,10 @@ from graphrag.query.cli import run_local_search, run_global_search
 
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="templates/static"), name="static")
+templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory="app/templates/static"), name="static")
 
-graphrag_root = Path("/workspaces/guidescanner/src/app/graphrag_data/bg3_shadowheart_tuning")
+graphrag_root = Path(os.path.join(os.getcwd(), "app/graphrag_data/bg3_shadowheart_tuning"))
 
 graphrag_data = graphrag_root / "output"
 config_path = graphrag_root / "settings.yaml"
