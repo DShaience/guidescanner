@@ -1,8 +1,9 @@
 document.getElementById('searchForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const query = document.getElementById('searchQuery').value;
+    const game = document.getElementById('game').value; // Get the selected game
     showSearchingEffect();
-    fetch(`/search?query=${encodeURIComponent(query)}`)
+    fetch(`/search?query=${encodeURIComponent(query)}&game=${encodeURIComponent(game)}`)
         .then(response => response.json())
         .then(data => {
             storedResults = data.results;
@@ -23,9 +24,24 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    const gameSelect = document.getElementById('game');
+
+    // Load the last selected game from localStorage
+    const savedGame = localStorage.getItem('selectedGame');
+    if (savedGame) {
+        gameSelect.value = savedGame;
+    }
+
+    // Save the selected game to localStorage when the form is submitted
+    document.getElementById('searchForm').addEventListener('submit', () => {
+        localStorage.setItem('selectedGame', gameSelect.value);
+    });
+});
 
 const paragraph = document.querySelector('p');
 paragraph.classList.add('paragraph-style');
+
 
 function updateResultsList(results) {
     const resultsList = document.getElementById('resultsList');

@@ -9,9 +9,19 @@
 </head>
 <body>
     <h2>Guide-Scanner Search</h2>
-    <h3> Ask me about Jedi Survivor </h3>
-    <form id="searchForm">
-        <input type="text" id="searchQuery" name="query" required> 
+    <h3> Ask me about one of the games I know! </h3>
+    <form id="searchForm" action="/search" method="post">
+        <!-- Dropdown menu for additional options -->
+        <label for="game">Choose a game:</label>
+        <select id="game" name="game">
+            <option value="JediSurvivor">Jedi Survivor</option>
+            <option value="BG3">Baldur's Gate 3</option>
+            <option value="Mafia">Mafia</option>
+        </select>  <br><br>
+    
+        <input id="searchQuery" name="query" class="searchQuery" required></input>
+        <!-- <textarea id="searchQuery" name="query" rows="1" class="searchQuery" required></textarea> -->
+      
         <button type="submit" id="searchButton">Search</button>
         <button id="searchingText" disabled>Searching<span id="dots">.</span></button>
     </form>
