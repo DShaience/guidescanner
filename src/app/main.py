@@ -17,7 +17,8 @@ app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/templates/static"), name="static")
 
-graphrag_root = Path(os.path.join(os.getcwd(), "app/graphrag_data/bg3_shadowheart_tuning"))
+# graphrag_root = Path(os.path.join(os.getcwd(), "app/graphrag_data/bg3_shadowheart_tuning"))
+graphrag_root = Path(os.path.join(os.getcwd(), "app/graphrag_data/jedi_survivor"))
 
 graphrag_data = graphrag_root / "output"
 config_path = graphrag_root / "settings.yaml"
@@ -46,6 +47,7 @@ async def read_root(request: Request):
 @alru_cache(maxsize=128)
 async def search(query: str):
     results = await post_query(config_path, graphrag_data, graphrag_root, community_level, response_type, streaming, query)
+    # results = [{"type": "paragraph", "content": "This is a \r\ntest paragraph"}]
     formatted_results = format_results(results)
     return {"results": formatted_results}
 
@@ -53,7 +55,7 @@ async def search(query: str):
 def format_results(results):
     formatted = []
     text = results[0]
-    lines = re.split(r'[\r\n]+', text)
+    lines = re.split(r'[\r\n]+', text)  # todo: protect against no \r or \n
     clean_lines = [line for line in lines if line.strip()]
 
     for line in clean_lines:

@@ -1,4 +1,4 @@
-/* styles.css */
+/* custom_styles.css */
 .paragraph-style {
     width: 60%; /* Adjust the width as needed */
     margin: 0 auto; /* Center the paragraph */
@@ -18,6 +18,13 @@
     margin-top: 12px;
     font-family: Arial;
 }
+#searchQuery {
+    resize: both !important; 
+    overflow: auto !important;
+    width: 30%;
+    padding: 5px !important;
+    font-size: 16px !important;  
+}
 #searchingText {
     display: none;
     width: 5%;
@@ -32,8 +39,4 @@
     text-align: left;
     font-family: Arial;
 }
-#searchQuery {
-    width: 30%;
-    padding: 5px;
-    font-size: 16px;
-}
+
