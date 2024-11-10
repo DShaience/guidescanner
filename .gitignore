@@ -7,3 +7,4 @@ src/output/*
 graphrag_tests/*
 *.pyc
 src/app/graphrag_data/*
+/dev/scribbles

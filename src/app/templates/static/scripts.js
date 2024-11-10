@@ -3,19 +3,30 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     const query = document.getElementById('searchQuery').value;
     const game = document.getElementById('game').value; // Get the selected game
     showSearchingEffect();
-    fetch(`/search?query=${encodeURIComponent(query)}&game=${encodeURIComponent(game)}`)
-        .then(response => response.json())
-        .then(data => {
-            storedResults = data.results;
-            if (!document.hidden) {
-                updateResultsList(storedResults);
-            }
-            hideSearchingEffect();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            hideSearchingEffect();
-        });
+
+    const formData = new URLSearchParams();
+    formData.append('query', query);
+    formData.append('game', game);
+
+    fetch('/search', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString(),
+    })
+    .then(response => response.json())
+    .then(data => {
+        storedResults = data.results;
+        if (!document.hidden) {
+            updateResultsList(storedResults);
+        }
+        hideSearchingEffect();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        hideSearchingEffect();
+    });
 });
 
 document.addEventListener('visibilitychange', function() {
@@ -57,9 +68,10 @@ function updateResultsList(results) {
         } else if (result.type === 'paragraph') {
             element = document.createElement('p');
             element.textContent = result.content;
-            element.classList.add('paragraph-style'); 
         }
-        resultsList.appendChild(element);
+        const listItem = document.createElement('li');
+        listItem.appendChild(element);
+        resultsList.appendChild(listItem);
     });
 }
 
