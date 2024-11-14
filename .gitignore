@@ -5,3 +5,6 @@ config/*
 src/output/*
 !/config/sample_config.json
 graphrag_tests/*
+*.pyc
+src/app/graphrag_data/*
+/dev/scribbles

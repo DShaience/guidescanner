@@ -1,0 +1,81 @@
+/* custom_styles.css */
+.paragraph-style {
+    width: 40%; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the paragraph */
+    margin-top: 0px;
+    margin-left: 0;
+    line-height: 1.05; /* Adjust line height for readability */
+    font-family: Arial, sans-serif; /* Set font family */
+    padding: 10px; /* Add padding for better spacing */
+    word-wrap: break-word; /* Ensure long words are wrapped */
+    text-align: left;
+    line-height: 1.5;
+    padding: 1rem;
+}
+#searchForm {
+    font-size: 16px;  
+    font-family: Arial;
+}
+#searchQuery {
+    width: 60%;
+    height: 1.5em;
+    vertical-align: top; /* Align text to the top */
+    text-align: left; /* Align text to the left */
+    padding: 5px;
+    font-size: 16px;  
+}
+#searchButton {
+    display: block;
+    /*width: 10%;*/
+    width: 110px;
+    padding: 5px;
+    font-size: 16px;
+    margin-top: 12px;
+    font-family: Arial;
+    text-align: left;
+}
+#searchingText {
+    display: none;
+    /*width: 10%;*/
+    width: 110px;
+    padding: 5px;
+    font-size: 16px;
+    margin-top: 12px;
+    background-color: lightgray;
+    color: black;
+    border: darkgray;
+    border-radius: 4px;
+    cursor: not-allowed;
+    text-align: left;
+    font-family: Arial;
+}
+#resultsList {
+    width: 100%; /* Default width for mobile devices */
+    padding: 0;
+    list-style-type: none;
+    font-family: Arial;
+}
+#title {
+    font-family: Arial;
+}
+#subheader3{
+    font-family: Arial;
+}
+@media (min-width: 1024px) {
+    #resultsList {
+        width: 60%; /* Adjust width for desktops */
+    }
+}
+/* Adjust width for larger screens */
+@media (min-width: 600px) {
+    #searchQuery {
+        width: 10%; /* Adjust as needed for tablets */
+        resize: horizontal;
+    }
+}
+@media (min-width: 1024px) {
+    #searchQuery {
+        width: 35%; /* Adjust as needed for desktops */
+        resize: horizontal;
+    }
+}

@@ -1,6 +1,18 @@
 # Guidescanner
 Scraping, indexing (RAG) and querying guides
 
+## Try it out!
+How many times while searching a clue for a game online, have you stumbled on a spoiler? <br>
+Tried to get an answer for one single question but ended up ruining half the story? <br>
+No more! 
+
+I have indexed walkthroughs of several games, giving *you* the ability to query the walkthrough in natural language, WITHOUT risking any spoilers! <br>
+Available [here](https://guidescanner-app.politebay-d54f15ab.eastus2.azurecontainerapps.io/).
+* https://guidescanner-app.politebay-d54f15ab.eastus2.azurecontainerapps.io/
+
+For example, try selecting Baldur's Gate 3, and ask: <br>
+`"Should I trust the Absolute? Do not include any spoilers"`
+
 ## Scanner Recipe
 
 1. Use `src/scanner/scanner_main.py` to scan and dump to json the content of a selected website.<br>
@@ -50,11 +62,3 @@ The results are saved locally. It is good for debugging and comparing changes / 
 ``` 
 python qurey_loop.py --root_dir "/workspaces/guidescanner/graphrag" 
 ```
-
-
-References: 
-* https://microsoft.github.io/graphrag/get_started/
-
-
-
-
