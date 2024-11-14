@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 from app.logger_web import logger
 
 from pathlib import Path
@@ -11,6 +15,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
+
 from graphrag.query.cli import run_local_search, run_global_search
 
 
@@ -21,6 +26,7 @@ app.mount("/static", StaticFiles(directory="app/templates/static"), name="static
 # Define the paths for each game
 game_paths = {
     "JediSurvivor": Path(os.path.join(os.getcwd(), "app/graphrag_data/jedi_survivor")),
+    "BO6": Path(os.path.join(os.getcwd(), "app/graphrag_data/blackops6")),
     "BG3": Path(os.path.join(os.getcwd(), "app/graphrag_data/bg3")),
     "Mafia": Path(os.path.join(os.getcwd(), "app/graphrag_data/mafia"))  # todo: reindex Mafia. Seems to have a problem
 }
@@ -29,7 +35,7 @@ community_level = 2
 response_type = "multiple paragraphs"
 streaming = False
 executor = ThreadPoolExecutor()
-
+cache = {}
 
 async def run_in_thread(func, *args):
     loop = asyncio.get_event_loop()
@@ -49,20 +55,28 @@ async def read_root(request: Request):
 
 
 @app.post("/search", response_class=JSONResponse)
-async def search_post(request: Request, query: str = Form(...), game: str = Form(...)):
+async def search_post(query: str = Form(...), game: str = Form(...)):
     # Set the graphrag_root based on the selected game
     graphrag_root = game_paths.get(game, game_paths["JediSurvivor"])
     graphrag_data = graphrag_root / "output"
     config_path = graphrag_root / "settings.yaml"
 
-    # Debugging: Print the selected graphrag_root
-    logger.info(f"Selected game: {game}")
-    logger.info(f"graphrag_root: {graphrag_root}")
+    # Create a cache key based on the query and game
+    cache_key = f"{game}:{query}"
 
-    # Process the form data
-    result = await post_query(config_path, graphrag_data, graphrag_root, community_level, response_type, streaming, query)
-    logger.info(f"Completed query.")
-    formatted_result = format_results(result)
+    # Check if the result is in the cache
+    if cache_key in cache:
+        logger.info(f"Cache hit for key: {cache_key}")
+        formatted_result = cache[cache_key]
+    else:
+        logger.info(f"Cache miss for key: {cache_key}")
+        # Process the form data
+        result = await post_query(config_path, graphrag_data, graphrag_root, community_level, response_type, streaming, query)
+        logger.info(f"Completed query.")
+        formatted_result = format_results(result)
+        # Store the result in the cache
+        cache[cache_key] = formatted_result
+
     return JSONResponse(content={"results": formatted_result})
 
 

@@ -9,9 +9,12 @@
     padding: 10px; /* Add padding for better spacing */
     word-wrap: break-word; /* Ensure long words are wrapped */
     text-align: left;
+    line-height: 1.5;
+    padding: 1rem;
 }
 #searchForm {
     font-size: 16px;  
+    font-family: Arial;
 }
 #searchQuery {
     width: 60%;
@@ -23,15 +26,18 @@
 }
 #searchButton {
     display: block;
-    width: 10%;
+    /*width: 10%;*/
+    width: 110px;
     padding: 5px;
     font-size: 16px;
     margin-top: 12px;
     font-family: Arial;
+    text-align: left;
 }
 #searchingText {
     display: none;
-    width: 10%;
+    /*width: 10%;*/
+    width: 110px;
     padding: 5px;
     font-size: 16px;
     margin-top: 12px;
@@ -43,6 +49,23 @@
     text-align: left;
     font-family: Arial;
 }
+#resultsList {
+    width: 100%; /* Default width for mobile devices */
+    padding: 0;
+    list-style-type: none;
+    font-family: Arial;
+}
+#title {
+    font-family: Arial;
+}
+#subheader3{
+    font-family: Arial;
+}
+@media (min-width: 1024px) {
+    #resultsList {
+        width: 60%; /* Adjust width for desktops */
+    }
+}
 /* Adjust width for larger screens */
 @media (min-width: 600px) {
     #searchQuery {
@@ -50,7 +73,6 @@
         resize: horizontal;
     }
 }
-
 @media (min-width: 1024px) {
     #searchQuery {
         width: 35%; /* Adjust as needed for desktops */
