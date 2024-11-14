@@ -1,4 +1,4 @@
-# Guidescanner
+# GuideScanner
 Scraping, indexing (RAG) and querying guides
 
 ## Try it out!
