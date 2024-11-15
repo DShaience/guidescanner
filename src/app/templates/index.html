@@ -6,29 +6,32 @@
     <title>Guide-Scanner Search</title>
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="static/custom_styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h2 id="title">Guide-Scanner Search</h2>
-    <h3 id="subheader3"> Ask me about one of the games I know! </h3>
-    <form id="searchForm" action="/search" method="post">
-        <!-- Dropdown menu for additional options -->
-        <label for="game">Choose a game:</label>
-        <select id="game" name="game">
-            <option value="JediSurvivor">Jedi Survivor</option>
-            <option value="BO6">Call of Duty: Black Ops 6</option>
-            <option value="BG3">Baldur's Gate 3</option>
-            <option value="Mafia">Mafia</option>
-        </select>  <br><br>
-    
-        <input id="searchQuery" name="query" class="searchQuery" required></input>     
-        <button type="submit" id="searchButton">Search</button>
-        <button id="searchingText" disabled>Searching<span id="dots">.</span></button>
-    </form>
-    <h2 id="subheader3">Search Results</h2>
-    <ul id="resultsList">
-        <!-- Results will be inserted here -->
-    </ul>
-    <p> </p>
+    <div class="overlay-container">
+        <h2 id="title">Guide-Scanner Search</h2>
+        <span id="subheader3"> Ask me about one of the games I know! </span>
+        <form id="searchForm" action="/search" method="post">
+            <!-- Dropdown menu for additional options -->
+            <label for="game"><span class="subheader3">Choose a game:</span></label>
+            <select id="game" name="game">
+                <option value="JediSurvivor">Jedi Survivor</option>
+                <option value="BO6">Call of Duty: Black Ops 6</option>
+                <option value="BG3">Baldur's Gate 3</option>
+                <option value="Mafia">Mafia</option>
+            </select>  <br><br>
+        
+            <input id="searchQuery" name="query" class="searchQuery" required></input>     
+            <button type="submit" id="searchButton">Search</button>
+            <button id="searchingText" disabled>Searching<span id="dots">.</span></button>
+            <h3 id="subheader4"> To learn more about this project, visit my <a href="https://github.com/DShaience/guidescanner">github</a>.</h3>
+        </form>
+        <h2 id="subheader3">Search Results</h2>
+        <ul id="resultsList">
+                <!-- Results will be inserted here -->
+        </ul>
+    </div>
     <script src="static/scripts.js"></script>
 </body>
 </html>
