@@ -6,7 +6,7 @@ body {
     background-attachment: fixed; /* Fixed background */
     font-family: 'Roboto', sans-serif;
     color: #f0f0f0; /* Lighter font color */
-    font-size: 1rem; /* Base font size */
+    font-size: 1.25rem; /* Base font size */
 }
 
 body::before {
@@ -23,7 +23,7 @@ body::before {
 .overlay-container {
     position: relative;
     padding: 0.625rem; /* Adjust padding for mobile if needed */
-    width: 60%;
+    width: 50%;
     height: 100%;
 }
 
@@ -41,80 +41,101 @@ body::before {
 }
 
 .paragraph-style {
-    width: 40%; /* Adjust the width as needed */
+    width: 80%; /* Adjust the width as needed */
     margin: 0 auto; /* Center the paragraph */
     margin-top: 0px;
     margin-left: 0;
     line-height: 1.05; /* Adjust line height for readability */
-    font-family: Arial, sans-serif; /* Set font family */
-    padding: 10px; /* Add padding for better spacing */
+    font-family: 'Roboto', sans-serif;
+    padding: 0.75rem; /* Add padding for better spacing */
     word-wrap: break-word; /* Ensure long words are wrapped */
     text-align: left;
     line-height: 1.5;
     padding: 1rem;
 }
 #searchForm {
-    font-size: 16px;  
-    font-family: Arial;
+    /*font-size: 16px;  */
+    font-size: 1.25rem;
+    font-family: 'Roboto', sans-serif;
 }
 #searchQuery {
     width: 80%;
     height: 1.5em;
     vertical-align: top; /* Align text to the top */
     text-align: left; /* Align text to the left */
-    padding: 5px;
-    font-size: 16px;  
+    padding: 0.75rem;
+    /*font-size: 16px;  */
+    font-size: 1.25rem;
 }
 #searchButton {
     display: block;
     width: 110px;
-    padding: 5px;
-    font-size: 16px;
-    margin-top: 12px;
-    font-family: Arial;
+    padding: 0.75rem;
+    /*font-size: 16px;*/
+    font-size: 1.25rem;
+    margin-top: 0.75rem;
+    font-family: 'Roboto', sans-serif;
     text-align: left;
 }
 #searchingText {
     display: none;
     width: 110px;
     padding: 5px;
-    font-size: 16px;
-    margin-top: 12px;
+    /*font-size: 16px;*/
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
     background-color: lightgray;
     color: black;
     border: darkgray;
-    border-radius: 4px;
+    border-radius: 0.5rem;
     cursor: not-allowed;
     text-align: left;
-    font-family: Arial;
+    font-family: 'Roboto', sans-serif;
 }
 #resultsList {
     width: 100%; /* Default width for mobile devices */
     padding: 0;
     list-style-type: none;
-    font-family: Arial;
+    font-family: 'Roboto', sans-serif;
 }
 #title {
-    font-family: Arial;
+    font-family: 'Roboto', sans-serif;
 }
 #subheader3{
-    font-family: Arial;
+    font-family: 'Roboto', sans-serif;
+}
+#subheader4{
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.75rem;
 }
 @media (min-width: 1024px) {
     #resultsList {
-        width: 60%; /* Adjust width for desktops */
+        width: 80%; /* Adjust width for desktops */
     }
 }
 /* Adjust width for larger screens */
 @media (min-width: 600px) {
     #searchQuery {
-        width: 20%; /* Adjust as needed for tablets */
+        width: 30%; /* Adjust as needed for tablets */
         resize: horizontal;
     }
 }
 @media (min-width: 1024px) {
     #searchQuery {
-        width: 55%; /* Adjust as needed for desktops */
+        width: 75%; /* Adjust as needed for desktops */
         resize: horizontal;
+    }
+}
+#game {
+    width: 20%;
+    /*height: 100%;*/
+    margin: 0.75rem;
+    padding: 0.75rem;
+    font-size: 1.25rem;
+    font-family: 'Roboto', sans-serif;
+}
+@media (min-width: 100x) {
+    #game {
+        width: 50%;
     }
 }
