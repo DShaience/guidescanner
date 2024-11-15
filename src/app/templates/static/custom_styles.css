@@ -1,4 +1,45 @@
-/* custom_styles.css */
+body {
+    background-image: url('/static/GuideScanner-background-v4_upscaled.png');
+    background-size: cover; /* Cover the entire background */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-attachment: fixed; /* Fixed background */
+    font-family: 'Roboto', sans-serif;
+    color: #f0f0f0; /* Lighter font color */
+    font-size: 1rem; /* Base font size */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay with 70% opacity */
+    z-index: -1; /* Ensure the overlay is behind the content */
+}
+
+.overlay-container {
+    position: relative;
+    padding: 0.625rem; /* Adjust padding for mobile if needed */
+    width: 60%;
+    height: 100%;
+}
+
+.overlay-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 15px 15px rgba(200, 200, 200, 0.6); /* Soft edges */
+    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay with 70% opacity */
+    z-index: -1; /* Ensure the overlay is behind the content */
+    pointer-events: none; /* Allow interaction with the content */
+}
+
 .paragraph-style {
     width: 40%; /* Adjust the width as needed */
     margin: 0 auto; /* Center the paragraph */
@@ -17,7 +58,7 @@
     font-family: Arial;
 }
 #searchQuery {
-    width: 60%;
+    width: 80%;
     height: 1.5em;
     vertical-align: top; /* Align text to the top */
     text-align: left; /* Align text to the left */
@@ -26,7 +67,6 @@
 }
 #searchButton {
     display: block;
-    /*width: 10%;*/
     width: 110px;
     padding: 5px;
     font-size: 16px;
@@ -36,7 +76,6 @@
 }
 #searchingText {
     display: none;
-    /*width: 10%;*/
     width: 110px;
     padding: 5px;
     font-size: 16px;
@@ -69,13 +108,13 @@
 /* Adjust width for larger screens */
 @media (min-width: 600px) {
     #searchQuery {
-        width: 10%; /* Adjust as needed for tablets */
+        width: 20%; /* Adjust as needed for tablets */
         resize: horizontal;
     }
 }
 @media (min-width: 1024px) {
     #searchQuery {
-        width: 35%; /* Adjust as needed for desktops */
+        width: 55%; /* Adjust as needed for desktops */
         resize: horizontal;
     }
 }
