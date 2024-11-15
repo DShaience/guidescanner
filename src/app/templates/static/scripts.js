@@ -56,7 +56,16 @@ paragraph.classList.add('paragraph-style');
 
 function updateResultsList(results) {
     const resultsList = document.getElementById('resultsList');
+    const searchResultsHeader = document.getElementById('searchResultsHeader');
+    
     resultsList.innerHTML = '';
+    
+    if (results.length > 0) {
+        searchResultsHeader.style.display = 'block';
+    } else {
+        searchResultsHeader.style.display = 'none';
+    }
+    
     results.forEach(result => {
         let element;
         if (result.type === 'main-header') {

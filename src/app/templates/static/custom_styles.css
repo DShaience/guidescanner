@@ -16,7 +16,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay with 70% opacity */
+    background-color: rgba(0, 0, 0, 0.4); /* Darker overlay with 70% opacity */
     z-index: -1; /* Ensure the overlay is behind the content */
 }
 
@@ -34,8 +34,8 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    box-shadow: 0 0 15px 15px rgba(200, 200, 200, 0.6); /* Soft edges */
-    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay with 70% opacity */
+    box-shadow: 0 0 15px 15px rgba(216, 73, 7, 0.4); /* Soft edges */
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay with 70% opacity */
     z-index: -1; /* Ensure the overlay is behind the content */
     pointer-events: none; /* Allow interaction with the content */
 }
@@ -53,8 +53,18 @@ body::before {
     line-height: 1.5;
     padding: 1rem;
 }
+/* Mobile styles */
+@media (max-width: 768px) {
+    .overlay-container {
+        width: 100%;
+    }
+
+    .paragraph-style {
+        width: 100%;
+    }
+}
+
 #searchForm {
-    /*font-size: 16px;  */
     font-size: 1.25rem;
     font-family: 'Roboto', sans-serif;
 }
@@ -64,14 +74,13 @@ body::before {
     vertical-align: top; /* Align text to the top */
     text-align: left; /* Align text to the left */
     padding: 0.75rem;
-    /*font-size: 16px;  */
+    margin-bottom: 0.75rem;
     font-size: 1.25rem;
 }
 #searchButton {
     display: block;
     width: 110px;
     padding: 0.75rem;
-    /*font-size: 16px;*/
     font-size: 1.25rem;
     margin-top: 0.75rem;
     font-family: 'Roboto', sans-serif;
@@ -79,9 +88,8 @@ body::before {
 }
 #searchingText {
     display: none;
-    width: 110px;
+    width: 130px;
     padding: 5px;
-    /*font-size: 16px;*/
     font-size: 1.25rem;
     margin-top: 0.5rem;
     background-color: lightgray;
@@ -100,6 +108,8 @@ body::before {
 }
 #title {
     font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    color: #b44511;
 }
 #subheader3{
     font-family: 'Roboto', sans-serif;
@@ -128,14 +138,15 @@ body::before {
 }
 #game {
     width: 20%;
-    /*height: 100%;*/
-    margin: 0.75rem;
+    min-width: 200px; /* Minimum width for mobile */
+    margin-top: 1.0rem;
     padding: 0.75rem;
     font-size: 1.25rem;
     font-family: 'Roboto', sans-serif;
 }
-@media (min-width: 100x) {
+@media (min-width: 1024px) {
     #game {
         width: 50%;
+        min-width: 400px; /* Minimum width for desktop */
     }
 }
