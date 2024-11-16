@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
 
-from graphrag.query.cli import run_local_search, run_global_search
+from graphrag.cli.query import run_local_search, run_global_search
 
 
 app = FastAPI()

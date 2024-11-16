@@ -36,24 +36,31 @@ Following that, you may set-up and run GraphRAG.
 1. Create an empty dir for GraphRAG: <br>
 ```
 python -m graphrag.index --init --root /workspaces/guidescanner/graphrag
+### NEW: 
+### python -m graphrag init --root /workspaces/guidescanner/src/app/graphrag_data/bg3
 ```
 
 2. Edit the ```settings.yaml``` to include the appropriate LLM / API settings <br>
 Common pitfalls: when the API version is a shortdate (YYYY-MM-DD) such as 2023-05-15, GraphRAG may have an error when parsing this value from the YAML (it will parse it to date). Instead, use a string qualifier "2023-05-15".
 
-3. Run <br>
+3. Auto-tune prompts according to your data:
 ```
-python -m graphrag.index --root /workspaces/guidescanner/graphrag
+python -m graphrag.prompt_tune --root /workspaces/guidescanner/graphrag  --config /workspaces/guidescanner/graphrag/settings.yaml --domain "cyber security" --discover-entity-types --min-examples-required 10 --selection-method auto
+```
+
+4. Run <br>
+```
+### python -m graphrag index --root /workspaces/guidescanner/graphrag
 ```
 to index the data.
 
-4. [Optional] Query locally or globally (commandline):<br>
+5. [Optional] Query locally or globally (commandline):<br>
 ```
-python -m graphrag.query --root /workspaces/guidescanner/graphrag --method local "Who is Scrooge, and what are his main relationships?"
+python -m graphrag query --root /workspaces/guidescanner/graphrag --method local "Who is Scrooge, and what are his main relationships?"
 ```
 
 ```
-python -m graphrag.query --root /workspaces/guidescanner/graphrag --method global "What are the top themes in this story?"
+python -m graphrag query --root /workspaces/guidescanner/graphrag --method global "What are the top themes in this story?"
 ```
 This is good for sanity checks.
 
@@ -62,3 +69,18 @@ The results are saved locally. It is good for debugging and comparing changes / 
 ``` 
 python qurey_loop.py --root_dir "/workspaces/guidescanner/graphrag" 
 ```
+
+6. When running the app via docker container, use this to run with the host's azure login
+
+```
+docker run -v ~/.azure:/root/.azure -p 8000:8000 -it [your-image-id]
+```
+
+References: 
+* https://microsoft.github.io/graphrag/get_started/
+* Auto-tuning GraphRag prompts: https://www.microsoft.com/en-us/research/blog/graphrag-auto-tuning-provides-rapid-adaptation-to-new-domains/
+
+
+
+
+

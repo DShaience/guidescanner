@@ -1,8 +1,7 @@
 azure-identity
 openai~=1.51.2
 beautifulsoup4~=4.12.3
-# graphrag~=0.4 
-graphrag~=0.3.6
+graphrag~=0.4.1  #~=0.3.6 
 fastapi~=0.115.3
 uvicorn~=0.32.0
 jinja2~=3.1.4
