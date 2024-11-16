@@ -62,17 +62,17 @@ class WebScraper:
 
         # Skip mailto links
         if url.startswith("mailto:"):
-            if link not in self.skipped_urls:
-                self.skipped_urls.add(link)
-                print("SKIPPED LINK:", link)
+            if url not in self.skipped_urls:
+                self.skipped_urls.add(url)
+                print("SKIPPED LINK:", url)
             return
 
         # Fetch the webpage content
         response = self.request_handler.get(url)
         if response is None:
-            if link not in self.skipped_urls:
-                self.skipped_urls.add(link)
-                print("EMPTY LINK:", link)           
+            if url not in self.skipped_urls:
+                self.skipped_urls.add(url)
+                print("EMPTY LINK:", url)           
             return
 
         print(f"{url} ...")
@@ -93,18 +93,18 @@ class WebScraper:
 
         # Store the extracted data in a JSON file
         filename = self.output_dir / f"scraped_data_{len(self.visited_urls)}.json"
-        # with open(filename, 'w', encoding="utf-8-sig") as f:
-        #     json.dump(data, f, indent=4 if self.debug else None, ensure_ascii=False)
+        with open(filename, 'w', encoding="utf-8-sig") as f:
+            json.dump(data, f, indent=4 if self.debug else None, ensure_ascii=False)
 
         # Recursively scrape the links
-        for link in data["links"]:
+        for url in data["links"]:
             # the link must contain the subdomain to avoid scraping the entire website
-            if self.domain in link:
-                self.scrape_page(link)
+            if self.domain in url:
+                self.scrape_page(url)
             else:
-                if link not in self.skipped_urls:
-                    self.skipped_urls.add(link)
-                    print("SKIPPED LINK:", link)
+                if url not in self.skipped_urls:
+                    self.skipped_urls.add(url)
+                    print("SKIPPED LINK:", url)
 
     def is_ad(self, element):
         """Check if an element is likely an ad based on its attributes."""
@@ -126,9 +126,9 @@ if __name__ == "__main__":
     # parser.add_argument("--subdomain", type=str, default='https://www.thegamer.com/baldurs-gate-3', help="Stay within this subdomain when scraping.")
     # parser.add_argument("--parent_url", type=str, default='https://www.thegamer.com/baldurs-gate-3-bg3-complete-guide-walkthrough', help="The URL to start scraping from.")
     # parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/bg3_thegamer.com', help="The directory to save the scraped data.")
-    parser.add_argument("--subdomain", type=str, default='https://www.ign.com/wikis/baldurs-gate-3', help="Stay within this subdomain when scraping.")
-    parser.add_argument("--parent_url", type=str, default='https://www.ign.com/wikis/baldurs-gate-3/Walkthrough', help="The URL to start scraping from.")
-    parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/bg3_ign_v2', help="The directory to save the scraped data.")
+    parser.add_argument("--subdomain", type=str, default='https://game8.co/games/Marvels-Spider-Man', help="Stay within this subdomain when scraping.")
+    parser.add_argument("--parent_url", type=str, default='https://game8.co/games/Marvels-Spider-Man', help="The URL to start scraping from.")
+    parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/spiderman', help="The directory to save the scraped data.")
 
     parser.add_argument("--debug", action="store_true", default=True, help="Enable debug mode for detailed output.")
     args = parser.parse_args()
