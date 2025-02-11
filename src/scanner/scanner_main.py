@@ -39,12 +39,13 @@ class RequestHandler:
 
 
 class WebScraper:
-    def __init__(self, subdomain: str, output_dir: Path, debug=True):
+    def __init__(self, subdomain: str, output_dir: Path, prefix='', debug=True):
         self.visited_urls = set()
         self.skipped_urls = set()
         self.request_handler = RequestHandler()
         self.output_dir = output_dir
         self.domain = subdomain   # any subsequent URLs must contain this domain to avoid scraping the entire website / external links
+        self.prefix = f'{prefix}_' if prefix != '' else ''  # files prefix
         self.debug = debug
         os.makedirs(self.output_dir, exist_ok=True)
 
@@ -92,7 +93,7 @@ class WebScraper:
         }
 
         # Store the extracted data in a JSON file
-        filename = self.output_dir / f"scraped_data_{len(self.visited_urls)}.json"
+        filename = self.output_dir / f"scraped_data_{self.prefix}{len(self.visited_urls)}.json"
         with open(filename, 'w', encoding="utf-8-sig") as f:
             json.dump(data, f, indent=4 if self.debug else None, ensure_ascii=False)
 
@@ -126,16 +127,18 @@ if __name__ == "__main__":
     # parser.add_argument("--subdomain", type=str, default='https://www.thegamer.com/baldurs-gate-3', help="Stay within this subdomain when scraping.")
     # parser.add_argument("--parent_url", type=str, default='https://www.thegamer.com/baldurs-gate-3-bg3-complete-guide-walkthrough', help="The URL to start scraping from.")
     # parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/bg3_thegamer.com', help="The directory to save the scraped data.")
-    parser.add_argument("--subdomain", type=str, default='https://game8.co/games/Marvels-Spider-Man', help="Stay within this subdomain when scraping.")
-    parser.add_argument("--parent_url", type=str, default='https://game8.co/games/Marvels-Spider-Man', help="The URL to start scraping from.")
-    parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/spiderman', help="The directory to save the scraped data.")
+    parser.add_argument("--parent_url", type=str, default='https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Overview.html', help="The URL to start scraping from.")
+    parser.add_argument("--subdomain", type=str, default='https://docs.nvidia.com/metropolis/deepstream', help="Stay within this subdomain when scraping.")
+    parser.add_argument("--prefix", type=str, default='deepstream', help="Optional prefix to add to the files names in the output.")
+    parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/nvidia', help="The directory to save the scraped data.")
 
     parser.add_argument("--debug", action="store_true", default=True, help="Enable debug mode for detailed output.")
     args = parser.parse_args()
+    prefix = args.prefix
     output_dir = Path(args.output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
-    scraper = WebScraper(args.subdomain, output_dir, args.debug)
+    scraper = WebScraper(args.subdomain, output_dir, prefix, args.debug)
     scraper.scrape_page(args.parent_url)
 
 

@@ -28,10 +28,11 @@ game_paths = {
     "JediSurvivor": Path(os.path.join(os.getcwd(), "app/graphrag_data/jedi_survivor")),
     "BO6": Path(os.path.join(os.getcwd(), "app/graphrag_data/blackops6")),
     "BG3": Path(os.path.join(os.getcwd(), "app/graphrag_data/bg3")),
+    "SpidermanRemastered": Path(os.path.join(os.getcwd(), "app/graphrag_data/spiderman")),
     "Mafia": Path(os.path.join(os.getcwd(), "app/graphrag_data/mafia"))  # todo: reindex Mafia. Seems to have a problem
 }
 
-community_level = 2
+community_level = 6
 response_type = "multiple paragraphs"
 streaming = False
 executor = ThreadPoolExecutor()

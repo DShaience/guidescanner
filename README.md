@@ -45,12 +45,12 @@ Common pitfalls: when the API version is a shortdate (YYYY-MM-DD) such as 2023-0
 
 3. Auto-tune prompts according to your data:
 ```
-python -m graphrag.prompt_tune --root /workspaces/guidescanner/graphrag  --config /workspaces/guidescanner/graphrag/settings.yaml --domain "cyber security" --discover-entity-types --min-examples-required 10 --selection-method auto
+python -m graphrag prompt-tune --root /workspaces/guidescanner/graphrag  --config /workspaces/guidescanner/graphrag/settings.yaml --domain "gaming" --discover-entity-types --min-examples-required 10 --selection-method auto
 ```
 
 4. Run <br>
 ```
-### python -m graphrag index --root /workspaces/guidescanner/graphrag
+python -m graphrag index --root /workspaces/guidescanner/graphrag
 ```
 to index the data.
 
