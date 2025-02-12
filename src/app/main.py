@@ -25,6 +25,7 @@ app.mount("/static", StaticFiles(directory="app/templates/static"), name="static
 
 # Define the paths for each game
 game_paths = {
+    "DeepStream": Path(os.path.join(os.getcwd(), "app/graphrag_data/nvidia")),
     "JediSurvivor": Path(os.path.join(os.getcwd(), "app/graphrag_data/jedi_survivor")),
     "BO6": Path(os.path.join(os.getcwd(), "app/graphrag_data/blackops6")),
     "BG3": Path(os.path.join(os.getcwd(), "app/graphrag_data/bg3")),
@@ -58,7 +59,7 @@ async def read_root(request: Request):
 @app.post("/search", response_class=JSONResponse)
 async def search_post(query: str = Form(...), game: str = Form(...)):
     # Set the graphrag_root based on the selected game
-    graphrag_root = game_paths.get(game, game_paths["JediSurvivor"])
+    graphrag_root = game_paths.get(game, game_paths["DeepStream"])
     graphrag_data = graphrag_root / "output"
     config_path = graphrag_root / "settings.yaml"
 
