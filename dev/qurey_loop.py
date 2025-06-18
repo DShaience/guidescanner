@@ -7,14 +7,23 @@ import argparse
 import datetime as dt
 import json
 from pathlib import Path
-from graphrag.query.cli import run_local_search, run_global_search
+from graphrag.cli.query import run_local_search, run_global_search
+import os
 
-# ROOT_DIR = Path("/workspaces/guidescanner/graphrag_tests/full_bg3")
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+
+endpoint = os.getenv("ENDPOINT_URL", "https://guidescanner-openai.openai.azure.com/")
+deployment = os.getenv("DEPLOYMENT_NAME", "guidescanner-gpt-4o-mini")
+
+credential = DefaultAzureCredential()
+token = credential.get_token("https://cognitiveservices.azure.com/.default")
+
+os.environ["GRAPHRAG_API_KEY"] = token[0]
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run query loop with specified ROOT_DIR")
-    parser.add_argument('--root_dir', type=str, default="/workspaces/guidescanner/graphrag_tests/full_bg3_v2", help='Root directory for the query loop')
+    parser.add_argument('--root_dir', type=str, default="/workspaces/guidescanner/src/app/graphrag_data/nvidia", help='Root directory for the query loop')
     parser.add_argument('--global_mode', action='store_true', default=True, help='Run the query loop in global mode. Otherwise, run in local mode.')
 
     args = parser.parse_args()
@@ -32,18 +41,17 @@ if __name__ == "__main__":
         
     results_file = f"/workspaces/guidescanner/data/query_results/{ROOT_DIR.name}_{timestamp}.json"               
 
-
     print(f"Running {'global' if global_mode else 'local'} search")
     while True:
-        query = input("Enter a query: ")
+        query = input("Enter a query: ")   # "Tell me about nvidia nvDCF tracker."
         # if the query is any of the following, exit the loop: exit, quit, q, quit(), exit()
         if query in ["exit", "quit", "q", "quit()", "exit()"]:
             break
 
         if global_mode:
             result = run_global_search(config_filepath, data_dir, ROOT_DIR, community_level, response_type, streaming, query)
-        else:        
-            result = run_local_search(config_filepath, data_dir, ROOT_DIR, community_level, response_type, streaming, query)
+        # else:        
+        #     result = run_local_search(config_filepath, data_dir, ROOT_DIR, community_level, response_type, streaming, query)
 
         print("\n")
         with open(results_file, 'a', encoding='utf-8-sig') as f:
