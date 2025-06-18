@@ -8,3 +8,5 @@ graphrag_tests/*
 *.pyc
 src/app/graphrag_data/*
 /dev/scribbles
+game/dalle3_image_generator.py
+dev/new_scanner
