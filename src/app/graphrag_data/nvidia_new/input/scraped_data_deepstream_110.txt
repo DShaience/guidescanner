@@ -1,0 +1,120 @@
+﻿Title: NvDsTrackerExt — DeepStream documentation
+
+NvDsTrackerExt#
+Components#
+nvidia::deepstream::NvDsTracker#
+Parameters#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+NVIDIA Object Tracking Extension.
+UUID: f5aaeb53-e9b8-4317-87d1-9549d67c1638
+Version: 1.6.0
+Author: NVIDIA
+License: Proprietary
+DeepStreamSDK NvTracker Bin. Internal Pipeline: queue->nvtracker.
+Refer to nvtracker plugin
+Component ID: 5b0aaa9d-f588-3485-b317-d13fec5cc2ae
+Base Type: nvidia::deepstream::INvDsElement
+compute-hw
+Compute Scaling HW.
+Valid values:
+0: Default
+1: GPU
+2: VIC
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+display-tracking-id
+Display tracking id in object text.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+enable-batch-process
+Enable batch processing across multiple streams.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+enable-past-frame
+Enable adding past frame track into user meta.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+gpu-id
+Set GPU Device ID.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+ll-config-file
+Low-level library config file path.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+ll-lib-file
+Low-level library file path.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_FILE
+tracker-height
+Frame height at which the tracker should operate, in pixels.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 384
+tracker-width
+Frame width at which the tracker should operate, in pixels.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+tracking-id-reset-mode
+Tracking ID reset mode when stream reset or EOS happens
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1
+tracking-surface-type
+Set Tracking Surface Type, default is ALL, (1) => SPOT Surface, (2) => AISLE Surface.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+video-in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supported formats - video(I420, NV12, RGBA).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+video-out
+Handle to an nvidia::deepstream::NvDsStaticOutput component. Supported formats - video(I420, NV12, RGBA).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticOutput
+previous
+NvDsTemplateExt
+next
+NvDsTranscodeExt
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

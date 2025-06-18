@@ -1,0 +1,105 @@
+﻿Title: AV Sync in DeepStream — DeepStream documentation
+
+AV Sync in DeepStream#
+Setup for RTMP/RTSP Input streams for testing#
+RTMP Server Setup#
+Command to simulate 2 RTMP streams using ffmpeg#
+RTSP Server Setup#
+AVSync Reference Pipelines#
+Pipelines with existing nvstreammux component#
+RTMP_IN->RTMP_OUT#
+FILE_IN->RTSP_OUT#
+FILE_IN->RTMP_OUT#
+RTMP_IN->FILE_OUT#
+RTSP_IN->FILE_OUT#
+FILE_IN->FILE_OUT#
+RTSP_IN->RTSP_OUT#
+RTMP_IN->RTSP_OUT#
+Reference AVSync + ASR (Automatic Speech Recognition) Pipelines with existing nvstreammux#
+RTMP_IN->RTMP_OUT#
+RTSP_IN->RTMP_OUT#
+FILE_IN->RTMP_OUT#
+Pipelines with New nvstreammux component#
+RTMP_IN->RTMP_OUT#
+RTSP_IN->RTMP_OUT#
+FILE_IN->RTSP_OUT#
+FILE_IN->RTMP_OUT#
+RTMP_IN->FILE_OUT#
+RTSP_IN->FILE_OUT#
+FILE_IN->FILE_OUT#
+RTSP_IN->RTSP_OUT#
+RTMP_IN->RTSP_OUT#
+Reference AVSync + ASR Pipelines (with new nvstreammux)#
+RTMP_IN->RTMP_OUT#
+RTSP_IN->RTMP_OUT#
+FILE_IN->RTMP_OUT#
+Gst-pipeline with audiomuxer (single source, without ASR + new nvstreammux)#
+RTMP_IN->FILE_OUT#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+AV Synchronization support is enabled for DeepStream-6.0 release and onwards. Currently it is in alpha development stage. A sample app deepstream-avsync-app is also provided at app/sample_apps/deepstream-avsync for reference. This document provides the sample gstreamer pipelines.
+The rtsp stream generated from above command can be accessed using URL: rtsp://<host_ip_address:port>/file-stream.
+Note
+RTMP src is not a live source. Youâll need to add fakesrc with is-live=true and connect it to audiomixer. This makes sure it wonât break even if the data from one of the sources is unavailable.
+A max-latency of 250msec is set on nvstreammux for rtmp input source. The value is set because max latency required for buffers from rtmpsrc to nvstreammux is 250msec. You can tune this value as per your requirement. Same value is set in audio path on audiomixer for the same reason.
+RTSP output will be available at rtsp://<host_ip_address:8554>/ds-test.
+You may experience AV sync is out of sync if the file output is played using VLC player. In that case try ffmpeg or gst-launch pipeline. This could be VLC player specific issue.
+Make sure that audio stream has same encoded configuration. (e.g. sampling rate). If these are different, audiomixer crashes. You may add audioconvert and audioresample before audiomixer for given source so that all inputs to audiomixer have same format and sampling rate.
+RTMP output on YouTubeâ¢ live takes time to appear (~30-40seconds). This could be because of YouTubeâ¢ playerâs buffering mechanism.
+In case of RTMP output, before running the pipeline make sure that YouTubeâ¢ live page is refreshed and ready to accept incoming data.
+If case of packet drop, rtsp output may look like it is corrupted. In that case reduce bitrate and try.
+Note
+These pipelines demonstrate how to add ASR plugin in avsync pipeline.
+To visualize overlaid text output from ASR on video frames, refer to deepstream-avsync-app application.
+Note
+Make sure the ASR service is running (refer README of deepstream-avsync-app, for detailed information ) . To ensure gRPC libraries are accessible, set LD _LIBRARY_PATH using $source ~/.profile. Update the correct path of riva_asr_grpc_jasper_conf.yml in the above command before running it.
+Note
+Make sure the ASR service is running (refer README of deepstream-avsync-app, for detailed information ) . To ensure gRPC libraries are accessible, set LD _LIBRARY_PATH using $source ~/.profile. Update the correct path of riva_asr_grpc_jasper_conf.yml in the above command before running it.
+Note
+Make sure the ASR service is running (refer README of deepstream-avsync-app, for detailed information ) . To ensure gRPC libraries are accessible, set LD _LIBRARY_PATH using $source ~/.profile. Update the correct path of riva_asr_grpc_jasper_conf.yml in the above command before running it.
+You can enable the new nvstreammux (Beta quality) by exporting USE_NEW_NVSTREAMMUX=yes. For more information, see the :doc: âGst-nvstreammux New (Beta)â section in the NVIDIA DeepStream SDK Developer Guide 6.1 Release.
+Note
+The existing nvstreammux functionality will be deprecated in the future.
+Note
+Make sure ASR service is running (refer README of deepstream-avsync-app, for detailed information ) . To ensure gRPC libraries are accessible, set LD _LIBRARY_PATH using $source ~/.profile. Update the correct path of riva_asr_grpc_jasper_conf.yml in the above command before running it.
+Note
+Make sure ASR service is running (refer README of deepstream-avsync-app, for detailed information ) . To ensure gRPC libraries are accessible, set LD _LIBRARY_PATH using $source ~/.profile. Update the correct path of riva_asr_grpc_jasper_conf.yml in the above command before running it.
+Note
+Make sure ASR service is running (refer README of deepstream-avsync-app, for detailed information ) . To ensure gRPC libraries are accessible, set LD _LIBRARY_PATH using $source ~/.profile. Update the correct path of riva_asr_grpc_jasper_conf.yml in the above command before running it.
+previous
+NTP Timestamp in DeepStream
+next
+DeepStream With REST API Sever
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

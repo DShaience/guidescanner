@@ -1,0 +1,64 @@
+﻿Title: FAQ for Deepstream On WSL — DeepStream documentation
+
+FAQ for Deepstream On WSL#
+1. Do we need to install nvidia driver inside Ubuntu Image with WSL?#
+2. While installing driver, should you choose âClean Installationâ?#
+3. While starting docker, I face error:âdocker: Error response from daemon: could not select device driver ââ with capabilities: [[gpu]]. What should I do?#
+4. While starting docker, I get error âGPU access blocked by operating systemâ. What should I do?#
+5. While installing Ubuntu image for WSL2, I get error: âThe service cannot be started, either because it is disabled or because it has no enabled devices associated with itâ. What should I do?#
+6. While running deepstream-app for the first time, I get an error: âGLib (gthread-posix.c): Unexpected error from C library during âpthread_setspecificâ: Invalid argument.  Aborting.â. What should I do?#
+7. There is no video on the screen while running gstreamer or deepstream video pipelines. But pipeline seems to be running in terminal without any error. What is the reason?#
+8. Warning prints are coming while running deepstream-app for first time after starting docker. For e.g: âdeepstream-app âversionâ shows below warnings. Is that an issue?#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+No. You only need to install the driver in Windows Host Machine for the specific GPU you are using. In fact you should not install nvidia drivers inside ubuntu machine to avoid any potential clashes.
+Although it is not insisted, it is better to choose âclean installationâ with all the available packages in driver by choosing âAdvancedâ option during installation to avoid potential issues with different libraries.
+Try below steps:
+(Make sure your logged in windows account does not have any limited access before trying this.)
+After the above steps, shutdown WSL and open it again.
+Not all GPUs are supported by WSL. Check the below document to see constraints associated with WSL2.
+https://docs.nvidia.com/cuda/wsl-user-guide/index.html#wsl-2-support-constraints
+Open the Services application (services.msc) by searching for it in the Start menu. (Run as administrator)
+Look for the service named âWindows Updateâ and make sure its startup type is set to âManualâ or âAutomatic.â (Automatic is preferred)
+If itâs not running, start the service. (Right click -> start)
+This is a harmless error and is associated with the glib package in your system. It may not be observed in every system. You can ignore this message.
+Make sure you have not launched WSL instance through ssh sessions (for eg. using Mobaxterm). Use VNC to start and use WSL. In case you have already launched the WSL through ssh, make sure you shutdown
+the WSL instance (you can use command âwsl âshutdownâ for this) before opening it again from VNC.
+These prints are harmless. They come because we donât have the corresponding OSS plugin libs packaged inside the container. They can be safely ignored.
+previous
+DeepStream On WSL
+next
+DeepStream API Guides
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

@@ -1,0 +1,648 @@
+﻿Title: NvDsSampleModelsExt — DeepStream documentation
+
+NvDsSampleModelsExt#
+Components#
+nvidia::deepstream::NvDsResnet10_4ClassDetectorModel#
+Parameters#
+nvidia::deepstream::NvDsSecondaryCarColorClassifierModel#
+Parameters#
+nvidia::deepstream::NvDsSecondaryCarMakeClassifierModel#
+Parameters#
+nvidia::deepstream::NvDsSecondaryVehicleTypeClassifierModel#
+Parameters#
+nvidia::deepstream::NvDsSonyCAudioClassifierModel#
+Parameters#
+nvidia::deepstream::NvDsCarDetector360dModel#
+Parameters#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+Components for using the sample models provided as part of DeepStreamSDK.
+UUID: 909dc1ea-c654-44c1-97a3-0b8fec12141a
+Version: 1.7.0
+Author: NVIDIA
+License: Proprietary
+4-class primary model detecting vehicles, persons, bicycles and roadsigns. Contains the caffemodel and prototxt, labels file, INT8 calibration file and the nvinfer configuration file for the model.
+Component ID: c2bed4f0-b9dd-43ab-b693-e0cbdd4f96e8
+Base Type: nvidia::deepstream::INvDsInferModelConfigComponent
+cluster-mode
+Object clustering mode to use.
+Valid values:
+1: DBSCAN
+2: NMS
+3: DBSCAN + NMS (Hybrid)
+4: No clustering
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 2
+dbscan-min-score
+Minimum sum of confidence of all the neighbors in a cluster for it to be considered a valid cluster.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.0
+detected-max-h
+Maximum height in pixels of detected objects to be output by the detector
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+detected-max-w
+Maximum width in pixels of detected objects to be output by the detector
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+detected-min-h
+Minimum height in pixels of detected objects to be output by the detector
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+detected-min-w
+Minimum width in pixels of detected objects to be output by the detector
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+enable-dla
+Enable DLA for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+eps
+Epsilon values for DBSCAN clustering algorithm
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.7
+infer-dims
+Binding dimensions to set on the image input layer. Format - <dim1>;<dim2>;<dim3>â¦
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+input-object-max-height
+When used in secondary mode only on objects with this maximum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-max-width
+When used in secondary mode only on objects with this maximum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-min-height
+When used in secondary mode only on objects with this minimum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+input-object-min-width
+When used in secondary mode only on objects with this minimum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+min-boxes
+Minimum number of points required to form a dense region for DBSCAN algorithm
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 3
+model-engine-file
+Path to the model engine file. Absolute or relative to the extension directory.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+network-mode
+Data format to be used by inference.
+Valid values:
+0: FP32
+1: INT8
+2: FP16
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1
+nms-iou-threshold
+Maximum IOU score between two proposals after which the proposal with the lower confidence will be rejected.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.5
+post-cluster-threshold
+Detection threshold to be applied post clustering operation for all classes
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.0
+pre-cluster-threshold
+Detection threshold to be applied prior to clustering operation for all classes
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.4
+roi-bottom-offset
+Offset of the RoI from the bottom of the frame. Only objects within the RoI are output.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+roi-top-offset
+Offset of the RoI from the top of the frame. Only objects within the RoI are output.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+scaling-compute-hw
+Compute hardware to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Platform default - GPU (dGPU), VIC (Jetson)
+1: GPU
+2: VIC (Jetson only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+scaling-filter
+The filter to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Nearest
+1: Bilinear
+2: Cubic(GPU)/5-Tap(VIC)
+3: Super(GPU)/10-Tap(VIC)
+4: Lanzos(GPU)/Smart(VIC)
+5: Nicest(VIC only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+tensor-meta-pool-size
+Size of the output tensor meta pool
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 6
+topK
+Keep only top K objects with highest detection scores.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 20
+use-dla-core
+DLA Core to use for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+Secondary car color classification model. Contains the caffemodel and prototxt, labels file, INT8 calibration file, the mean ppm file and the nvinfer configuration file for the model.
+Component ID: f7a64e00-f01f-4eaf-8c94-d686c28b9e48
+Base Type: nvidia::deepstream::INvDsInferModelConfigComponent
+classifier-async-mode
+Enables inference on detected objects and asynchronous metadata attachments.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+classifier-threshold
+Minimum threshold label probability. The classifier outputs the label having the highest probability if it is greater than this threshold
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.51
+enable-dla
+Enable DLA for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+infer-dims
+Binding dimensions to set on the image input layer. Format - <dim1>;<dim2>;<dim3>â¦
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+input-object-max-height
+When used in secondary mode only on objects with this maximum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-max-width
+When used in secondary mode only on objects with this maximum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-min-height
+When used in secondary mode only on objects with this minimum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 128
+input-object-min-width
+When used in secondary mode only on objects with this minimum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 128
+model-engine-file
+Path to the model engine file. Absolute or relative to the extension directory.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+network-mode
+Data format to be used by inference.
+Valid values:
+0: FP32
+1: INT8
+2: FP16
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1
+scaling-compute-hw
+Compute hardware to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Platform default - GPU (dGPU), VIC (Jetson)
+1: GPU
+2: VIC (Jetson only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+scaling-filter
+The filter to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Nearest
+1: Bilinear
+2: Cubic(GPU)/5-Tap(VIC)
+3: Super(GPU)/10-Tap(VIC)
+4: Lanzos(GPU)/Smart(VIC)
+5: Nicest(VIC only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+tensor-meta-pool-size
+Size of the output tensor meta pool
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 6
+use-dla-core
+DLA Core to use for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+Secondary car make classification model.  Contains the caffemodel and prototxt, labels file, INT8 calibration file, the mean ppm file and the nvinfer configuration file for the model.
+Component ID: f10b9a8c-d8d4-4ed8-ad54-8d8dca2392b9
+Base Type: nvidia::deepstream::INvDsInferModelConfigComponent
+classifier-async-mode
+Enables inference on detected objects and asynchronous metadata attachments.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+classifier-threshold
+Minimum threshold label probability. The classifier outputs the label having the highest probability if it is greater than this threshold
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.51
+enable-dla
+Enable DLA for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+infer-dims
+Binding dimensions to set on the image input layer. Format - <dim1>;<dim2>;<dim3>â¦
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+input-object-max-height
+When used in secondary mode only on objects with this maximum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-max-width
+When used in secondary mode only on objects with this maximum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-min-height
+When used in secondary mode only on objects with this minimum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 128
+input-object-min-width
+When used in secondary mode only on objects with this minimum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 128
+model-engine-file
+Path to the model engine file. Absolute or relative to the extension directory.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+network-mode
+Data format to be used by inference.
+Valid values:
+0: FP32
+1: INT8
+2: FP16
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1
+scaling-compute-hw
+Compute hardware to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Platform default - GPU (dGPU), VIC (Jetson)
+1: GPU
+2: VIC (Jetson only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+scaling-filter
+The filter to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Nearest
+1: Bilinear
+2: Cubic(GPU)/5-Tap(VIC)
+3: Super(GPU)/10-Tap(VIC)
+4: Lanzos(GPU)/Smart(VIC)
+5: Nicest(VIC only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+tensor-meta-pool-size
+Size of the output tensor meta pool
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 6
+use-dla-core
+DLA Core to use for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+Secondary vehicle type classification model. Contains the caffemodel and prototxt, labels file, INT8 calibration file, the mean ppm file and the nvinfer configuration file for the model.
+Component ID: 47728594-4a13-4460-a906-32c3ae52a61a
+Base Type: nvidia::deepstream::INvDsInferModelConfigComponent
+classifier-async-mode
+Enables inference on detected objects and asynchronous metadata attachments.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+classifier-threshold
+Minimum threshold label probability. The classifier outputs the label having the highest probability if it is greater than this threshold
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.51
+enable-dla
+Enable DLA for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+infer-dims
+Binding dimensions to set on the image input layer. Format - <dim1>;<dim2>;<dim3>â¦
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+input-object-max-height
+When used in secondary mode only on objects with this maximum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-max-width
+When used in secondary mode only on objects with this maximum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-min-height
+When used in secondary mode only on objects with this minimum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 128
+input-object-min-width
+When used in secondary mode only on objects with this minimum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 128
+model-engine-file
+Path to the model engine file. Absolute or relative to the extension directory.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+network-mode
+Data format to be used by inference.
+Valid values:
+0: FP32
+1: INT8
+2: FP16
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1
+scaling-compute-hw
+Compute hardware to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Platform default - GPU (dGPU), VIC (Jetson)
+1: GPU
+2: VIC (Jetson only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+scaling-filter
+The filter to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Nearest
+1: Bilinear
+2: Cubic(GPU)/5-Tap(VIC)
+3: Super(GPU)/10-Tap(VIC)
+4: Lanzos(GPU)/Smart(VIC)
+5: Nicest(VIC only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+tensor-meta-pool-size
+Size of the output tensor meta pool
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 6
+use-dla-core
+DLA Core to use for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+Audio classifier trained on the SONYC urban noise database. Contains the onnx file, labels file and the nvinfer configuration file for the model.
+Component ID: d8d8f07e-3502-4124-ac4f-15f521cf2fb9
+Base Type: nvidia::deepstream::INvDsInferModelConfigComponent
+classifier-threshold
+Minimum threshold label probability. The classifier outputs the label having the highest probability if it is greater than this threshold
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.0
+enable-dla
+Enable DLA for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+infer-dims
+Binding dimensions to set on the image input layer. Format - <dim1>;<dim2>;<dim3>â¦
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+model-engine-file
+Path to the model engine file. Absolute or relative to the extension directory.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+network-mode
+Data format to be used by inference.
+Valid values:
+0: FP32
+1: INT8
+2: FP16
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+tensor-meta-pool-size
+Size of the output tensor meta pool
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 6
+use-dla-core
+DLA Core to use for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+Car detector model for 360d use case.  Contains the caffemodel and prototxt, labels file, INT8 calibration file and the nvinfer configuration file for the model.
+Component ID: 8e3defe9-faf4-4417-945f-4ceb3950ca20
+Base Type: nvidia::deepstream::INvDsInferModelConfigComponent
+cluster-mode
+Object clustering mode to use.
+Valid values:
+1: DBSCAN
+2: NMS
+3: DBSCAN + NMS (Hybrid)
+4: No clustering
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1
+dbscan-min-score
+Minimum sum of confidence of all the neighbors in a cluster for it to be considered a valid cluster.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.0
+detected-max-h
+Maximum height in pixels of detected objects to be output by the detector
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1920
+detected-max-w
+Maximum width in pixels of detected objects to be output by the detector
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1920
+detected-min-h
+Minimum height in pixels of detected objects to be output by the detector
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+detected-min-w
+Minimum width in pixels of detected objects to be output by the detector
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+enable-dla
+Enable DLA for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+eps
+Epsilon values for DBSCAN clustering algorithm
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.9
+infer-dims
+Binding dimensions to set on the image input layer. Format - <dim1>;<dim2>;<dim3>â¦
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+input-object-max-height
+When used in secondary mode only on objects with this maximum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-max-width
+When used in secondary mode only on objects with this maximum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+input-object-min-height
+When used in secondary mode only on objects with this minimum height
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+input-object-min-width
+When used in secondary mode only on objects with this minimum width
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+min-boxes
+Minimum number of points required to form a dense region for DBSCAN algorithm
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 3
+model-engine-file
+Path to the model engine file. Absolute or relative to the extension directory.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+network-mode
+Data format to be used by inference.
+Valid values:
+0: FP32
+1: INT8
+2: FP16
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1
+nms-iou-threshold
+Maximum IOU score between two proposals after which the proposal with the lower confidence will be rejected.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.5
+post-cluster-threshold
+Detection threshold to be applied post clustering operation for all classes
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.0
+pre-cluster-threshold
+Detection threshold to be applied prior to clustering operation for all classes
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FLOAT64
+Default: 0.5
+roi-bottom-offset
+Offset of the RoI from the bottom of the frame. Only objects within the RoI are output.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+roi-top-offset
+Offset of the RoI from the top of the frame. Only objects within the RoI are output.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+scaling-compute-hw
+Compute hardware to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Platform default - GPU (dGPU), VIC (Jetson)
+1: GPU
+2: VIC (Jetson only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+scaling-filter
+The filter to use for scaling frames / object crops to network resolution.
+Valid values:
+0: Nearest
+1: Bilinear
+2: Cubic(GPU)/5-Tap(VIC)
+3: Super(GPU)/10-Tap(VIC)
+4: Lanzos(GPU)/Smart(VIC)
+5: Nicest(VIC only)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+tensor-meta-pool-size
+Size of the output tensor meta pool
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 6
+topK
+Keep only top K objects with highest detection scores.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 20
+use-dla-core
+DLA Core to use for inferencing
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+previous
+NvDsSampleExt
+next
+NvDsSourceExt
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

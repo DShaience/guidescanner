@@ -10,3 +10,6 @@ src/app/graphrag_data/*
 /dev/scribbles
 game/dalle3_image_generator.py
 dev/new_scanner
+src/app/graphrag_data/*
+!src/app/graphrag_data/nvidia_new/
+!src/app/graphrag_data/nvidia_new/input/

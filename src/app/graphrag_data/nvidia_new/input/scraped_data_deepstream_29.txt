@@ -1,0 +1,126 @@
+﻿Title: DeepStream 3D Depth Camera App — DeepStream documentation
+
+DeepStream 3D Depth Camera App#
+Prerequisites#
+Depth Color Capture to 2D Rendering Pipeline Overview#
+Depth Color Capture to 3D Point Cloud Processing and Rendering#
+Getting Started#
+Run RealSense Camera for Depth Capture and 2D Rendering Examples#
+Run 3D Depth Capture, Point Cloud filter, and 3D Points Rendering Examples#
+DeepStream 3D Depth Camera App Configuration Specifications#
+deepstream-3d-depth-camera [ds3d::userapp] group settings#
+DS3D Custom Components Configuration Specifications#
+Build application From Source#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The deepstream-3d-depth-camera sample application is provided at app/sample_apps/deepstream-3d-depth-camera for your reference. This example demonstrates two different pipelines which bring depth camera from 2D into 3D world.
+The depth and color data capture component is produced by IntelÂ® RealSenseâ¢ Depth Camera D435 series. For more details, see https://www.intelrealsense.com/depth-camera-d435/.
+You must have the following development packages installed:
+GStreamer-1.0
+GStreamer-1.0 Base Plugins
+GStreamer-1.0 gstrtspserver
+X11 client-side library
+libyaml-cpp-dev
+RealSense SDK
+To install these packages, execute the following command:
+Follow the RealSense SDK documentation to add RealSense public key and list of repositories. For x86, refer to IntelRealSense/librealsense. For Jetson platforms, refer to IntelRealSense/librealsense. You may use Ubuntu 20.04 source path into apt-repository to install dependencies.
+Then install librealsense2 package to build and test.
+Make sure RealSense SDK version is not earlier than 2.48.
+Plugin in Intel RealSense Depth D400 series USB camera. To verify the camera and upgrade firmware, run realsense-viewer and update from the UI. Navigate to the folder sources/apps/sample_apps/deepstream-3d-depth-camera.
+If you are running these commands inside deepstream container, make sure camera devices are mounted in the docker run command. For example:
+Export DISPLAY environment to  the correct display. for example,  export DISPLAY=:0.0.
+This is the first pipeline from the depth capture to 2D based depthmap to direct rendering with linear colors configured by the user.
+The pipeline is setup by ds_3d_realsense_depth_capture_render.yaml. It has 2 components, ds3d::dataloader for depth/color and datarender for GLES 2D render.
+ds3d::dataloader loads custom lib libnvds_3d_dataloader_realsense.so and creates a RealSense dataloader through the createRealsenseDataloader function. This specific loader is configured for output streams of [color, depth]. Gst-appsrc connects the dataloader into the deepstream pipeline.
+ds3d::datarender loads custom lib libnvds_3d_gl_datarender.so and create a GLES render through the createDepthStreamDataRender function. This specific loader is configured for 2D depth and color images. Gst-appsink connects the datarender into the deepstream pipeline.
+realsense_dataloader captures color and depth streams in ds3d/datamap, then delivers the data to ds3d::datarender component depth-render.
+The 2nd pipeline is from depth capture, 3D point cloud processing and alignment, to the 3D point cloud rendering with colors.
+The 2nd pipeline is setup by the ds_3d_realsense_depth_to_point_cloud.yaml. It has 3 components: ds3d::dataloader for depth/color capture, ds3d::datafilter for depth-to-point-cloud processing, and datarender for GLES 3D points render.
+ds3d::dataloader is the same as the 1st pipeline for depth and color capture. It also outputs the intrinsic parameters of the color/depth sensors, and extrinsic parameters from depth to color sensor module.
+ds3d::datafilter loads custom lib libnvds_3d_depth2point_datafilter.so and creates a depth-to-3D-point processing filter through the createDepth2PointFilter function. This specific filter generates the 3D point-cloud dataset from depth, and calculates a UV-coordinate map for correspondence between points and color position. It requires sensorsâ intrinsic and extrinsic data from dataloader to make the alignment.
+ds3d::datafilter is loaded by the nvds3dfilter Gst-plugin which accepts in_caps as sink_caps and out_caps as src_caps. It creates a custom ds3d::datafilter instance and processess data as ds3d/datamap.
+ds3d::datarender loads custom lib libnvds_3d_gl_datarender.so and create a GLES render through the createPointCloudDataRender function . This specific loader is configured for 3D points and colors rendering. It also supports 3D scene rotation based on mouse-drag.
+realsense_dataloader captures color and depth streams along with  the intrinsic and extrinsic parameters of the sensor in ds3d/datamap. It then delivers the data to the next component point2cloud_datafilter. This component generates 3D point-cloud data and UV coordination map into new output data ds3d/datamap. Finally, the data is delivered to ds3d::datarender component point-render for 3D rendering.
+Inside the configuration files, in_caps and out_caps correspond to Gstreamerâs sink_caps and src_caps.
+Run the depth capture 2D render pipeline:
+This sets up a realsense dataloader.
+It then streams ds3d/datamap to final the rendering component: depth-render.
+The depth-render custom lib shall display the depth data and color data together in same window. Update min_depth/max_depth to remove foreground and background objects in the depth rendering. From RealSense specification, D435 Camera depth range is between 0.3 and 3 meters.
+Update min_depth_color/min_depth_color [R, G, B] values to visualize color map of depth.
+Run the depth capture and 3D processing pipeline:
+This sets up a realsense dataloader (same as 2D depth). It then streams ds3d/datamap to the downstream datafilter component point2cloud_datafilter.
+It streams ds3d/datamap to the nvds3dfilter Gst-plugin  which loads point2cloud_datafilter to convert 2D depth into 3D points. For more details on nvds3dfilter Gst-plugin, See Gst-nvds3dfilter.
+Finally the data stream as ds3d/datamap is delivered to the render component point-render.
+Fields of view_* are the eyes of the view position, similar to the OpenGL gluLookAt().
+Fields of near/far/fov are the perspective range of the eye, similar to the OpenGL gluPerspective().
+The table below demonstrates the group settings for ds_3d_realsense_depth_to_point_cloud.yaml as an example.
+Property
+Meaning
+Type and Range
+Example
+type
+Specify type ds3d::userapp
+Component type for user debug
+Must be type: ds3d::userapp
+name
+Indicate user-defined component name
+String
+name: debugdump
+enable_debug
+Indicate whether enable debug log
+Boolean
+enable_debug: False
+dump_depth
+Indicate file location to dump depth raw data
+String
+dump_depth: depth_uint16_640x480.bin
+dump_color
+Indicate file location to dump color raw data
+String
+dump_color: color_rgba_1920x1080.bin
+dump_points
+Indicate file location to dump 3D points raw data. datatype is Float and XYZ packed
+String
+dump_points: pointxyz.bin
+See more details in the DS_3D supported custom components specifications section in the DeepStream-3D Custom Apps and Libs Tutorials.
+Go to the folder sources/apps/sample_apps/deepstream-3d-depth-camera.
+Run the following commands:
+Note
+Check the source code for more details on how to load dataloader/datarender through Gst-appsrc and Gst-appsink. datafilter is loaded by the nvds3dfilter Gst-plugin.
+previous
+DeepStream 3D Action Recognition App
+next
+DeepStream 3D Lidar Inference App
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

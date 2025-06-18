@@ -1,0 +1,213 @@
+﻿Title: Gst-nvdsudpsrc — DeepStream documentation
+
+Gst-nvdsudpsrc#
+Inputs and Outputs#
+Features#
+Gst Properties#
+Example pipelines#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The Gst-nvdsudpsrc plugin is a source type component which is used to receive the UDP-RTP packets from the network. Internally, the plugin uses Rivermax SDK APIs for network communications. NVIDIA RivermaxÂ® offers a unique IP-based solution for any media and data streaming use case. For more details, see the Rivermax Product Page..
+Rivermax utilizes the kernel bypass technology and RDMA capabilities to achieve better CPU performance, low latency, and higher bandwidth. On top of Rivermax based enhancements, some of memory and buffer management optimization have been implemented to further reduce the CPU utilization in case of high packet rate use cases.
+This component also supports RTP header and payload separation. RTP header and payloads can be received in separate memories. Header will always be in system memory while payload can directly be copied to GPU (Pinned) memory. This can avoid memory copies in cases when GPU processing is performed on the RTP payloads. Header and payload separation will happen only if header-size property is set to non-zero value and for fixed header size.
+High resolution uncompressed video streams have a very high number of RTP packets per second. In such case, OSS de-packetization component (rtpvrawdepay) becomes bottleneck to process stream real-time. To handle such cases, nvdsudpsrc has added support for de-packetization of uncompressed video and audio streams as per SMPTE 2110-20/30 specifications. In this mode, nvdsudpsrc will provide GstBuffer having complete video / audio frame as an output instead of RTP packets.
+Note
+To use de-packetization for uncompressed video and audio payloads within nvdsudpsrc, there are certain assumptions regarding input stream.
+Each RTP packet must be of fixed size with fixed header and payload size.
+There should not be more than one sample row data (SRD) per RTP packet.
+With the support for de-packetization, nvdsudpsrc can now have four different operating modes based on the value of caps property of the component.
+nvdsudpsrc will receive RTP packets having any type of payload from the network and push those packets to the downstream depayloader component for de-packetization. In this mode, nvdsudpsrc component is agnostic to content of the RTP packet. This is default mode and the source pad should have âapplication/x-rtp, â¦â¦â as caps.
+nvdsudpsrc will receive RTP packets having uncompressed video as payload and will do de-packetization as per SMPTE 2110-20 specification to form a video frame before sending to downstream components. This mode will be activated when caps property is set with âvideo/x-raw(memory:NVMM), â¦..â caps.
+nvdsudpsrc will receive RTP packets having uncompressed audio as payload and will do de-packetization as per SMPTE 2110-30 specification to form an audio frame before sending to downstream components. This mode will be activated when the caps property is set with âaudio/x-raw, â¦..â caps.
+nvdsudpsrc will receive RTP packets having any type of payload and will do de-packetization to form a frame before sending to downstream components. In this case, the frame boundary is not decided based on the parsing of the RTP / payload header but based on the configurable value of the number of packets. i.e., the value of payload-multiple property will decide on how many packets are considered as a frame and nvdsudpsrc will remove the RTP header of those many packets and combine the payloads to form a frame. This mode will be activated when the caps property is set with âapplication/x-custom, â¦..â caps.
+System can also have Gstreamer provided OSS implementation of udp source (udpsrc) component. In that case system would have two implementations for udp source - udpsrc and nvdsudpsrc.
+nvdsudpsrc component can only be used with NVIDIA ConnectX-5 and above cards after having installed Rivermax SDK and its license.
+Download and setup the Rivermax 1.40.x SDK here: https://developer.nvidia.com/networking/rivermax-getting-started
+Follow the instruction on the SDK page to obtain Rivermax development license.
+To select nvdsudpsrc out of two installations, use either LOCAL_IFACE_IP environment variable or local-iface-ip property. Use the command below to export the environment variable:
+nvdsudpsrc component also requires CAP_NET_RAW capability. Either run the application that uses nvdsudpsrc component with superuser privilege or set the CAP_NET_RAW capabilities using the following command.
+For example:
+Inputs
+None
+Control parameters
+LOCAL_IFACE_IP ENV flag or local-iface-ip property
+payload-size
+header-size
+num-packets
+uri
+address
+port
+source-address
+caps
+gpu-id
+payload-multiple
+Output
+GstBufferList having RTP packets as buffer content.
+GstBuffer having uncompressed audio or video frame.
+The following table summarizes the features of the plugin.
+Feature
+Description
+Release
+Supports header and payload separation
+Separate memories can be allocated for RTP header and payload
+DS 6.0
+Supports any type of RTP packet (Compressed, Uncompressed, audio etc.)
+No restriction on content of RTP payload
+DS 6.0
+Supports RTCP packets
+In addition to RTP, RTCP packets can also be received
+DS 6.0
+Supports RTP payload directly in GPU memory
+Content of RTP payload can directly be in GPU memory. This can avoid copy if GPU processing of payload is required
+DS 6.0
+Supports de-packetization of uncompressed video
+RTP packets having uncompressed video as payload can be depacketized and converted to video frame as per SMPTE 2110-20 specification
+DS 6.3
+Supports de-packetization of uncompressed audio
+RTP packets having uncompressed audio as payload can be depacketized and converted to audio frame as per SMPTE 2110-30 specification
+DS 6.3
+Supports de-packetization of generic payload
+RTP packets having fixed header and payload size can be depacketized to form a frame. In this mode headers will be removed and payloads will be combined to form a frame
+DS 6.3
+The following table describes the Gst-nvdsudpsrc pluginâs Gst properties.
+Property
+Meaning
+Type and Range
+Example / Notes
+Platforms
+port
+The port number to receive the RTP packets from
+Integer,
+0 to 65535
+Port=5004
+dGPU
+Jetson
+address
+IP address of the server to receive packets from
+String
+address=192.168.4.60
+dGPU
+Jetson
+uri
+Uri of the server in the form of udp://<ip>:<port>
+String
+uri=udp://192.168.4.60:5004
+dGPU
+Jetson
+payload-size
+Size of payload in RTP packet
+Integer,
+0 to 65535
+payload-size=1500
+dGPU
+Jetson
+header-size
+RTP header size
+Integer,
+0 to 65535
+header-size=12
+dGPU
+Jetson
+num-packets
+Number of packets for which memory to allocate
+Integer,
+0 to 2147483647
+num-packets=10000
+dGPU
+Jetson
+local-iface-ip
+IP Address associated with network interface through which to receive the data
+String
+local-iface-ip=192.168.2.20
+dGPU
+Jetson
+buffer-size
+Size of the kernel receive buffer in bytes
+Integer,
+0 to 2147483647
+buffer-size=50000
+dGPU
+Jetson
+reuse
+Enable reuse of the port
+Boolean
+reuse=1
+dGPU
+Jetson
+multicast-iface
+The network interface on which to join the multicast group
+String
+multicast-iface=eth0
+dGPU
+Jetson
+auto-multicast
+Automatically join/leave multicast groups
+Boolean
+auto-multicast=1
+dGPU
+Jetson
+loop
+Used for setting the multicast loop parameter
+Boolean
+loop=1
+dGPU
+Jetson
+source-address
+Unicast address to receive the data only from that sender
+String
+source-address=â192.168.3.4â
+dGPU
+Jetson
+gpu-id
+GPU device id to allocate the buffers
+Integer, -1 to 32767
+gpu-id=0
+dGPU Jetson
+payload-multiple
+Output buffer to be multiple of these number of packets
+Integer, 0 to 65535
+payload-multiple=4320
+dGPU Jetson
+Pipeline to receive and play 24 bit 2 channel 48k audio stream:
+Pipeline to receive and display 10bit YUV 4:2:2 1080p30 video stream:
+Pipeline to receive and display 10bit YUV 4:2:2 1080p30 video stream without additional depayload component:
+Pipeline to receive and display 10bit YUV 4:2:2 1080p30 video stream without additional depayload component and using GPU Direct:
+Pipeline to receive and play 24 bit 2 channel 48k audio stream without additional depayload component:
+Pipeline to receive and depacketize generic payload. Following pipeline receives uncompressed video as generic paylaod:
+previous
+Gst-nvdsanalytics
+next
+Gst-nvdsudpsink
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

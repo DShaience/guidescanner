@@ -1,0 +1,507 @@
+﻿Title: Frequently Asked Questions — DeepStream documentation
+
+Frequently Asked Questions#
+DeepStream General topics#
+How do I uninstall DeepStream?#
+What types of input streams does DeepStream 7.1 support?#
+Whatâs the throughput of H.264 and H.265 decode on dGPU (Tesla)?#
+How can I run the DeepStream sample application in debug mode?#
+Where can I find the DeepStream sample applications?#
+How can I verify that CUDA was installed correctly?#
+How can I interpret frames per second (FPS) display information on console?#
+My DeepStream performance is lower than expected. How can I determine the reason?#
+How can I specify RTSP streaming of DeepStream output?#
+What is the official DeepStream Docker image and where do I get it?#
+What is the recipe for creating my own Docker image?#
+How can I display graphical output remotely over VNC? How can I determine whether X11 is running?#
+Why does the deepstream-nvof-test application show the error message âDevice Does NOT support Optical Flow Functionalityâ ?#
+Why is the Gst-nvstreammux plugin required in DeepStream 4.0+?#
+How do I profile DeepStream pipeline?#
+How can I check GPU and memory utilization on a dGPU system?#
+What is the approximate memory utilization for 1080p streams on dGPU?#
+DeepStream apps fails while encoding on Orin Nano#
+When deepstream-app is run in loop on Jetson AGX Orin using âwhile true; do deepstream-app -c <config_file>; done;â, after a few iterations I see low FPS for certain iterations. Why is that?#
+Why do I get the error incorrect camera parameters provided, please provide supported resolution and frame rate when I compile DeepStream sample application with source1_usb_dec_infer_resnet_int8.txt config in default setting on Jetson?#
+Why do on Jetson, engine file generation fails occasionally inside container?#
+Why the application hangs sometimes with RTSP streams on reaching EOS?#
+Why do I get error GLib (gthread-posix.c): Unexpected error from C library during 'pthread_setspecific': Invalid argument.  Aborting.#
+Why do I get the error Makefile:13: *** "CUDA_VER is not set".  Stop when I compile DeepStream sample applications?#
+How can I construct the DeepStream GStreamer pipeline?#
+How to set camera calibration parameters in Dewarper plugin config file?#
+How to get camera calibration parameters for usage in Dewarper plugin?#
+How to minimize FPS jitter with DS application while using RTSP Camera Streams?#
+Why am I getting âImportError: No module named google.protobuf.internal when running convert_to_uff.py on Jetson AGX Orinâ?#
+Does DeepStream Support 10 Bit Video streams?#
+What is the difference between batch-size of nvstreammux and nvinfer? What are the recommended values for nvstreammux batch-size?#
+How do I configure the pipeline to get NTP timestamps?#
+Why is the NTP timestamp value 0?#
+Why do I see confidence value as -0.1.?#
+How to use the OSS version of the TensorRT plugins in DeepStream?#
+Why do I see the below Error while processing H265 RTSP stream?#
+Why do I observe: A lot of buffers are being dropped. When running live camera streams even for few or single stream, also output looks jittery?#
+Why does the RTSP source used in gst-launch pipeline through uridecodebin show blank screen followed by the error -  WARNING: from element /GstPipeline:pipeline0/GstNvStreamMux:m: No Sources found at the input of muxer. Waiting for sources?#
+What if I do not get expected 30 FPS from camera using v4l2src plugin in pipeline but instead get 15 FPS or less than 30 FPS?#
+On Jetson platform, I get same output when multiple Jpeg images are fed to nvv4l2decoder using multifilesrc plugin. Why is that?#
+On Jetson platform, I observe lower FPS output when screen goes idle.#
+How do I obtain individual sources after batched inferencing/processing? What are the sample pipelines for nvstreamdemux?#
+Why do I encounter such error while running Deepstream pipeline memory type configured and i/p buffer mismatch ip_surf 0 muxer 3?#
+How does secondary GIE crop and resize objects?#
+How to save frames from GstBuffer?#
+What are different Memory types supported on Jetson and dGPU?#
+What are different Memory transformations supported on Jetson and dGPU?#
+Why does my image look distorted if I wrap my cudaMallocâed memory into NvBufSurface and provide to NvBufSurfTransform?#
+Why do transformations below 16x16 dimensions fail on Jetson?#
+How to find out the maximum number of streams supported on given platform?#
+How to find the performance bottleneck in DeepStream?#
+How to fix âcannot allocate memory in static TLS blockâ error?#
+How to measure pipeline latency  if pipeline contains open source components#
+Migration to  newer gstreamer version#
+Why do I get the WARNING WARNING from src_elem: No decoder available for type 'audio/mpeg, mpegversion=(int)4â when I run deepstream-app sample configuration on DS docker containers?#
+Why do I get the WARNING: Failed to load plugin '/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstlibav.so': libavfilter.so.7: cannot open shared object file: No such file or directory when using deepstream-app âversion-all?#
+Why do I get the warning message: libEGL warning: DRI3: Screen seems not DRI3 capable and libEGL warning: DRI2: failed to authenticate when running deepstream pipeline with nveglglesink?#
+How to run higher number of streams (200+) on Hopper,Ampere and ADA?#
+Why do I get the message: ERROR: This container was built for NVIDIA Driver Release 560.28 or later, but version 540.4.0 was detected and compatibility mode is UNAVAILABLE?#
+On x86, why do I get below ERROR during compilation and running of application/libs/plugins : Cuda failure: the provided PTX was compiled with an unsupported toolchain NvDsInferConvert_C3ToP3Float: cuda err = the provided PTX was compiled with an unsupported toolchain.?#
+Why am I getting error Could not get EGL display connection while running deepstream sample application?#
+Why am I getting error cuGraphicsGLRegisterBuffer failed with error(219) gst_eglglessink_cuda_init texture = 1 while running deepstream sample application with EGLSink on SBSA/GH100?#
+Why are all deepstream reference apps failing on dGPU on ARM with DS 7.1 and throwing a segfault?#
+Why am I getting error âGPUassert: invalid argumentâ when setting outputReidTensor: 1 in Gst-nvtracker low level config file?#
+Profiling using NVTX#
+Smart Record#
+Does smart record module work with local video streams?#
+Are multiple parallel records on same source supported?#
+What if I forgot to stop the recording?#
+I started the record with a set duration. Can I stop it before that duration ends?#
+What if I donât set default duration for smart record?#
+What if I donât set video cache size for smart record?#
+What is maximum duration of data I can cache as history for smart record?#
+Can I record the video with bounding boxes and other information overlaid?#
+Triton#
+Can Jetson platform support the same features as dGPU for Triton plugin?#
+How to enable TensorRT optimization for Tensorflow and ONNX models?#
+How to tune GPU memory for Tensorflow models?#
+Why am I getting following warning when running deepstream app for first time?#
+Why am I getting warning âFailed to query video capabilities: Invalid argumentâ?#
+How to handle operations not supported by Triton Inference Server?#
+Can Gst-nvinferserver support models across processes or containers?#
+Can users set different model repos when running multiple Triton models in single process?#
+Why is the script prepare_classification_test_video.sh failing on Triton docker(s)?#
+What is the difference between DeepStream classification and Triton classification?#
+Why is max_batch_size: 0 used in some Triton model config files (samples/triton_model_repo/*/config.pbtxt)?#
+How to support Triton ensemble model?#
+Does Gst-nvinferserver support Triton multiple instance groups?#
+Can Gst-nvinferserver support inference on multiple GPUs?#
+What is batch-size differences for a single model in different config files (gie group in source, config_inferserver.., and Triton modelâs config.pbtxt)?#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+For dGPU:
+To remove all previous DeepStream 3.0 or prior installations, enter the command:
+To remove DeepStream 4.0 or later installations:
+Open the uninstall.sh file in /opt/nvidia/deepstream/deepstream/
+Set PREV_DS_VER as 4.0
+Run the script as sudo: ./uninstall.sh
+For Jetson: Flash the target device with the latest release of JetPack.
+It supports H.264, H.265, JPEG, and MJPEG streams.
+See https://developer.nvidia.com/nvidia-video-codec-sdk for information.
+Enter this command:
+$ deepstream-app -c <config> --gst-debug=<debug#>
+Where:
+<config> is the pathname of the configuration file
+<debug#> is a number specifying the amount of detail in the debugging output
+For information about debugging tools, see:
+https://gstreamer.freedesktop.org/documentation/tutorials/basic/debugging-tools.html
+Note
+Running Deepstream app over SSH (via putty) with X11 forwarding does not work.
+The DeepStream sample applications are located at:
+<DeepStream installation dir>/sources/apps/sample_apps/
+The configuration files for the sample applications are located at:
+<DeepStream installation dir>/samples/configs/deepstream-app
+For more information, see the NVIDIA DeepStream Development Guide.
+Check the CUDA version:
+$ nvcc --version
+The FPS number shown on the console when deepstream-app runs is an average of the most recent five seconds. The number in brackets is average FPS over the entire run. The numbers are displayed per stream. The performance measurement interval is set by the perf-measurement-interval-sec setting in the configuration file.
+See the Troubleshooting chapter in the NVIDIA DeepStream Development Guide.
+You can enable remote display by adding an RTSP sink in the application configuration file. The sample configuration file source30_1080p_dec_infer-resnet_tiled_display_int8.txt has an example of this in the [sink2] section. You must set the enable flag to 1.
+Once you enable remote display, the application prints the RTSP URL, which you can open in any media player like VLC.
+Note: When using VLC to view DeepStream RTSP sink output remotely, please force usage of TCP to avoid unnecessary packet drops.
+Example command to force TCP:
+$ vlc --rtsp-tcp rtsp://path/to/stream
+You can download the official DeepStream Docker image from DeepStream docker image.
+For dGPU, see: https://ngc.nvidia.com/containers/nvidia:deepstream. For Jetson, see: https://ngc.nvidia.com/containers/nvidia:deepstream-l4t
+Note
+nvdrmvideosink plugin is not supported in docker. It is an unsupported use case, nvdrmvideosink only work well when there is no compositor
+running in background, and that is not possible inside a docker.
+One can use the DeepStream container as the base image and add custom layers on top of it using standard technique in Docker.
+Alternatively, follow below  steps if you want to create a DeepStream triton docker on the top of a particular triton base image.
+1. For example to build a custom Triton base container image, follow the instructions mentioned on https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/customization_guide/compose.html#use-the-compose-py-script
+Once the âserver repositoryâ is cloned use below command to create the base docker.
+python3 compose.py --backend tensorrt --backend onnxruntime --repoagent  checksum
+The command will create a tritonserver  container locally named âtritonserver:latestâ.
+2. Go through README mentioned on NVIDIA-AI-IOT/deepstream_dockers
+In the required Dockerfile, edit the FROM command to use the base docker name created in step 1 e.g. FROM tritonserver:latest
+Once the Dockerfile is updated, follow README to create a DeepStream based docker on the top of pulled triton based docker.
+If the host machine is running X, starting VNC is trivial. Otherwise you must start X, then start VNC.
+To determine whether X is running, check the DISPLAY environment variable.
+If X is not running you must start it first, then run DeepStream with GUI, or set type to 1 or 3 under sink groups to select fakesink or save to a file. If you are using an NVIDIAÂ® TeslaÂ® GPU Accelerators (compute-only cards without a display), you can set type to 4 for DeepStream output RTSP streaming. See the NVIDIA DeepStream SDK Development Guide for sink settings or create a virtual display to visualize the output using VNC. Refer to How to visualize the output if the display is not attached to the system in Quickstart Guide for more details
+Optical flow functionality is supported only on NVIDIAÂ® Jetson AGX Orin, NVIDIAÂ® Jetson Orin NXâ¢ and on GPUs with Turing architecture (NVIDIAÂ® T4, NVIDIAÂ® GeForceÂ® RTX 2080 etc.).
+Multiple source components like decoder, camera, etc. are connected to the Gst-nvstreammux plugin to form a batch.
+This plugin is responsible for creating batch metadata, which is stored in the structure NvDsBatchMeta. This is the primary form of metadata in DeepStream 4.0.1.
+All plugins downstream from Gst-nvstreammux work on NvDsBatchMeta to access metadata and fill in the metadata they generate.
+You can use NVIDIAÂ® Nsightâ¢ Systems, a system-wide performance analysis tool. See https://developer.nvidia.com/nsight-systems for more details.
+Enter nvidia-smi or nvidia-settings on the console.
+Use the table below as a guide to memory utilization in this case.
+Note
+Width and height in Gst-nvstreammux are set to the input stream resolution specified in the configuration file.
+The pipeline is: decoder |rarr| nvstreammux |rarr| nvinfer |rarr| fakesink.
+Batch size
+(Number of streams)
+Decode memory
+Gst-nvinfer
+memory
+Gst-nvstreammux
+memory
+1
+32 MB
+333 MB
+0 MB
+2
+64 MB
+341 MB
+0 MB
+4
+128 MB
+359 MB
+0 MB
+8
+256 MB
+391 MB
+0 MB
+16
+512 MB
+457 MB
+0 MB
+If input stream resolution and Gst-nvstreammux resolution (set in the configuration file) are the same, no additional GPU memory is allocated in Gst-nvstreammux.
+If input stream resolution is not same as Gst-nvstreammux resolution, Gst-nvstreammux allocates memory of size:
+buffers*(1.5*width*height)*mismatches
+Where:
+buffers is the number of Gst-nvstreammux output buffers (set to 4).
+width and height are the mux output width and height.
+mismatches is the number of sources with resolution mismatch.
+This table shows some examples:
+Example
+Gst-nvstreammux width*height settings
+Gst-nvstreammux GPU memory size
+16 sources at 1920*1080 resolution
+1280*720
+4*(1.5*1280*720)*16 = 84 MB
+15 sources at 1280*720 resolution and one source at 1920*1080 resolution
+1280*720
+4*(1.5*1280*720)*1 = 5.2 MB
+Orin does not have HW encoder. You should modify the application code to use SW encoder.
+This may happen when you are running thirty 1080p streams at 30 frames/second. The issue is caused by initial load. I/O operations bog down the CPU, and with qos=1 as a default property of the [sink0] group, decodebin starts dropping frames. To avoid this, set qos=0 in the [sink0] group in the configuration file.
+This is because nvdrmvideosink does not work along with Xorg. Refer to /opt/nvidia/deepstream/deepstream/README (Notes section, Point#3) to resolve the error.
+This is due to a bug in TensorRT-10.3 version. The issue is fixed in TensorRT-10.5 version. So, to overcome this issue, you should either install TensorRT-10.5 inside the docker or generate the engine file outside docker, on baremetal, and copy it inside the docker.
+This is because of an issue in rtpjitterbuffer component. To fix this issue,a script âupdate_rtpmanager.shâ at /opt/nvidia/deepstream/deepstream/ has been provided with required details to update gstrtpmanager library.
+The script should be executed once user installs packages mentioned under âInstall Dependenciesâ section of Quickstart Guide.
+The issue is caused because of a bug in glib 2.0-2.72 version which comes with ubuntu22.04 by default.
+The issue is addressed in glib2.76 and its installation is required to fix the issue (GNOME/glib).
+Export this environment variable:
+For both Jetson & x86 : CUDA_VER=12.6
+Then compile again using sudo -E make.
+Here are few examples of how to construct the pipeline. To run these example pipelines as-is, run the applications from the samples directory:
+V4l2 decoder â nvinfer â nvtracker â nvinfer (secondary) â nvmultistreamtiler â nvdsosd â nveglglessink
+For multistream (4x1080p) operation on dGPU:
+For multistream (4x1080p) operation on Jetson:
+For single stream (1080p) operation on dGPU:
+For single stream (1080p) operation on Jetson:
+JPEG decode
+Using nvv4l2decoder on Jetson:
+$ gst-launch-1.0 filesrc location= ./streams/sample_720p.jpg ! jpegparse ! nvv4l2decoder ! nv3dsink
+Using nvv4l2decoder on dGPU:
+$ gst-launch-1.0 filesrc location= ./streams/sample_720p.jpg ! jpegparse ! nvv4l2decoder ! nveglglessink
+Using nvjpegdec on Jetson:
+$ gst-launch-1.0 filesrc location= ./streams/sample_720p.jpg ! nvjpegdec ! nv3dsink
+Using nvjpegdec on dGPU:
+$ gst-launch-1.0 filesrc location= ./streams/sample_720p.jpg ! nvjpegdec !   nveglglessink
+Dewarper
+On dGPU:
+On Jetson:
+Note
+This Gst pipeline must be run from the dewarper test application directory, sources/apps/sample_apps/deepstream-dewarper-test.
+This pipeline runs only for four surfaces. To run for one, two, or three surfaces, use the dewarper test application.
+Dsexample
+On dGPU:
+On Jetson:
+Focal length:
+Source focal length can be set using the property focal-length in dewarper configuration file. It has the units of âpixels per radianâ.
+It can be specified as a single focal length or two different focal lengths for X and Y directions.
+Center of projection/optical center/principal point:
+The principal point can be set using the properties src-x0 and src-y0.
+Distortion  coefficients:
+Up to 5 (k0 to k4) distortion coefficients can be configured in Dewarper plugin using the property distortion.
+The plugin supports two types of distortion coefficients based on the type of input/source camera:
+Perspective camera input : To correct the distortion caused by perspective camera, 5 distortion coefficients are supported (k0 to k4) which consist of:
+3  radial distortion coefficients : k0 to k2
+2 tangential distortion coefficients : k3 & k4
+Fisheye camera input: To correct fisheye distortion, 4 distortion coefficients (k0 to  k3) need to be specified.
+The distortion coefficients are unused for equirectangular input sources.
+Using calibrations algorithms like the one in OpenCV. For more details, please refer the following OpenCV links:
+For perspective input : https://docs.opencv.org/2.4.13.7/doc/tutorials/calib3d/camera_calibration/camera_calibration.html
+For fisheye input : https://docs.opencv.org/3.4/db/d58/group__calib3d__fisheye.html
+The mapping from dewarper configuration parameters to OpenCV parameters is:
+Distortion coefficients:
+EXIF data:
+The focal length (in pixels or pixels/radian) can also be acquired from the image EXIF data, by multiplying the focal length in millimeters by the pixel density in pixels per millimeter.
+The relevant EXIF tags are as follows:
+FocalLength (37386)
+FocalPlaneXResolution (41486)
+FocalPlaneYResolution (41487)
+FocalPlaneResolutionUnit (41488)
+Below are the few DeepStream application tuning parameters that can help to lower the FPS Jitter.
+Set the kernel receive max window size rmem_max to 52428800 or higher value:
+Also try to set DeepStream config file parameter under source section as udp-buffer-size=2000000.
+Set Latency=1000 under the DeepStream Config File Source section.
+Set rtsp-reconnect-interval-sec=30 or 60, so that it can wait for sufficient time required for camera to reboot and start before. DS application attempts camera reconnection after waiting for this duration.
+If deepstream-test5 application is used, then try running application with  âno-force-tcp parameter, which will use to RTP over UDP streaming instead of RTP over TCP streaming.
+Set perf-measurement-interval-sec=5 so that better average FPS reported over 5 seconds duration where few cameras transmits the packets in bursts.
+Sample DeepStream configuration file snippet with above tuning parameters as below:
+If you set up Tensorflow using https://elinux.org/Jetson_Zoo#TensorFlow, please use Python 3 for running convert_to_uff.py:
+$ python3 /usr/lib/python3.6/dist-packages/uff/bin/convert_to_uff.py
+Decoder supports 10-bit as well as 12bit 4:2:0 semiplanar decoding (P010_10LE/I420_12LE), although most of the components work on 8-bit input.
+10 and 12bit 4:4:4 planar decoding (Y444_10LE/Y444_12LE) is also supported, but limited to x86/dGPU platforms.
+It is suggested to use nvvideoconvert to transform stream from 10-bit to 8-bit, and then add the relevant components, if they do not support 10/12 bit streams.
+Sometimes, RTSP output from DeepStream is not observed remotely
+Try running following pipeline to see if there is issue in network. With this youâll be able to see output.
+gst-launch-1.0 uridecodebin uri=rtsp://<rtsp link> ! nveglglessink sync=0 on remote machine.
+Note
+For 12bit NV12 format, the output caps shows I420_12LE. But the data is handled as semiplanar 12 bit data. This is a workaround since gstreamer v1.16 does not have the particular caps for 12 bit NV12. Downstream component should process it considering as 12bit NV12 only.
+nvstreammuxâs batch-size is the number of buffers(frames) it will batch together in one muxed buffer. Nvinferâs batch-size is the number of frame(primary-mode)/objects(secondary-mode) it will infer together.
+We recommend that the nvstreammuxâs batch-size be set to either number of sources linked to it or the primary nvinferâs batch-size.
+To get NTP timestamps, set attach-sys-ts property to FALSE on nvstreammux component.
+NTP timestamp 0 suggests that you are not receiving NTP timestamp from RTCP sender report. You can verify this using a tool like Wireshark.
+If âGroup Rectanglesâ mode of clustering is chosen then confidence value is set to -0.1 because the algorithm does not preserve confidence value.
+Also, for the objects being tracked by the tracker but not detected by the inference component, confidence value is set to -0.1.
+If TensorRT OSS plugins library is not already available, please follow instructions from NVIDIA/TensorRT to build the library. To use the library in DeepStream, export LD_PRELOAD=/path/to/oss/libnvinfer_plugin.so before running any DeepStream app.
+This issue is observed from h265depay gstreamer plugin component when size of rtp payload is less than 4. The component throws assertion.
+This invalid packet size could be because of packet corruption. To overcome this issue, you should ignore assertion and handle such errors.
+Required modification in the code is present at https://forums.developer.nvidia.com/t/deepstream-sdk-faq/80236. Youâll need to compile the code and place the lib at the appropriate location.
+For live streams, nvstreammux element live-source property should be set as 1. Also, sink/renderer elementâs sync and qos property should be set as 0 or FALSE.
+At times the requested muxer pad gets deleted before linking happens, as streams might contain both video and audio. If queue element is added between nvstreammux and the uridecodebin then the above pipeline will work. As uridecodebin will link to queue pad and not nvstreammux pad. This problem is not observed programmatically as the linking takes place new pad callback of decoder on video stream.
+This could be possible due to exposure or lighting conditions around camera however this can be fixed by changing camera settings through below reference commands to change the exposure settings.
+For example
+On Jetson platforms nvv4l2decoder needs to set property mjpeg=1 in order to work with multifilesrc.
+If you are running Ubuntu UI, then run below commands:
+This will prevent screen lock and display going off. You should not see low fps when this is done
+If you are running this on a bare X server and  have an ubuntu UI up then kill it with:
+Then start a bare X server with either of the 2 commands below:
+Wait for few seconds and then run:
+Some sample nvstreamdemux pipelines:
+Note
+Queue element should be inserted after every nvstreamdemux src pad.
+It is not required to demux all sources / create all nvstreamdemux src pad. Also, the downstream pipeline for every source may be different. Sample pipeline:
+This error is observed on dGPU, when NvStreamMux is configured for memory type 3, i.e., NVBUF_MEM_CUDA_UNIFIED and the input surface to the nvstreammux has the memory type 0 i.e., NVBUF_MEM_CUDA_DEFAULT (Cuda device for dGPU). The resolution of input surface is same as nvstreammux configured resolution, in such scenario the nvstreammux ``tries to send the original buffer on its sinkpad to downstream muxed with buffers from other sources, but due to different configured memory type of ``nvstreammux it canât do the same. To get around this ensure that all the sources connected to nvstreammux are generating same type of memory and configure the nvstreammux memory to the same type. Alternatively, if there is scaling in nvstreammux this error wonât be encountered.
+SGIE will crop the object from NvStreamMux buffer using the objectâs bbox detected by the Primary GIE. The crop is then scaled/converted to the network resolution/color format. For example, if the NvStreamMux resolution is 1920x1080, SGIE will crop using object bbox co-ordinates (e.g. x=1000, y=20, w=400, y=500) from the 1920x1080 image and then scale it to the SGIE network resolution (say 224x224). In practice, the object crop + scaling + color conversion happens in one go.
+To save frames from gst buffer you need to Map gst buffer using gst_buffer_map () API.
+Here is the pseudo code:
+Now that you have access to NvBufSurface structure, you can access actual frame memory and save it. At the end you need to unmap gst buffer using gst_buffer_unmap (inbuf, &in_map_info)
+For more details, see gst_dsexample_transform_ip() in gst-dsexample plugin source code.
+Memory Type
+Jetson
+dGPU or X86_64
+NVBUF_MEM_DEFAULT
+Memory of type Surface Array which is 2D pitched allocated by default: Used by all hardware accelerator on the platform. Accessible by CPU using NvBufSurfaceMap and NvBufSurfaceSyncForCpu or NvBufSurfaceSyncForDevice based on read write usage. GPU Access using EGLImageCreate and Map APIs
+Memory of type Cuda Device is allocated by default, accessible only by GPU. User might need to have custom Cuda kernels to access or modify memory. Or NvBufSurfaceCopy to copy content into CPU accessible memory
+NVBUF_MEM_CUDA_PINNED
+Page Locked Memory allocated using cudaMallocHost (), accessible by CPU and GPU
+Page Locked Memory allocated using cudaMallocHost () accessible by CPU and GPU.
+NVBUF_MEM_CUDA_DEVICE
+Memory of type Cuda Device is allocated, accessible only by GPU. User might need to have custom Cuda kernels to access or modify memory. NvBufSurfaceCopy is not supported for Cuda memory on Jetson
+Memory of type Cuda Device is allocated, accessible only by GPU. User might need to have custom Cuda kernels to access or modify memory. Or NvBufSurfaceCopy to copy content into CPU accessible memory
+NVBUF_MEM_CUDA_UNIFIED
+Unsupported
+Unified Virtual Memory allocated using cudaMallocManaged () accessible by CPU and multiple GPU
+NVBUF_MEM_SURFACE_ARRAY
+Memory of type Surface Array which is 2D pitched allocated by default; used by all hardware accelerator on the platform; accessible by CPU using NvBufSurfaceMap () and  NvBufSurfaceSyncForCpu () or NvBufSurfaceSyncForDevice () based on usage read write usage.
+GPU Access using EGLImageCreate and Map APIs
+Unsupported
+NVBUF_MEM_HANDLE
+Used internally for Jetson
+Unsupported
+NVBUF_MEM_SYSTEM
+Allocated using malloc
+Allocated using malloc ()
+dGPU: User can use NvBufSurfaceCopy() to copy from one memory type to another. If transformation is required, nvvideoconvert plugin support nvbuf-memory-type property to allow different type of memory. NvBufSurfTransform() can also be used to do the transformation between various CUDA types of memories. CUDA to NVBUF_MEM_SYSTEM transformation is not supported by NvBufSurfTransform directly, user can use NvBufSurfaceCopy() to copy into CUDA memory and perform transformation on that memory.
+Jetson:  User can use NvBufSurfaceCopy() to copy from one memory type to another, although CUDA memory copies are not supported directly. User can perform NvBufSurfTransform() for transformation from NVBUF_MEM_SURFACE_ARRAY/NVBUF_MEM_DEFAULT to Cuda Memory, but user need to use GPU as compute device for doing the transformation, as VIC doesnât support transformation to CUDA memory or NVBUF_MEM_SYTEM. See NvBufSurfTransform APIs for more information.
+If you are not using NvBufSurfaceCreate for allocation, ensure the pitch of the allocated memory is multiple of 32. Also ensure that the starting address of each plane of the input is 128-byte aligned.
+Jetson (VIC) has a hardware limitation which only allows transformations with minimum 16x16 dimensions therefore NvBufSurfTransform has the same limitations on this platform.
+DeepStream can support as many streams as possible as long as application under run is not limited by memory/decode/compute capability.
+On dGPU (X86):
+Run following command to check GPU, decoder, encoder, memory utilization:
+$nvidia-smi dmon
+You need to check the temperature and power usage as well.
+Performance is limited by the temperature and power numbers beyond the allowed limits for a given platform.
+To check if CPU is the bottleneck, run htop command on the console to see if any of the CPU core utilizations is ~100%
+On Jetson:
+Run following command to check CPU, GPU, and memory utilization:
+sudo./tegrastats
+For more details, see the link: https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%2520Linux%2520Driver%2520Package%2520Development%2520Guide%2FAppendixTegraStats.html%23wwpID0E0SB0HA.
+On Jetson, sometimes the following error might occur:
+This error can be fixed by running the following:
+If the open source component cannot be modified to measure latency using APIs mentioned in https://docs.nvidia.com/metropolis/deepstream/dev-guide/sdk-api/group__ee__nvlatency__group.html , then following approach can be used.
+You can insert a probe on sink pad of the decoder, measure the time at which input buffer arrives. Insert another probe on sink pad of the sink component and measure the time at which output buffer arrives corresponding to the input buffer . Time difference between these two will give you the latency of the buffer.
+In order to migrate to newer gstreamer version (e.g. gstreamer-1.22.6) follow below steps:
+Prerequisites: Install below packages:
+Compilation and installation steps
+Check and confirm the newly installed gstreamer version:
+Note
+Run commands with sudo when prompted for permissions.
+With DS 6.2+, DeepStream docker containers do not package libraries necessary for certain multimedia operations like audio data parsing, CPU decode, and CPU encode.
+This change could affect processing certain video streams/files like mp4 that include audio track.
+Please run the below script inside the docker images to install additional packages that might be necessary to use all of the DeepStreamSDK features:
+Note
+For more FAQs and troubleshooting information, see https://forums.developer.nvidia.com/t/deepstream-sdk-faq/.
+With DS 6.2+, DeepStream containers do not package gstreamer1.0-libav, library necessary for certain multimedia operations.
+Please run the below script inside the docker images to install additional packages that might be necessary to use all of the DeepStreamSDK features:
+This warning is seen on T4 dGPU when the pipeline is run with nveglglessink. This warning is harmless and can be ignored.
+To run higher number of streams, follow below steps:
+Note that these steps are applicable only in testing environment and not for production. This is a known issue with the driver.
+While running multiaarch triton docker on jetson, above prints are observed. These prints are harmless and should be ignored.
+Below steps are needed to be executed for source files which include â.cuâ files during compilation and before running the application
+Note
+Replace x with the CUDA version mentioned in the Quickstart Guide Guide.
+Note
+This is applicable for data center GPUs only.
+Before running the application, if display device is connected, use command:
+$export DISPLAY=:0
+If display device is not connected, use command:
+$unset DISPLAY
+SBSA/dGPU on ARM does not support nveglglessink. You should instead be using nv3dsink in your application.
+This is a known limitation with DS 7.1 arm sbsa docker. Video sink will not work by default on dGPU on ARM systems. Please see section Known Limitation with Video Subsystem and Workaround for details and workaround on how to get nv3dsink working.
+The actual number of objects in all the streams exceeds the memory allocated for tracker re-identification embedding output. When outputting re-identification tensor is enabled, users are recommended to set maxTargetsPerStream to be larger than the total number of objects across all streams in the pipeline.
+NVIDIAÂ® Tools Extension SDK (NVTX) provides APIs for annotating events, code ranges, and resources in an application. The core GStreamer plugins in DeepStreamSDK have integrated NVTX and the events and ranges can be captured and visualized using NVIDIA Nsight tool, Tegra System Profiler, and Visual Profiler to capture and visualize these events and ranges. For more information on NVTX, visit https://docs.nvidia.com/gameworks/content/gameworkslibrary/nvtx/nvidia_tools_extension_library_nvtx.htm. Following are the instructions on how to capture and visualize these events using deepstream-app with NVIDIA Nsight tool:
+Download and install Nsight tool from https://developer.nvidia.com/nsight-systems. Installation can be done using any file (.deb, .run or .rpm).
+Run the following command on terminal:
+Click on File -> New Project
+Select target system as âTarget for profilingâ.
+Now the deepstream-app process needs to be launched by Nsight tool for profiling. In order to do that, add the following command in âCommand line with argumentsâ:
+In the tick box options, enable âCollect NVTX traceâ. User can select other custom options as per requirement on the tool.
+To begin profiling, click on âStartâ.
+Manually stop collection of traces once application run is completed.
+Once collection is stopped, in analytics view, the framewise analysis of each plugin will be shown, which gives an idea of time taken by each plugin.
+For more information about performance settings, refer âPerformanceâ section of troubleshooting page.
+Yes. Smart record module expects encoded frames which can be from either local video or RTSP stream. But deepstream-test5-app only supports RTSP sources for smart record.
+No. Only single record at a time on the same source is supported. You need to stop the ongoing record to start the new recording again.
+There is default duration setting and if record is not stopped by stop event it would be stopped automatically as per default duration value.
+Yes, running recording instance can be stopped any time.
+Default value of record duration is 10 seconds.
+Default value of video cache size is 30 seconds.
+As such, there is no limit on cache size. It is limited by available system memory.
+To have better performance and optimization, smart record avoids transcoding and caches only encoded frames. To that extent recording the video with overlaid bounding boxes is not possible. But you can implement that use case in two ways:
+Run the inference pipeline on recorded video and save the output in a file using sink (type = filesink)
+Add encoding components in the pipeline after OSD and then add smart record module.
+Not exactly. dGPU can support most models such as TensorRT, Tensorflow (and TF-TRT), ONNX(and with TRT optimization), Pytorch.
+Jetson can support TensorRT, Tensorflow (and TF-TRT). Support for other models are coming in future releases.
+For more details, see Deepstream Plugin Guide section.
+To learn details TensorRT optimization setting in Triton models, see:
+triton-inference-server/server
+TF-TRT is supported on both dGPU and Jetson platforms.
+1. Open the modelâs Triton config.pbtxt file
+2. Make sure GPU instance enabled
+3. Append tensorrt accelerator.(e.g. triton_model_repo/ssd_mobilenet_v1_coco_2018_01_28/config.pbtxt)
+For more on TF-TRT parameters, see TF-TRT API in Tensorflow 1.x. is_dynamic_op is set to True natively in Triton.
+Additionally, you can generate offline TF-TRT models by their own script running with Tensorflow environment.
+Read TF-TRT User guide to generate offline(static) models. Once the original online model is replaced by offline model, remove optimization block in case TF-TRT online runs again to overwrite offline TF-TRT caches.
+ONNX is supported on dGPU only. TensorRT optimization can be enabled by
+The TensorRT engine caches will be generated at run time. It is getting started during initialization or first frame come. This might take from several seconds even to minutes depends on how heavy the model is and how good platform it is.
+When running TensorFlow models using Triton Inference Server, the GPU device memory may fall short. The allowed GPU device memory allocation for TensorFlow models can be tuned using the tf_gpu_memory_fraction parameter in the nvdsinferserverâs config files (config_infer_*). For more details, see samples/configs/deepstream-app-triton/README.
+This parameter is same as Tensorflow configâs per_process_gpu_memory_fraction. For more details, see:
+Tensorflow 1.x gpu-guide
+TF-TRT user guide
+This is a harmless warning indicating that the DeepStreamâs nvinferserver plugin cannot be used since âTriton Inference Serverâ is not installed.
+If DeepStream-Triton is required, try to pull DeepStreamâs Triton docker image on dGPU following instructions
+at https://ngc.nvidia.com/catalog/containers/nvidia:deepstream and run the test apps inside container. Triton Inference Server is automatically installed on Jetson along with DeepStream package. No extra instructions are needed.
+This is a harmless warning. It is due to a bug in nvv4l2decoder and can be safely ignored.
+For details on handling unsupported operations, see:
+https://docs.nvidia.com/deeplearning/sdk/triton-inference-server-guide/docs/user_guide/custom_operations.html.
+The custom library mentioned in the document can be loaded in the DeepStream application by one of the following methods:
+Running the application as
+Add the custom-lib path in ânvinferserverâ config file as
+The plugin can be configured to use gRPC API to access Triton Inference server using the Triton Client library. In this mode, the Triton server is run as a separate process, on same or different  machine / container.
+When the plugin is configured for Triton Server C-APIs, it doesnât support client/server architecture. But the single process could run a standalone Triton model repo no matter how many models running together.
+No. All config files for a same deepstream-app process must have same model_repo. Otherwise GSt-nvinferserver may report error or use random config on model_repo.
+The script prepare_classification_test_video.sh present at /opt/nvidia/deepstream/deepstream/samples requires ffmpeg to be installed. Some of the low level codec libraries need to be re-installed along with ffmpeg. Use the following command to install/re-install  ffmpeg: apt-get install --reinstall libflac8 libmp3lame0 libxvidcore4 ffmpeg
+Gst-nvinferserver plugin support 2 classification methods:
+Use DeepStream plugin to parse classification output and select labels. Configure the pluginâs postprocess block with labelfile_path, and classification options.
+Example: samples/ configs/deepstream-app-triton/config_infer_primary_classifier_inception_graphdef_postprocessInDS.txt
+Use Triton native classification method. The label file configured in Triton modelâs config.pbtxt (e.g. samples/triton_model_repo/inception_graphdef/config.pbtxt)
+To enable it, need update Gst-nvinferserverâs config file with:
+Example: samples/configs/deepstream-app-triton/config_infer_primary_classifier_inception_graphdef_postprocessIntriton.txt
+This is the parameter settings for Triton runtime. Some models do not support batching according to Triton docs (https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/model_configuration.html#maximum-batch-size).
+Gst-nvinferserver plugin supports these models in the non-batching mode, and tensor input/output shapes usually exist with full dimensions (1st dim is a batch-size).
+For example in triton_model_repo/densenet_onnx/config.pbtxt with:
+The 1st dim 1 is a batch-size in full-dims.
+In addition to some specific cases, if a model can support dynamic-shape with:
+The 1st dim -1 means a dynamic batching size. In this case, to control the maximum batching size for pre-allocated buffer pool, user need
+to configure Gst-nvinferserver plugin configs/deepstream-app-triton/config_infer_**.txt with a valid maximum batch-size:
+The example above limits the final input batch-size to <= 30.
+Gst-nvinferserver can also support Triton models reshape in config files. Read more details here:
+https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/model_configuration.html#reshape
+See details in Triton Ensemble Models in :doc: DS_plugin_gst_nvinferserver section.
+Yes, you can configure Triton model config.pbtxt with multiple instances on single GPU or CPU to make them run in parallel. If multiple instances are configured on different settings (e.g. run an instance on GPU, and another instance on GPU), warmup of the instances is recommended. This is to avoid timeout or other live streaming errors in case the specific instance takes too long to initialize on the first frame.
+To enable multiple instances, see:
+https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/model_configuration.html#instance-groups
+To enable warmup, see:
+https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/model_configuration.html#model-warmup
+Not yet. When running on multiple-gpu platform, youâll need a specific single gpu-id for GPU instances. If no gpu-id is specified, all GPU instances would be running together by default. This could cause unexpected behaviors. Update config.pbtxt and specify single gpu-id explicitly.
+Or specify single GPU in docker cmdline:
+Take TensorRT Primary_Detector for example:
+Gst-nvinferserver Pluginâs config file configs/deepstream-app-triton/config_infer_plan_engine_primary.txt, defines
+This indicates the Gst plugin would pre-allocate 30 input buffers for preprocessing and pass at most 30 batched preprocessed
+buffers into Triton Runtime each time. This value must be > 0
+Deepstream-appâs config file configs/deepstream-app-triton/source4_1080p_dec_infer-resnet_tracker_sgie_tiled_display_int8.txt, defines
+This config-file has top-priority and would overwrite configs/deepstream-app-triton/config_infer_plan_engine_primary.txt with max_batch_size to 4 at run time.
+Triton Runtime has its own config file format following https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/model_configuration.html#model-configuration.
+Inside triton_model_repo/Primary_Detector/config.pbtxt, it defines
+This indicates Triton Runtime can batch at most 30 input buffers for model inference. In this example,
+plan engine model resnet18_trafficcamnet_pruned.onnx_b30_gpu0_int8.engine in Triton backend can support maximum batch-size: 30.
+If Triton model is not non-batching configured with max_batch_size: >0,  youâll need to make sure batch-size in config-file
+of Gst-nvinferserver and deepstream-app must less than or equal to this Triton modelâs max_batch_size in triton_model_repo/${model}/config.pbtxt.
+If Triton model is non-batching configured with max_batch_size: 0, see the non-batching support questions above.
+#TODO Mention EGLSink error, suggest to use nv3dsink rather than EGL
+previous
+Troubleshooting
+next
+DeepStream On WSL
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

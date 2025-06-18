@@ -1,0 +1,217 @@
+﻿Title: Gst-nvdsasr — DeepStream documentation
+
+Gst-nvdsasr#
+Inputs and Outputs#
+Features#
+DS-Riva ASR Library YAML File Configuration Specifications#
+Gst Properties#
+Riva ASR Service Deployment#
+gRPC C++ Library Installation#
+Sample Test Application#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The Gst-nvdsasr plugin performs automatic speech recognition (ASR) on the input audio data.
+The plugin provides a mechanism to load custom ASR low level library at runtime.
+It is supported on both x86 and Jetson platforms and can be used on x86, Jetson devices or from inside DeepStream dockers.
+A custom library libnvds_riva_asr_grpc.so is provided which uses gRPC APIs to access the Riva ASR service.
+The library communicates with the ASR service of the NVIDIA Riva SDK for speech recognition and punctuation-capitalization using optimized Riva models.
+Note
+The DS-Riva ASR library, libnvds_riva_asr_grpc.so, uses gRPC APIs to access the Riva ASR service.
+The Riva ASR service should be started before using this library. Required steps are outlined below in section âRiva ASR Service Deploymentâ.
+Installation of the gRPC C++ libraries (v1.38) is required on the client side. Required steps are outlined below in section âgRPC C++ Library Installationâ.
+Note
+The libnvds_riva_asr_grpc.so library works with NVIDIA Riva Release 1.5.0 Beta or later.
+The plugin accepts raw PCM audio GStreamer buffers (GstBuffer) from upstream component. It transforms audio into generic text GstBuffer output.
+Model needs raw audio data input with S16LE (Signed 16bit Little Endian). Library settings can be configured via YAML format file (by setting a property on Gst-nvdsasr plugin) which has multi-part settings for plugin.
+As shown in the diagram below input S16LE raw audio data is preprocessed and inferred by the Riva ASR service . The final output is available in UTF8 text.
+This section summarizes the inputs, outputs, and communication facilities of the Gst-nvdsasr plugin with the gRPC based ASR library.
+Input
+Raw Audio GStreamer buffers
+Control parameters
+customlib-name: Set a custom ASR library that the plugin loads to perform inference. Use : libnvds_riva_asr_grpc.so
+create-speech-ctx-func: Symbol name to create ASR speech context. Use : create_riva_asr_grpc_ctx
+config-file: A text file to configure the plugin. Use riva_asr_grpc_conf.yml
+Outputs
+Text GStreamer buffer containing ASR output
+The following table summarizes the features of the plugin.
+Feature
+Description
+Release
+Speech ASR template
+The plugin is a ASR speech base which can support custom ASR library loading in runtime
+DS 6.0
+Live stream transcription
+Support partial transcript output in realtime
+DS 6.0
+Final transcription
+Support final transcription only useful for local audio streams
+DS 6.0
+Languages support
+The plugin is currently only tested for English (en-US)
+DS 6.0
+Words punctuation
+Support words punctuation and capitalization
+DS 6.0
+Custom library with gRPC API implementation
+Supports custom library implementation that uses gRPC APIs for accessing Riva ASR gRPC service. Set libnvds_riva_asr_grpc.so as customlib-name and create_riva_asr_grpc_ctx as create-speech-ctx-func
+DS 6.0
+x86 platform support
+â
+DS 6.0
+Jetson platform support
+â
+DS 6.2
+DS-Riva ASR configuration file uses YAML 1.2 file format: https://yaml.org/spec/1.2/spec.html.
+There are multiple parts in the config file.
+An example for the gRPC riva_asr_grpc_conf.yml yml file is located at
+/opt/nvidia/deepstream/deepstream/sources/apps/audio_apps/deepstream_asr_tts_app/.
+Each part has a name indicating a unique part name and a detail indicating the setting details.
+name: riva_server part configures Riva ASR server settings in its corresponding node detail:.
+name: riva_model part configures Riva ASR model entry in its corresponding node detail:.
+name: riva_asr_stream part configures Riva low level library supported features in its corresponding node detail:. Each ASR plugin instance will launch a standalone Riva stream. The settings between different plugin instances could be different.
+name: ds_riva_asr_plugin part configures DS-Riva ASR settings in its corresponding node detail:.
+A separator line with --- is inserted between the 2 neighbor parts according to YAML specification.
+The following tables describes the Gst properties of the Gst-nvdsasr plugin.
+Property
+Meaning
+Type and Range
+Example Notes
+name
+Unique name
+String
+name: riva_server
+detail
+Node for Riva Server Setting details
+Node
+detail: server_uri: âlocalhost:50051â
+server_uri
+Part of detail node. Specify Riva ASR service address. Used in case of gRPC APIs.
+String
+server_uri: âlocalhost:50051â
+Property
+Meaning
+Type and Range
+Example Notes
+name
+Unique name
+String
+Must be name: riva_model
+detail
+Node for Riva model setting details
+Node
+detail: model_name: citrinet-1024-asr-trt-ensemble-vad-streaming
+model_name
+Part of detail node. Specify which model entry is used
+String
+model_name: citrinet-1024-asr-trt-ensemble-vad-streaming
+Property
+Meaning
+Type and Range
+Example Notes
+name
+Unique name
+String
+Must be name: riva_asr_stream
+detail
+Node for Riva ASR Steam setting details
+Node
+detail: encoding: LINEAR_PCM  â¦
+encoding
+Part of detail node. Specify Input data format Only Value LINEAR_PCM is supported
+String
+encoding: LINEAR_PCM
+sample_rate_hertz
+Part of detail node. Input audio sample rate Only Value 16000 is supported
+Integer & >0
+sample_rate_hertz: 16000
+language_code
+Part of detail node. Specify which language is used for recognition Only Value en-US is supported
+String
+language_code: en-US
+max_alternatives
+Part of detail node. Max alternatives selected by top confidence Only 1 is supported at present
+Integer & >0
+max_alternatives: 1
+enable_automatic_punctuation
+Part of detail node. Enable automatic punctuation or not
+Boolean
+enable_automatic_punctuation: false
+Property
+Meaning
+Type and Range
+Example Notes
+name
+Unique name
+String
+Must be name: ds_riva_asr_plugin
+detail
+Node DS-Riva ASR library details
+Node
+detail: final_only: false
+final_only
+Part of detail node. Specify whether final transcriptions only or with partial transcription output together
+Boolean
+final_only: false
+enable_text_pts
+Part of detail node. Specify whether text buffer timestamp is enabled or not.
+Boolean
+enable_text_pts: false
+use_riva_pts
+Part of detail node. Specify whether time informatation provided by Riva service is used to calculate the timestamp and duration of output buffer. Note: At present this option is supported for non-live sources only
+Boolean
+use_riva_pts: false
+force_final_trailing
+Part of detail node. Enable insertion of new line character after the final transcription
+Boolean
+force_final_trailing: false
+Please check https://docs.nvidia.com/deeplearning/riva/user-guide/docs/quick-start-guide.html for the steps to deploy the models using Riva Quick start scripts:
+Example steps to deploy Riva server with desired ASR model:
+Download Riva Quick Start package:
+Update config.sh file for required ASR model e.g CitriNet-1024:
+Run the Riva initialization script:
+Deploy the Riva ASR service:
+To stop ASR services after the application has run successfully, run the following command:
+gRPC C++ shared libraries v1.38 installation is needed for the DS-Riva ASR library to access the Riva ASR gRPC service.
+To install the libraries, please follow steps given at https://grpc.io/docs/languages/cpp/quickstart/ , and add -DBUILD_SHARED_LIBS=ON
+to the cmake build options. (Recommended to use make -j4 instead of make -j)
+Or
+Use the included script to install gRPC C++ libraries, this scripts performs same steps:
+Please run below command to add the installation path to the LD_LIBRARY_PATH
+environment variable:
+The gRPC C++ libraries are pre-installed on the DeepStream dGPU docker images.
+In the dGPU docker container, please run below command to add the installation path to the LD_LIBRARY_PATH
+environment variable:
+For information about Gst-nvdsasr sample tests, please see source code under directory sources/apps/audio_apps/deepstream_asr_app. Follow README to run the sample tests.
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

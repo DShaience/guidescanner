@@ -1,0 +1,674 @@
+﻿Title: NvDsOutputSinkExt — DeepStream documentation
+
+NvDsOutputSinkExt#
+Components#
+nvidia::deepstream::NvDsFakeSink#
+Parameters#
+nvidia::deepstream::NvDsFileOut#
+Parameters#
+nvidia::deepstream::NvDsVideoRendererPropertyController#
+nvidia::deepstream::NvDsVideoRenderer#
+Parameters#
+nvidia::deepstream::NvDsRtspOut#
+Parameters#
+nvidia::deepstream::XvImageSink#
+Parameters#
+nvidia::deepstream::AlsaAudioRenderer#
+Parameters#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+NVIDIA DeepStream sink and output related components.
+UUID: 3fc9ad87-03e7-47a8-bbfc-8501c3f7ff2f
+Version: 1.6.0
+Author: NVIDIA
+License: Proprietary
+Black hole for data.
+Component ID: 58271e37-3a3e-3fba-b083-d1a5f09a3686
+Base Type: nvidia::deepstream::INvDsElement
+async
+Go asynchronously to PAUSED.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+blocksize
+Size in bytes to pull per buffer (0 = default).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 4096
+can-activate-pull
+Can activate in pull mode.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+can-activate-push
+Can activate in push mode.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+drop-out-of-segment
+Drop and donât render / hand off out-of-segment buffers.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+dump
+Dump buffer contents to stdout.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+enable-last-sample
+Enable the last-sample property.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supports any format.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+max-bitrate
+The maximum bits per second to render (0 = disabled).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+max-lateness
+Maximum number of nanoseconds that a buffer can be late before it is dropped (-1 unlimited).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: -1
+num-buffers
+Number of buffers to accept going EOS.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: -1
+qos
+Generate Quality-of-Service events upstream.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+render-delay
+Additional render delay of the sink in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+signal-handoffs
+Send a signal before un-reffing the buffer.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+silent
+Donât produce last_message events.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+state-error
+Generate a state change error.
+Valid values:
+0: none
+1: null-to-ready
+2: ready-to-paused
+3: paused-to-playing
+4: playing-to-paused
+5: paused-to-ready
+6: ready-to-null
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+sync
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+throttle-time
+The time to keep between rendered buffers (0 = disabled).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+ts-offset
+Timestamp offset in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+DeepStreamSDK Video Sinks Bin. Internal Pipeline: queue->nvvideoconvert->encoder->codecparse->mux->filesink.
+Component ID: f6d82647-03d8-3d74-a17e-a3ee8f1eb9a3
+Base Type: nvidia::deepstream::INvDsElement
+bitrate
+Encoding bitrate in bits/sec.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+codec
+Type of codec to use.
+Valid values:
+1: h264
+2: h265
+3: mpeg4
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 1
+container
+Type of container to use.
+Valid values:
+1: mp4
+2: mkv
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 1
+enc-type
+Type of encoder to use.
+Valid values:
+0: hw
+1: sw
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+gpu-id
+Set GPU Device ID for operation.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+iframeinterval
+Encoding Intra Frame occurrence frequency (H/W encoder only).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+nvbuf-memory-type
+Type of NvBufSurface Memory to be allocated for output buffers.
+Valid values:
+0: nvbuf-mem-default
+1: nvbuf-mem-cuda-pinned
+2: nvbuf-mem-cuda-device
+3: nvbuf-mem-cuda-unified
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+output-file
+Type of Video sink to use.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_FILE
+profile
+Encoder profile to use.
+Valid values:
+0: baseline
+1: main
+2: high
+3: main10
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+qos
+Generate Quality - of - Service events upstream.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+sync
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+video-in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supported formats - video(I420, NV12, P010_10LE, BGRx, RGBA, GRAY8, GBR, RGB, BGR, UYVP).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+Helper component to control properties of nvidia::deepstream::NvDsVideoRendererPropertyController. This is a connector component. It must be linked to two components - An NvDsVideoRendererPropertyController component to control properties and another component which will set/get properties via the helper component APIs.
+Component ID: 7df81ee0-72db-43f9-ba31-f51e9fe2c2d1
+Base Type: nvidia::deepstream::INvDsPropertyController
+Defined in: @@@@@@@@@@
+DeepStreamSDK Video Sinks Bin. Internal Pipeline: queue->nvvideoconvert->renderer.
+Component ID: 3370346e-c770-3de9-9adf-c7fdf0f25c0f
+Base Type: nvidia::deepstream::INvDsElement
+color-range
+Sets color range only when set-mode=1 (Valid for nvdrmvideosink)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+conn-id
+Connection Index (Valid for nvdrmvideosink)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+gpu-id
+Set GPU Device ID for operation.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+height
+Renderer height.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+nvbuf-memory-type
+Type of NvBufSurface Memory to be allocated for output buffers.
+Valid values:
+0: nvbuf-mem-default
+1: nvbuf-mem-cuda-pinned
+2: nvbuf-mem-cuda-device
+3: nvbuf-mem-cuda-unified
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+offset-x
+Renderer horizontal offset.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+offset-y
+Renderer vertical offset.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+plane-id
+Plane on which video should be rendered (Valid for nvdrmvideosink)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+prop-controller
+Property Controller for NvDsVideoRenderer component.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsVideoRendererPropertyController
+qos
+Generate Quality - of - Service events upstream.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+set-mode
+Select default or mode of Video Stream (Valid for nvdrmvideosink)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+sync
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+video-in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supported formats - video(I420, NV12, P010_10LE, BGRx, RGBA, GRAY8, GBR).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+video-sink
+Type of Video sink to use.
+Valid values:
+1: fake
+2: egl
+3: overlay
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 2
+width
+Renderer width.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+Nvidia DeepStreamSDK RTSP Sink Bin. Internal Pipeline: queue->nvvideoconvert->encoder->codecparse->rtppay->udpsink.
+Component ID: 938afedb-02e6-39de-a513-43da57f1ad09
+Base Type: nvidia::deepstream::INvDsElement
+audio-in
+Handle to an nvidia::deepstream::NvDsOnRequestInput component. Supported formats - audio(S8, U8, S16LE, S16BE, U16LE, U16BE, S24_32LE, S24_32BE, U24_32LE, U24_32BE, S32LE, S32BE, U32LE, U32BE, S24LE, S24BE, U24LE, U24BE, S20LE, S20BE, U20LE, U20BE, S18LE, S18BE, U18LE, U18BE, F32LE, F32BE, F64LE, F64BE).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsOnRequestInput
+bitrate
+Encoding bitrate in bits/sec.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+codec
+Type of codec to use.
+Valid values:
+1: h264
+2: h265
+3: mpeg4
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 1
+enc-type
+Type of encoder to use.
+Valid values:
+0: hw
+1: sw
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+gpu-id
+Set GPU Device ID for operation.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+iframeinterval
+Encoding Intra Frame occurrence frequency (H/W encoder only).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 30
+nvbuf-memory-type
+Type of NvBufSurface Memory to be allocated for output buffers.
+Valid values:
+0: nvbuf-mem-default
+1: nvbuf-mem-cuda-pinned
+2: nvbuf-mem-cuda-device
+3: nvbuf-mem-cuda-unified
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+output-file
+Type of Video sink to use.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+profile
+Encoder profile to use.
+Valid values:
+0: baseline
+1: main
+2: high
+3: main10
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+qos
+Generate Quality - of - Service events upstream.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+rtsp-port
+Port on which the RTSP server would listen.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 8554
+sync
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+video-in
+Handle to an nvidia::deepstream::NvDsOnRequestInput component. Supported formats - video(I420, NV12, P010_10LE, BGRx, RGBA, GRAY8, YUY2, UYVY, YVYU, Y42B).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsOnRequestInput
+A Xv based videosink.
+Component ID: bce7ec3f-7c68-32bc-a45f-de6bdd570969
+Base Type: nvidia::deepstream::INvDsElement
+async
+Go asynchronously to PAUSED.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+autopaint-colorkey
+Autofill overlay with colorkey.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+blocksize
+Size in bytes to pull per buffer (0 = default).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 4096
+brightness
+The brightness of the video.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+colorkey
+Color to use for the overlay mask.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 526352
+contrast
+The contrast of the video.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+device
+The number of the video adaptor.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+Default: 0
+display
+X Display name.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+double-buffer
+Double-buffer the output.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+draw-borders
+Draw black borders to fill unused area in force-aspect-ratio mode.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+enable-last-sample
+Enable the last-sample property.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+force-aspect-ratio
+When enabled, scaling will respect original aspect ratio.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+handle-events
+When enabled, XEvents will be selected and handled.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+handle-expose
+When enabled, the current frame will always be drawn in response to X Expose events.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+hue
+The hue of the video.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supports any format.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+max-bitrate
+The maximum bits per second to render (0 = disabled).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+max-lateness
+Maximum number of nanoseconds that a buffer can be late before it is dropped (-1 unlimited).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 5000000
+pixel-aspect-ratio
+The pixel aspect ratio of the device.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+processing-deadline
+Maximum processing deadline in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 15000000
+qos
+Generate Quality-of-Service events upstream.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+render-delay
+Additional render delay of the sink in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+saturation
+The saturation of the video.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+show-preroll-frame
+Whether to render video frames during pre-roll.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+sync
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+synchronous
+When enabled, runs the X display in synchronous mode. (unrelated to A/V sync, used only for debugging).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+throttle-time
+The time to keep between rendered buffers (0 = disabled).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+ts-offset
+Timestamp offset in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+Output to a sound card via ALSA.
+Component ID: c29cf282-989b-31d0-a347-c1a1f305627c
+Base Type: nvidia::deepstream::INvDsElement
+alignment-threshold
+Timestamp alignment threshold in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 40000000
+async
+Go asynchronously to PAUSED.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+audio-in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supported formats - audio(S8, U8, S16LE, S16BE, U16LE, U16BE, S24_32LE, S24_32BE, U24_32LE, U24_32BE, S32LE, S32BE, U32LE, U32BE, S24LE, S24BE, U24LE, U24BE, S20LE, S20BE, U20LE, U20BE, S18LE, S18BE, U18LE, U18BE, F32LE, F32BE, F64LE, F64BE, ac3, eac3, dts).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+blocksize
+Size in bytes to pull per buffer (0 = default).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 4096
+buffer-time
+Size of audio buffer in microseconds, this is the minimum latency that the sink reports.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 200000
+can-activate-pull
+Allow pull-based scheduling.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+device
+ALSA device, as defined in an asound configuration file.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+Default: default
+discont-wait
+Window of time in nanoseconds to wait before creating a discontinuity.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 1000000000
+drift-tolerance
+Tolerance for clock drift in microseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 40000
+enable-last-sample
+Enable the last-sample property.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+latency-time
+The minimum amount of data to write in each iteration in microseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 10000
+max-bitrate
+The maximum bits per second to render (0 = disabled).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+max-lateness
+Maximum number of nanoseconds that a buffer can be late before it is dropped (-1 unlimited).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: -1
+processing-deadline
+Maximum processing deadline in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 20000000
+provide-clock
+Provide a clock to be used as the global pipeline clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+qos
+Generate Quality-of-Service events upstream.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+render-delay
+Additional render delay of the sink in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+slave-method
+Algorithm used to match the rate of the master clock.
+Valid values:
+0: resample
+1: skew
+2: none
+3: custom
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 1
+sync
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+throttle-time
+The time to keep between rendered buffers (0 = disabled).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+ts-offset
+Timestamp offset in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+previous
+NvDsOpticalFlowExt
+next
+NvDsSampleExt
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

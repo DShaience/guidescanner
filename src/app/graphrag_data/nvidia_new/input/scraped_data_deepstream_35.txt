@@ -1,0 +1,49 @@
+﻿Title: GStreamer Plugin Overview — DeepStream documentation
+
+GStreamer Plugin Overview#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+DeepStream SDK is based on the GStreamer framework. This section describes the DeepStream GStreamer plugins and the DeepStream input, outputs, and control parameters.
+DeepStream SDK is supported on systems that contain an NVIDIAÂ® Jetsonâ¢ module or an NVIDIA dGPU adapter [1].
+The manual is intended for engineers who want to develop DeepStream applications or additional plugins using the DeepStream SDK. It also contains information about metadata used in the SDK. Developers can add custom metadata as well.
+The manual describes the methods defined in the SDK for implementing custom inferencing layers using the IPlugin interface of NVIDIAÂ® TensorRTâ¢.
+You can refer the sample examples shipped with the SDK as you use this manual to familiarize yourself with DeepStream application and plugin development.
+Footnotes
+This manual uses the term dGPU (âdiscrete GPUâ) to refer to NVIDIA GPU expansion card products such as NVIDIAÂ® TeslaÂ® T4, NVIDIAÂ® Ampere and NVIDIAÂ® GeForceÂ® RTX 2080. This version of DeepStream SDK runs on specific dGPU products on x86_64 platforms supported by NVIDIA driver 535+  and NVIDIAÂ® TensorRTâ¢ 10.3.0.26 and later versions.
+previous
+Application Migration to DeepStream 7.1 from DeepStream 7.0
+next
+MetaData in the DeepStream SDK
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.
