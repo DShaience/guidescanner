@@ -4,10 +4,13 @@ from bs4 import BeautifulSoup
 import json
 import os
 import time
+import re
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from urllib.parse import urlparse, urljoin, urlunparse
 from pathlib import Path
+
+import trafilatura
 
 
 class RequestHandler:
@@ -55,12 +58,48 @@ class WebScraper:
         normalized_url = urlunparse(parsed_url._replace(fragment='', path=parsed_url.path.rstrip('/')))
         return normalized_url
 
+    def parse_tables(self, soup):
+        tables = soup.find_all('table')
+        table_texts = []
+
+        for table in tables:
+            rows = table.find_all('tr')
+            table_text = []
+            for row in rows:
+                cols = row.find_all(['td', 'th'])
+                col_texts = [col.get_text(strip=True) for col in cols]
+                table_text.append('\t'.join(col_texts))
+            table_texts.append('\n'.join(table_text))
+
+        return table_texts
+
+    def insert_table_markers(self, html_content):
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        for i, table in enumerate(soup.find_all('table')):
+            # Insert start marker as a full row at the top
+            marker_start = f'<tr><td colspan="100%">TABLE_START_{i}</td></tr>'
+            table.insert(0, BeautifulSoup(marker_start, 'html.parser'))
+
+            # Insert end marker as a full row at the bottom
+            marker_end = f'<tr><td colspan="100%">TABLE_END_{i}</td></tr>'
+            table.append(BeautifulSoup(marker_end, 'html.parser'))
+
+        return str(soup)
+
+    def replace_table_markers(self, text, table_texts):
+        for i, table_text in enumerate(table_texts):
+            marker_start = f'TABLE_START_{i}'
+            marker_end = f'TABLE_END_{i}'
+            text = text.replace(marker_start, table_text).replace(marker_end, '')
+        return text
+
     def scrape_page(self, url):
         url = self.normalize_url(url)
         if url in self.visited_urls:
             return
         self.visited_urls.add(url)
-
+        
         # Skip mailto links
         if url.startswith("mailto:"):
             if url not in self.skipped_urls:
@@ -80,15 +119,42 @@ class WebScraper:
         
         web_content = response.text
 
+        ############################################################
+        # TESTING
+        # import trafilatura
+        # downloaded = trafilatura.fetch_url(url)
+        # print("")
+        # END TESTING
+
+        # Insert markers around tables
+        web_content_with_markers = self.insert_table_markers(web_content)
+        # Extract the main text content with trafilatura
+
+        from trafilatura.settings import DEFAULT_CONFIG
+        from copy import deepcopy
+        my_config = deepcopy(DEFAULT_CONFIG)
+        my_config['DEFAULT']['MAX_TREE_SIZE '] = '10000'
+
+        # text = trafilatura.extract(web_content_with_markers, favor_recall=True, include_tables=True, config=my_config)
+        text = trafilatura.bare_extraction(web_content_with_markers).text
+
         # Parse the HTML content
         soup = BeautifulSoup(web_content, 'html.parser')
+        table_texts = self.parse_tables(soup)
+        
+        # text.find('TABLE_START_')
+        # web_content_with_markers.find('TABLE_START_')
+        # Replace markers with table text
+        # BeautifulSoup(web_content_with_markers, 'html.parser')
+        cleaned_text = self.replace_table_markers(text, table_texts)
 
         # Extract relevant data while avoiding ads
         data = {
             "url": url,
             "title": soup.title.string if soup.title else '',
             "headings": [h.get_text() for h in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])],
-            "paragraphs": [p.get_text() for p in soup.find_all('p') if not self.is_ad(p)],
+            # "paragraphs": [p.get_text() for p in soup.find_all('p') if not self.is_ad(p)],
+            "paragraphs": cleaned_text,
             "links": [urljoin(url, a['href']) for a in soup.find_all('a', href=True) if not self.is_ad(a)]
         }
 
@@ -127,10 +193,10 @@ if __name__ == "__main__":
     # parser.add_argument("--subdomain", type=str, default='https://www.thegamer.com/baldurs-gate-3', help="Stay within this subdomain when scraping.")
     # parser.add_argument("--parent_url", type=str, default='https://www.thegamer.com/baldurs-gate-3-bg3-complete-guide-walkthrough', help="The URL to start scraping from.")
     # parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/bg3_thegamer.com', help="The directory to save the scraped data.")
-    parser.add_argument("--parent_url", type=str, default='https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Overview.html', help="The URL to start scraping from.")
-    parser.add_argument("--subdomain", type=str, default='https://docs.nvidia.com/metropolis/deepstream', help="Stay within this subdomain when scraping.")
+    parser.add_argument("--parent_url", type=str, default='https://www.nvidia.com/en-eu/geforce/graphics-cards/compare/', help="The URL to start scraping from.")
+    parser.add_argument("--subdomain", type=str, default='https://www.nvidia.com/en-eu/geforce/graphics-cards/compare/', help="Stay within this subdomain when scraping.")
     parser.add_argument("--prefix", type=str, default='deepstream', help="Optional prefix to add to the files names in the output.")
-    parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/nvidia', help="The directory to save the scraped data.")
+    parser.add_argument("--output_dir", type=Path, default=r'/workspaces/guidescanner/data/scraped_websites/testing', help="The directory to save the scraped data.")
 
     parser.add_argument("--debug", action="store_true", default=True, help="Enable debug mode for detailed output.")
     args = parser.parse_args()
