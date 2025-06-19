@@ -38,7 +38,6 @@ python -m graphrag prompt-tune --root /workspaces/guidescanner/src/app/graphrag_
 
 4. Run <br>
 ```
-## python -m graphrag index --root /workspaces/guidescanner/src/app/graphrag_data/nvidia_new
 python -m graphrag index --root /workspaces/guidescanner/src/app/graphrag_data/nvidia_new --config /workspaces/guidescanner/src/app/graphrag_data/nvidia_new/settings.yaml
 
 ```
@@ -47,7 +46,6 @@ to index the data.
 5. [Optional] Query locally or globally (commandline):<br>
 ```
 python -m graphrag query --root /workspaces/guidescanner/src/app/graphrag_data/nvidia_new --method local -q "Tell me how Deepstream nvDCF tracker is working and what are its key parameters."
-# python -m graphrag query --root /workspaces/guidescanner/graphrag --method local "Who is Scrooge, and what are his main relationships?"
 ```
 
 ```
