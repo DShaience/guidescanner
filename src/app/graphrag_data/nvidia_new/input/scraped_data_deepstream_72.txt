@@ -1,0 +1,190 @@
+﻿Title: Gst-nvurisrcbin — DeepStream documentation
+
+Gst-nvurisrcbin#
+1. Introduction#
+2. How to use nvurisrcbin in a pipeline#
+3. Gst Properties#
+3.1 Gst Properties to configure nvurisrcbin#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+This GstBin is a GStreamer source bin. This bin is a wrapper over uridecodebin with additional functionality of the file looping, rtsp reconnection and smart record.
+The bin allows users to create simple gstreamer pipelines for AI multimedia analytics.
+For more details on nvurisrcbin, please run gst-inspect-1.0 nvurisrcbin on a machine/docker container with DeepStream installed.
+Below pipeline is a sample gstreamer pipeline which is configured to accept input source:
+Property
+Meaning
+Type and Range
+Example Notes
+num-extra-surfaces
+Set extra decoder surfaces; Number of surfaces in addition to minimum decode surfaces given by the decoder
+Integer,
+1 to 4,294,967,295
+num-extra-surfaces=1 (default)
+gpu-id
+Set GPU Device ID used by nvurisrcbin components like decoder (nvv4l2decoder) and nvvideoconvert
+Integer,
+1 to 4,294,967,295
+gpu-id=0 (default)
+cudadec-memtype
+Memory type for cuda decoder buffers,
+Memory type for CUDA decoder buffers. Represented internally by enum CudaDecMemType.
+0 (memtype_device): Device
+1 (memtype_pinned): Host Pinned
+2 (memtype_unified): Unified
+Integer,
+0, 1, or 2
+cudadec-memtype=0 (default)
+drop-frame-interval
+Interval to drop the frames, e.g. a value of 5 means the decoder outputs every fifth frame, and others are dropped.
+Integer,
+1 to 30
+Default: 0, dGPU / Jetson
+dec-skip-frames
+Type of frames to skip during decoding. Represented internally by enum SkipFrame. 0 (decode_all): decode all frames
+1 (decode_non_ref): skips non-ref frames (Applicable only on Jetson platform)
+2 (decode_key): decode key frames
+Integer,
+0, 1, or 2
+skip-frames=0 Default: 0 ,dGPU / Jetson
+select-rtp-protocol
+Transport Protocol to use for RTP
+Enum RtpProtocol Default: 0, rtp-multi
+(0): rtp-multi - UDP + UDP Multicast + TCP
+(4): rtp-tcp - TCP Only
+select-rtp-protocol=0 (default)
+file-loop
+Loop file sources after EOS. Src type must be source-type-uri and uri starting with âfile:/â
+boolean
+file-loop=false (default)
+rtsp-reconnect-interval
+Timeout in seconds to wait since last data was received from an RTSP source before forcing a reconnection. 0=disable timeout
+Integer,
+1 to 4,294,967,295
+rtsp-reconnect-interval=10
+rtsp-reconnect-attempts
+Maximum number of times a reconnection is attempted. Setting it to -1 means reconnection will be attempted infinitely. Valid when type of source is 4 and rtsp-reconnect-interval-sec is a non-zero positive value.
+Integer, >=-1
+rtsp-reconnect-attempts=4
+latency
+Jitterbuffer size in milliseconds; applicable only for RTSP streams.
+Integer,
+1 to 4,294,967,295
+latency=100 (default)
+udp-buffer-size
+UDP Buffer Size in bytes; applicable only for RTSP streams.
+Integer,
+1 to 4,294,967,295
+udp-buffer-size=524288 (default)
+smart-record
+Enable Smart Record and choose the type of events to respond to. Sources must be of type source-type-rtsp
+(0):smart-rec-disable - Disable Smart Record
+(1):smart-rec-cloudÂ  - Trigger Smart Record through cloud messages only
+(2):smart-rec-multiÂ  - Trigger Smart Record through cloud and local events
+smart-record=0 (default)
+smart-rec-dir-path
+Path of directory to save the recorded file.
+string
+Absolute or relative path
+smart-rec-file-prefix
+By default, Smart_Record is the prefix. For unique file names every source must be provided with a unique prefix
+string
+Absolute or relative path
+smart-rec-video-cache
+Size of video cache in seconds. DEPRECATED: Use âsmart-rec-cacheâ instead
+Integer,
+1 to 4,294,967,295
+smart-rec-video-cache=0 (default)
+smart-rec-cache
+Size of cache in seconds, applies to both audio and video cache
+Integer,
+1 to 4,294,967,295
+smart-rec-cache=0 (default)
+smart-rec-container
+Container format of recorded video. MP4 and MKV containers are supported. Sources must be of type source-type-rtsp
+(0): smart-rec-mp4 - MP4 container
+(1): smart-rec-mkv - MKV container
+smart-rec-container=0 (default)
+smart-rec-mode
+Smart record mode
+(0):smart-rec-mode-av - Record audio and video if available
+(1):smart-rec-mode-video - Record video only if available
+(2):smart-rec-mode-audio - Record audio only if available
+smart-rec-mode=0 (default)
+smart-rec-default-duration
+In case a Stop event is not generated. This parameter will ensure the recording is stopped after a predefined default duration.
+Integer,
+1 to 4,294,967,295
+smart-rec-default-duration=20 (default)
+async-handling
+Boolean property so that will handle Asynchronous state changes
+boolean
+async-handling=true(default)
+disable-audio
+Disable audio path mode at init time
+boolean
+disable-audio=true(default)
+ipc-buffer-timestamp-copy
+Copy buffer timestamp for nvunixfdsrc plugin
+boolean
+ipc-buffer-timestamp-copy=false(default)
+ipc-connection-attempts
+Max number of attempts for connection (-1 = unlimited)
+Integer. Range: -1 - 2147483647 Default: -1
+ipc-connection-attempts=-1(default)
+ipc-connection-interval
+connection interval between connection attempts in micro seconds
+Unsigned Integer64. Range: 0 - 18446744073709551615
+ipc-connection-interval=1000000(default)
+ipc-socket-path
+The path to the control socket used to control the shared memory transport. This may be modified during the NULL->READY transition
+String
+ipc-socket-path=null(default)
+low-latency-mode
+Set low latency mode for bitstreams having I and IPPP frames on decoder
+boolean
+low-latency-mode=false(default)
+drop-on-latency
+Tells the jitterbuffer to never exceed the given latency in size
+boolean
+drop-on-latency=true(default)
+message-forward
+Forwards all children messages
+boolean
+message-forward=false(default)
+previous
+Gst-nvmultiurisrcbin
+next
+Troubleshooting
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

@@ -1,0 +1,64 @@
+﻿Title: NTP Timestamp in DeepStream — DeepStream documentation
+
+NTP Timestamp in DeepStream#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+DeepStream 5.0+ supports the setting of NTP timestamps per frame. Calculated NTP timestamp is available in ntp_timestamp field of NvDsFrameMeta.
+DeepStream calculates NTP timestamps in 2 ways:
+Host system time as NTP timestamp - when the frame is received by the NvStreamMux plugin in the DeepStream pipeline.
+This method requires you to synchronize host system to NTP clock.
+To attach host system time as NTP timestamp, youâll need to set attach-sys-ts to TRUE on nvstreammux.
+Set the attach-sys-ts-as-ntp config parameter to 1 in [streammux] group of the application configuration file in the DeepStream reference app.
+NTP timestamp when attached at RTSP source - supported only if RTSP sources send RTCP Sender Reports (SR).
+To configure the pipeline to attach these timestamps:
+Set attach-sys-ts to FALSE on nvstreammux. Set the attach-sys-ts-as-ntp config parameter to 0 in [streammux] group of the application configuration file in the DeepStream reference app.
+After creating an ârtspsrcâ element or an âuridecodebinâ element, application must call configure_source_for_ntp_sync() function and pass the GstElement pointer to this API. (Refer to create_rtsp_src_bin() in deepstream_source_bin.c file.) The API internally configures the pipeline to parse sender report and calculate NTP timestamps for each frame.
+Make sure RTSP source can send RTCP Sender Reports.
+Verify this by starting streaming from the source on a host and viewing the packets in a tool like wireshark or tshark on the same host to confirm the presence of Sender Reports (SR).
+Example method to check if RTSP source sends RTCP sender reports using a tool like tshark:
+Note
+We assume RTSP source has IP address 192.168.1.100
+Install tshark on a host: sudo apt-get install tshark
+Find the host network interface that would be receiving the RTP/RTCP packets:
+Start the monitoring using tshark tool. Replace the network interface and source IP as applicable:
+On the same host, start streaming from the RTSP source only after starting the monitoring tool. Any client may be used:
+$ gst-launch-1.0 rtspsrc location= <RTSP URL e.g. rtsp://192.168.1.100/stream1> ! fakesink
+The output of the tshark monitoring tool should have lines containing "Sender Report   Source description". Here is a sample output:
+6041 10.500649319 192.168.1.100 â 192.168.1.101 RTCP 94 Sender Report   Source description
+previous
+On the Fly Model Update
+next
+AV Sync in DeepStream
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

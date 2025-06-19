@@ -1,0 +1,78 @@
+﻿Title: NvDsAnalyticsExt — DeepStream documentation
+
+NvDsAnalyticsExt#
+Components#
+nvidia::deepstream::NvDsAnalytics#
+Parameters#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+NVIDIA DeepStream Extension for metadata analytics.
+UUID: 0aee1c83-fad2-4bba-a25a-b253a8289f13
+Version: 1.6.0
+Author: NVIDIA
+License: Proprietary
+Process analytics algorithm on objects.
+Refer to nvdsanalytics plugin
+Component ID: 684a5fe9-f265-3520-b621-455749501c69
+Base Type: nvidia::deepstream::INvDsElement
+config-file
+DsAnalytics Config File.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_FILE
+enable
+Enable DsAnalytics plugin, or set in passthrough mode.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+unique-id
+Unique ID for the element. Can be used to identify output of the element.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 17
+video-in
+Handle to a nvidia::deepstream::NvDsStaticInput component. Supported formats are video(NV12, RGBA).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+video-out
+Handle to a nvidia::deepstream::NvDsStaticOutput component. Supported formats are video(NV12, RGBA).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticOutput
+previous
+NvDsActionRecognitionExt
+next
+NvDsBaseExt
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

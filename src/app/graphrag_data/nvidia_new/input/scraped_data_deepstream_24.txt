@@ -1,0 +1,52 @@
+﻿Title: On the Fly Model Update — DeepStream documentation
+
+On the Fly Model Update#
+Assumptions#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The current DeepStream release supports changing Model on the Fly. This feature assumes that the model being updated has the same network parameters. This is an alpha feature and only supported in deepstream-test5-app.
+Currently, on the fly model update helps to deploy more accurate, newly trained models without the necessity to stop and re-launch the DeepStream application or container.
+That means, models can be updated with zero DeepStream application downtime.
+The image below shows how on the fly models works currently:
+Refer to âsection 7â in the deepstream-test5-app/README for instructions on how to test model update feature.
+The future releases aim to address these listed assumption for on the fly model update:
+New model must have same network parameter configuration as of previous model (e.g. network resolution, network architecture, number of classes).
+Engine file or cache file of new model to be provided by developer.
+Other primary gie configuration parameters like group-threshold, bbox color, gpu-id, nvbuf-memory-type etc., will not have any effect after model switch even if updated parameters are provided in the override file.
+previous
+IoT
+next
+NTP Timestamp in DeepStream
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

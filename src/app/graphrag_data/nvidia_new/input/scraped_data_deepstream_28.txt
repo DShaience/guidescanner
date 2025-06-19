@@ -1,0 +1,154 @@
+﻿Title: DeepStream 3D Action Recognition App — DeepStream documentation
+
+DeepStream 3D Action Recognition App#
+Getting Started#
+Prerequisites#
+Run 3D Action Recognition Examples#
+Run 2D Action Recognition Examples#
+DeepStream 3D Action Recognition App Configuration Specifications#
+deepstream-3d-action-recognition [action-recognition] group settings#
+Custom sequence preprocess lib user settings [user-configs] for gst-nvdspreprocess#
+Custom lib and `gst-nvdspreprocess` Settings for Action Recognition#
+Build Custom sequence preprocess lib and application From Source#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The deepstream-3d-action-recognition sample application is provided at app/sample_apps/deepstream-3d-action-recognition for your reference. This example demonstrates a sequence batching based 3D or 2D model inference pipeline for action recognition. The image below shows the architecture of this reference app.
+Gst-nvdspreprocess plugin re-processses the input tensors for Gst-nvinfer plugin. Gst-nvdspreprocess  loads a custom_sequence_preprocess lib (subfolder) to perform temporal sequence batching and ROI spatial batching. It delivers the preprocessed batched tensor buffers into downstream plugin Gst-nvinfer for inference. This application probes the tensor data and action classification result, converts them into display metadata to print on screen.
+This 3D/2D model is pretrained by NVIDIA TAO toolkit. The 3D model has NCDHW (NCSHW) input and the 2D model has NSHW shapes.
+A custom sequence preprocessing lib: libnvds_custom_sequence_preprocess.so is also provided at sources/apps/sample_apps/deepstream-3d-action-recognition/custom_sequence_preprocess to demonstrate how to implement a sequence batching and preprocessing methods with Gst-nvdspreprocess plugin. This custom lib normalizes each incoming ROI cropped image and accumulates the data into buffer sequence for temporal batching. When temporal batching is ready, it continues to do spacial batching on multi-ROIs and multi-streams. Finally it returns the temporal and spacial batched buffer(tensor) to Gst-nvdspreprocess plugin which would attach the buffer as preprocess input metadata and deliver to downstream Gst-nvinfer plugin to do inference.
+Go to the folder sources/apps/sample_apps/deepstream-3d-action-recognition.
+Search and Download 3D and 2D RGB based tao_iva_action_recognition_pretrained models from NGC https://ngc.nvidia.com/catalog/models/nvidia:tao:actionrecognitionnet (Version 5):
+resnet18_3d_rgb_hmdb5_32
+resnet18_2d_rgb_hmdb5_32
+These Models support following classes : push; fall_floor; walk; run; ride_bike.
+Update source streams uri-list in action recognition config file: deepstream_action_recognition_config.txt.
+Export DISPLAY environment to correct display. e.g. export DISPLAY=:0.0.
+Make sure 3D preprocess config and 3D inference config are enabled in deepstream_action_recognition_config.txt.
+Run the following command:
+Run with DS-Triton, update application config file deepstream_triton_action_recognition_config.txt.
+Run 3D test with DS-Triton:
+Check sources/TritonOnnxYolo/README for more details how to switch action recognition DS-Triton tests between CAPI and gRPC.
+Make sure 2D preprocess config and 2D inference config are enabled in deepstream_action_recognition_config.txt.
+Run the following command:
+Run with DS-Triton, update application config file deepstream_triton_action_recognition_config.txt.
+Run 2D test with DS-Triton:
+Check sources/TritonOnnxYolo/README for more details how to switch action recognition DS-Triton tests between CAPI and gRPC.
+The table below demonstrates the group settings for deepstream_action_recognition_config.txt as an example.
+Property
+Meaning
+Type and Range
+Example
+uri-list
+source video file or stream list
+Semicolon delimited string list
+file:///path/to/sample_action1.mp4;file:///path/to/sample_action2.mp4;
+display-sync
+Indicate display synchronization on timestamp or not
+Boolean
+display-sync=1
+preprocess-config
+Gst-nvdspreprocess plugin config file path
+String
+preprocess-config=config_preprocess_3d_custom.txt
+infer-config
+Gst-nvinfer plugin config file path
+String
+infer-config=config_infer_primary_2d_action.txt
+muxer-height
+Gst-nvstreammux height
+Unsigned Integer
+muxer-height=720
+muxer-width
+Gst-nvstreammux width
+Unsigned Integer
+muxer-width=1280
+muxer-batch-timeout
+Gst-nvstreammux batched push timeout in usec
+Unsigned Integer
+muxer-batch-timeout=40000
+tiler-height
+Gst-nvmultistreamtiler height
+Unsigned Integer
+tiler-height=720
+tiler-width
+Gst-nvmultistreamtiler width
+Unsigned Integer
+tiler-width=1280
+debug
+Log print debug level
+Integer, 0: disabled. 1: debug. 2: verbose
+debug=0
+enable-fps
+Indicate whether print fps on screen
+Boolean
+enable-fps=1
+The table below demonstrates the config_preprocess_3d_custom.txt setting of libnvds_custom_sequence_preprocess.so as an example.
+Property
+Meaning
+Type and Range
+Example
+channel-scale-factors
+scale factor list for each channel
+Semicolon delimited float array
+channel-scale-factors=
+0.007843137;0.007843137;0.007843137
+channel-mean-offsets
+data mean offsets for each channel
+Semicolon delimited float array
+channel-mean-offsets=127.5;127.5;127.5
+stride
+sequence sliding stride for each batched sequnece
+Unsigned Integer, value >= 1
+stride=1
+subsample
+Subsample rates for inference images in each sequence
+Unsigned Integer, value >= 0
+subsample=0
+Youâll need to set input order as CUSTOM network-input-order=2 for this custom sequence preprocess lib.
+3D models NCDHW(NCSHW) require network-input-shape with 5-dimension shape. For example:
+2D models NSHW require network-input-shape with 4-dimension shape. For example:
+Assume incoming frame numbers are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15â¦ When subsample=1, the preprocessing custom lib will pick up frame numbers: 1,3,5,7,9â¦ to preprocess sequentially and  pass it onto inference as a next-step.
+Assuming same incoming frame numbers above, For example, when subsample=0, stride=1, the 2 consecutive sliding sequences are:
+When subsample=0, stride=2, the 2 consecutive sliding sequences are:
+When subsample=1, stride=2, the subsample is performed first, and sliding sequences are on top of subsample results. The processing frame numbers after subsample are: 1,3,5,7,9,11,13,15,17,19â¦ The consecutive sliding sequences on top of them are:
+The image below shows the frame batches with different subsample and stride settings.
+Go to the folder sources/apps/sample_apps/deepstream-3d-action-recognition.
+Run the following commands:
+Check the source code and comments to learn about implementation of other order formats, for example, NSCHW (NDCHW).
+previous
+DeepStream With REST API Sever
+next
+DeepStream 3D Depth Camera App
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

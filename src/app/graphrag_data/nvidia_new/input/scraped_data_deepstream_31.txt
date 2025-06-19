@@ -1,0 +1,64 @@
+﻿Title: Networked Media Open Specifications (NMOS) in DeepStream — DeepStream documentation
+
+Networked Media Open Specifications (NMOS) in DeepStream#
+Supported Specifications#
+Prerequisites#
+NvDsNmos API#
+Sample Application#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The NvDsNmos utility library provides the APIs to create, destroy and internally manage an NMOS Node for a DeepStream application.
+The library can automatically discover and register with an NMOS Registry on the network using the AMWA IS-04 Registration API.
+The library provides callbacks for NMOS events such as AMWA IS-05 Connection API requests from an NMOS Controller.
+These callbacks can be used to update running DeepStream pipelines with new transport parameters, for example.
+NvDsNmos currently supports Senders and Receivers for uncompressed Video and Audio, i.e., SMPTE ST 2110-20 and SMPTE ST 2110-30 streams.
+The NvDsNmos library supports the following specifications, using the Sony nmos-cpp implementation:
+AMWA IS-04 NMOS Discovery and Registration Specification v1.3
+AMWA IS-05 NMOS Device Connection Management Specification v1.1
+AMWA IS-09 NMOS System Parameters Specification v1.0
+AMWA BCP-002-01 Natural Grouping of NMOS Resources v1.0
+AMWA BCP-002-02 NMOS Asset Distinguishing Information v1.0
+AMWA BCP-004-01 NMOS Receiver Capabilities v1.0
+Session Description Protocol conforming to SMPTE ST 2110-20 and -30
+The Avahi Apple Bonjour compatibility library must be installed. For example, run:
+The Avahi mDNS/DNS-SD daemon must also be running.
+The Avahi browsing, publishing and discovery utilities (avahi-utils) can be used to confirm that DNS Service Discovery (DNS-SD) records for an NMOS Registry are discoverable. For example, run:
+Refer to the nvdsnmos.h header file.
+Refer to the DeepStream Reference Application - deepstream-nmos app, which demonstrates how to use the NvDsNmos library.
+previous
+DeepStream 3D Lidar Inference App
+next
+Gst-nvdspostprocess in DeepStream
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

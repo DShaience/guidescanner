@@ -1,0 +1,70 @@
+﻿Title: Quick Start Guide — DeepStream documentation
+
+Quick Start Guide#
+Getting to know Pipeline and Flow#
+Create a Simple Video Player Application#
+Create an Object Detection Application#
+Customizing Object Detection Sample Application#
+Getting to know Buffer and Tensor#
+BufferProvider#
+BufferRetriever#
+Tensor#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The first thing users need to know for using pyservicemaker is pipeline. A pipeline consists of various processing nodes linked together to process or manipulate data flows. Each node instance performs a specific function, such as capturing data, decoding, processing, or rendering it. These nodes are connected in a chain, creating a pipeline through which the data flows.
+A simple empty pipeline can be created with a given name as follows:
+So far the pipeline can not do anything. To make it functional developers can define data flows for the pipeline by creating a flow for a pipeline. Flow APIs provide developers with the flexibility to append operations based on their specific goals subsequently. This approach allows for a modular and customizable workflow where operations can be added as needed. Every time a Flow method is called, it takes the intended output streams from the last flow and assume them as the inputs of current flow. Thus, the order of Flow methods determines how a flow works when the pipeline is started.
+The code snippet below demonstrates how to create a simple flow to decode and display a video file.
+Once the flow is complete, it can be invoked with â()â because it is callable. This invocation keeps the pipeline running until the processing is finished. Additionally, developers can choose to call Pipeline.start() and Pipeline.wait(). The code snippet below is effectively equivalent to the above one.
+A more advanced pipeline for object detection built on top of Sample Video Player Application can be constructed using the infer method for inference as follows:
+The application executes an object detection model based on ResNet18 on the captured video. The modelâs configuration is specified in the infer_config, and detected objects are automatically converted into bounding boxes, which are overlaid on the display.
+In many use cases, developers require direct access to inference results for various analyses. To achieve this, the application can be enhanced by attaching a probe to the inference result (For deeper understanding of a probe, please refer to Handling Buffers). This probe allows developers to define custom metadata operators that extract output tensors from the metadata associated with the output buffers. (For more details on metadata, please refer to Leveraging Metadata.)
+Below is the enhanced version of the above code snippet.
+The enhanced code retrieves inference result as tensors from user metadata associated with the output buffer from infer flow. This is done through a probe that utilizes a customized BatchMetadataOperator to extract and process the metadata.
+In pyservicemaker, a Buffer represents a chunk of data that flows through the pipeline from one node to another. It contains the actual media data, such as a segment of audio or video, and is passed between nodes for processing or output. In some cases, developers would like to create their own buffers and inject it to the pipeline or consume the buffers from the pipeline. pyservicemaker provides two abstract classes for them to achieved such goals.
+BufferProvider specifies an interface for developers to implement, so to generate buffers. The code snippet below demonstrates how to generate buffers from bytes with a sub-class of BufferProvider (For demonstration, the method generates grey pictures):
+Extra information is recommended for the pipeline to better understand what the data in the buffer represents, such as format, width, height, etc.
+Developers can create an empty buffer without any argument, and injecting an empty buffer to the pipeline will end it.
+To inject buffers to pipeline, developers can use inject flow with their customized BufferProvider. The code snippet below shows how to inject video buffers into a pipeline and display it:
+BufferRetriever specifies a customizable interface for developers to consume the buffers. It must be used with the retrieve flow. The code snippet below shows how to get buffer data from the pipeline.
+To utilize the buffer data, developers must extract it into a tensor. If the data is batched, multiple tensors may be extracted, requiring the use of a batch ID. If there is no batching, 0 should always be passed to extract method. Sub class from BufferRetriever can be used together with the retrieve flow to get buffer from the pipeline:
+Tensor is essentially a multidimensional array that is widely used in deep learning space. The pyservicemaker Tensor facilitates data handling on the GPU and offers seamless interoperability with other frameworks through its compatibility with DLPack.
+A common practice for re-using data from a pyservicemaker Tensor is to clone the tensor and pass it to a PyTorch Tensor. This ensures that the original data remains unchanged while enabling efficient integration with other frameworks for further processing. The code snippet below shows how to transform a pyservicemaker Tensor to a pytorch tensor
+Similarly, developers also can create pyservicemaker Tensors from pytorch tensor, and then wrap it into a buffer. The code snippet below demonstrates how to generate buffers from pytorch tensors within a customized BufferProvider, which can be later used by inject flow.
+previous
+Service Maker for Python Developers(alpha)
+next
+Introduction to Flow APIs
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

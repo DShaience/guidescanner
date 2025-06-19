@@ -1,0 +1,96 @@
+﻿Title: Gst-nvds3dbridge — DeepStream documentation
+
+Gst-nvds3dbridge#
+Gst-nvds3dbridge properties Specifications#
+Custom library Interfaces#
+Supported DS3D Data bridges#
+Custom low level library: libnvds_3d_video_databridge.so#
+Inputs and Outputs#
+Configuration file#
+Video bridge configuration options#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The Gst-nvds3dbridge plugin is a customizable plugin which provides a custom library interface to load component ds3d::databridge.
+The Plugin is fully configured through YAML format content or file. sink_caps and src_caps is also configurable.
+Note
+Support for 3D (DS3D data format) to 2D (video/x-raw NVMM) is not provided.
+Properties
+Description
+Release
+config-content
+yaml config content
+DS 7.0
+config-file
+yaml config file path
+DS 7.0
+The plugin parse the config file or content and set SinkCaps and SrcCaps. load a custom ds3d::databridge from custom_lib_path. Create this databridge by custom_create_function.
+SL
+Data bridge
+Data bridge custom library
+1
+Video data bridge; wraps NVMM video memory to ds3d/datamap
+libnvds_3d_video_databridge.so
+Inputs
+video/x-raw(memory:NVMM)
+data format: NvBufSurface
+with/without GStreamer metadata (including NvDsBatchMeta)
+Control parameters
+config-file
+config-content
+Output
+ds3d/datamap
+sink_caps
+parsed from config-file: in_caps: video/x-raw(memory:NVMM).
+src_caps
+parsed from config-file: out_caps: ds3d/datamap.
+config-key
+Description
+Example value
+surface_to_image
+output_image_key: ds3d::Frame2DGuard (with frame_0 in NvBufSurface->surfaceList[0])
+output_image_key_%d: ds3d::Frame2DGuard (with frame_i in NvBufSurface->surfaceList[i])
+True / False
+output_image_key
+The key name to use when generating datamap output.
+This name will be used to configure the input of downstream ds3d component.
+DS3D::ColorFrame
+output_object2d_key
+The key name to use when generating datamap output. This key name will be used to save NvDsObjectMeta from NvDsBatchMeta as an array of ds3d::Object2DBbox.
+DS3D::Object2DBboxKey
+previous
+Gst-nvds3dfilter
+next
+Gst-nvds3dmixer
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

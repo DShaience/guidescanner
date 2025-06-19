@@ -1,0 +1,362 @@
+﻿Title: NvDsCloudMsgExt — DeepStream documentation
+
+NvDsCloudMsgExt#
+Components#
+nvidia::deepstream::NvDsMessage#
+nvidia::deepstream::NvDsMsgRelayTransmitter#
+nvidia::deepstream::NvDsMsgRelayReceiver#
+nvidia::deepstream::NvDsMsgBrokerC2DReceiver#
+Parameters#
+nvidia::deepstream::NvDsMsgBrokerD2CTransmitter#
+Parameters#
+nvidia::deepstream::NvDsMsgRelay#
+Parameters#
+nvidia::deepstream::NvDsMsgBroker#
+Parameters#
+nvidia::deepstream::NvDsMsgConverter#
+Parameters#
+nvidia::deepstream::NvDsMsgConvBroker#
+Parameters#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+Components for cloud messaging
+UUID: d16b1366-dba2-47f6-95fc-b09b39f885de
+Version: 1.6.0
+Author: NVIDIA
+License: Proprietary
+Data component for a cloud message. Consists of the topic for the message and a buffer containing the message contents.
+Component ID: 45d73bc1-7ffb-43af-b11f-c3202fde0902
+Base Type:
+Defined in: nvdscloudmsg/nvds_message.hpp
+Helper component to transmit message payload to a receiver component. This component does not generate any messages. Message producer components use methods of this component to relay messages to consumer components.
+Component ID: 68568563-6464-41f6-912e-d25038a2c299
+Base Type: nvidia::deepstream::INvDsComponent
+Defined in: nvdscloudmsg/nvds_msg_relay_transmitter.hpp
+Helper component to receive message payloads from a transmitter component. This component does not handle the messages. Message consumer components use methods of this component to implement and set a callback for when messages are received.
+Component ID: 5c6861a2-706e-4311-b4e6-936846415ba3
+Base Type: nvidia::deepstream::INvDsComponent
+Defined in: nvdscloudmsg/nvds_msg_relay_receiver.hpp
+Receive messages from cloud via a message broker for the user configured topics using a protocol library implementing the DeepStream messaging interface NvDsMsgApi.
+Refer to Messaging Interface
+Component ID: 88ff8361-8045-4457-b257-5f19db143409
+Base Type: nvidia::deepstream::INvDsComponent
+cfg-file
+Path of a configuration file to be passed to the message protocol adapter.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+conn-str
+Connection string of backend message broker server (e.g. foo.bar.com;80;dsapp1).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+debug
+Debug flag to print message contents as string.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+proto-lib
+Path of the message protocol adaptor library implementing the NvDsMsgAPI interface.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_FILE
+topics
+List of topics that the component should subscribe to. Specified as a semi-colon separated list of strings, for example, topic1;topic2;topic3.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+tx
+Handle to the helper component NvDsMsgRelayTransmitter for pushing messages to other components.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsMsgRelayTransmitter
+Send messages to cloud via a message broker using a protocol library implementing the DeepStream messaging interface NvDsMsgApi.
+Refer to Messaging Interface
+Component ID: 585ad84e-b5af-4997-b3b3-d2e10d50a2b8
+Base Type: nvidia::deepstream::INvDsComponent
+cfg-file
+Path of a configuration file to be passed to the message protocol adapter.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+conn-str
+Connection string of backend message broker server (e.g. foo.bar.com;80;dsapp1).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+debug
+Debug flag to print message contents as string.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+proto-lib
+Path of the message protocol adaptor library implementing the NvDsMsgAPI interface.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_FILE
+rx
+Handle to the helper component NvDsMsgRelayReceiver for getting messages pushed by other components.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsMsgRelayReceiver
+Component to connect an NvDsMsgRelayTransmitter and an NvDsMsgRelayReceiver component.
+Component ID: 5a1ea6d3-20f6-4c4a-b480-1a26bd89ef60
+Base Type: nvidia::deepstream::INvDsConnection
+source
+Handle to an NvDsMsgRelayTransmitter component which will transmit the messages.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsMsgRelayTransmitter
+target
+Handle to an NvDsMsgRelayReceiver component which will transmit the messages.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsMsgRelayReceiver
+Sends payload metadata to the remote server.
+Refer to nvmsgbroker plugin
+Component ID: 9e7c325b-7368-39d4-ae5c-b9c245e1342c
+Base Type: nvidia::deepstream::INvDsElement
+async
+Go asynchronously to PAUSED.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+blocksize
+Size in bytes to pull per buffer (0 = default).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 4096
+comp-id
+By default this element operates on all NvDsPayload type meta. It may be restricted to a specific NvDsPayload meta by this component id.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+config
+Name of configuration file with absolute path.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+conn-str
+connection string of backend server (e.g. foo.bar.com;80;dsapp1).
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_STRING
+enable-last-sample
+Enable the last-sample property.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supports any format.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+max-bitrate
+The maximum bits per second to render (0 = disabled).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+max-lateness
+Maximum number of nanoseconds that a buffer can be late by, before it is dropped (-1 unlimited).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: -1
+new-api
+Use new libnvds_msgbroker API.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+proto-lib
+Name of protocol adaptor library with absolute path.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_FILE
+qos
+Generate Quality-of-Service events upstream.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+render-delay
+Additional render delay of the sink in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+sync
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+throttle-time
+The time to keep between rendered buffers (0 = disabled).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+topic
+Name of the message topic.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+Default:
+ts-offset
+Timestamp offset in nanoseconds.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+Transforms buffer meta to schema or payload meta.
+Refer to nvmsgconv plugin
+Component ID: 3e9033bc-e428-3358-bbb6-3455b2a492e8
+Base Type: nvidia::deepstream::INvDsElement
+comp-id
+By default this element operates on all NvDsEventMsgMeta. It may be restricted to a specific NvDsEventMsgMeta meta by this component id.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+config
+Name of configuration file with absolute path.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+debug-payload-dir
+Absolute path of the directory to dump payloads for debugging.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+frame-interval
+Frame interval at which payload is generated
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 30
+in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supports any format.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+msg2p-lib
+Name of payload generation library with absolute path.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+msg2p-newapi
+Use new API which supports publishing multiple payloads using NvDsFrameMeta
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+multiple-payloads
+Use API which supports receiving multiple payloads from converter lib.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+out
+Handle to an nvidia::deepstream::NvDsStaticOutput component. Supports any format.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticOutput
+payload-type
+Type of payload to be generated.
+Valid values:
+0: PAYLOAD_DEEPSTREAM
+1: PAYLOAD_DEEPSTREAM_MINIMAL
+256: PAYLOAD_RESERVED
+257: PAYLOAD_CUSTOM
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+DeepStreamSDK Message Broker Sink Bin. Internal Pipeline: queue->nvmsgconv->nvmsgbroker
+Component ID: 76975c14-1e84-325f-867c-4a291ce310c1
+Base Type: nvidia::deepstream::INvDsElement
+debug-payload-dir
+Absolute path of the directory to dump payloads for debugging.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+disable-msgconv
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supports any format.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+msg-broker-comp-id
+By default this element operates on all NvDsPayload meta. It may be restricted to a specific NvDsPayload meta by this component id.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+msg-broker-config
+Name of configuration file with absolute path.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+msg-broker-conn-str
+connection string of backend server (e.g. foo.bar.com;80;dsapp1).
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_STRING
+msg-broker-proto-lib
+Name of protocol adaptor library with absolute path.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_FILE
+msg-conv-comp-id
+By default this element operates on all NvDsEventMsgMeta meta. It may be restricted to a specific NvDsEventMsgMeta meta by this component id.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+msg-conv-config
+Name of configuration file with absolute path.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+msg-conv-msg2p-lib
+Name of payload generation library with absolute path.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+msg-conv-payload-type
+Type of payload to be generated.
+Valid values:
+0: PAYLOAD_DEEPSTREAM
+1: PAYLOAD_DEEPSTREAM_MINIMAL
+256: PAYLOAD_RESERVED
+257: PAYLOAD_CUSTOM
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+multiple-payloads
+Use API which supports receiving multiple payloads from converter lib.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+new-api
+Use new libnvds_msgbroker API.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+sync
+Sync on the clock.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: True
+topic
+Name of the message topic.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+previous
+NvDsBaseExt
+next
+NvDsConverterExt
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.
