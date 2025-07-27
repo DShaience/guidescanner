@@ -14,49 +14,84 @@ Available [here](https://guidescanner-app.politebay-d54f15ab.eastus2.azurecontai
 For example, try selecting DeepStream, and ask: <br>
 `"Please tell me how DeepStream nvDCF tracker works, and what are its key parameters"`
 
-## GraphRAG Recipe for Creating and Updating Index
+## Simple GraphRAG Indexing Recipe (without prompt auto-tuning)
+This basic indexing might prove the easiest way to get GraphRAG working.<br>
+Auto-Turning prompts is sometimes very sensitive to types of inputs and internal GraphRAG bits and pieces that are sometimes difficult to pinpoint.<br>
+As a first step and sanity, it is encouraged to first run basic indexing before trying the prompt-tuning options.<br>
+For this example you may use the same settings.yaml found in:
+`src/app/graphrag_data/holmes/`
+
+1. Alternatively run <br>
+```
+cd guidescanner/src/app/graphrag_data
+graphrag init --root ./holmes/
+```
+<br>
+This will create settings.yaml and .env files that you'll have to modify to access your own LLM. 
+
+2. Copy you data (text files) to the input directory
+```
+cp mydata/*.txt ./holmes/input
+```
+
+3. Run GraphRAG indexing. It will use default options for anything not tuned.
+```
+graphrag index --root ./holmes
+```
+
+4. You may use the sample dev/qurey_loop.py script to query your indexed data:
+```
+python dev/qurey_loop.py --root_dir "/workspaces/guidescanner/src/app/graphrag_data/holmes" 
+```
+
+## GraphRAG Recipe for Prompt Tuning
 1. Create an empty dir for GraphRAG: <br>
 If you are using Azure OpenAI, remember to first use `az login`.<br>
 ```
-python -m graphrag init --root /workspaces/guidescanner/src/app/graphrag_data/nvidia_new/
+python -m graphrag init --root /workspaces/guidescanner/src/app/graphrag_data/holmes/
 ```
 
 2. Edit the ```settings.yaml``` to include the appropriate LLM / API settings <br>
 Specifically note the following fields that should be populated according to your deployment on both chat model and embedding model (otherwise graphrag may throw some really hairy error messages):<br>
 model, type, deployment_name, api_base, api_version, auth_type, and api_key / audience fields under both chat model and embedding model.<br>
 As a reference, you may use this project's settings.yaml which is included with a sample dataset at
-`src/app/graphrag_data`
+`src/app/graphrag_data/holmes/input`
 You should leave encoding_model as cl100k_base.<br>
 Common pitfalls: when the API version is a shortdate (YYYY-MM-DD) such as 2023-05-15, GraphRAG may have an error when parsing this value from the YAML (it will parse it to date). Instead, use a string qualifier "2023-05-15".<br>
 Note that if you are using Azure, all of these values can be found in Azure AI Foundry / Azure OpenAI inside each deployment. You'll need to set-up a chat model and a text embedding model.<br>
 
 3. Auto-tune prompts according to your data:
 ```
-cd /workspaces/guidescanner/src/app/graphrag_data/nvidia_new/
-python -m graphrag prompt-tune --root /workspaces/guidescanner/src/app/graphrag_data/nvidia_new  --config /workspaces/guidescanner/src/app/graphrag_data/nvidia_new/settings.yaml --domain "software development" --discover-entity-types --min-examples-required 10 --selection-method auto
+cd /workspaces/guidescanner/src/app/graphrag_data
+graphrag prompt-tune --root ./holmes --config ./holmes/settings.yaml --domain "detective stories" --output ./holmes/prompts
 ```
+This phase creates NEW prompts files files and places them inside the root dir.
+These files replace the default prompts that graphrag uses (they are referenced inside the settings.yaml file)
+For more see Modify Env Vars here: https://microsoft.github.io/graphrag/prompt_tuning/auto_prompt_tuning/
 
-4. Run <br>
+4. Open the extract_graph.txt file that was just created, and locate the entity-types line. Something like:
+entity_types: [person,location,organization,occupation,object,event, ..., ....]<br>
+Copy the entities<br>
+Open your settings.yaml file<br>
+Replace the entities listed on extract-graph --> entity-types with the auto-detected entities<br>
+
+4. Execute indexing normally <br>
 ```
-python -m graphrag index --root /workspaces/guidescanner/src/app/graphrag_data/nvidia_new --config /workspaces/guidescanner/src/app/graphrag_data/nvidia_new/settings.yaml
-
+graphrag index --root ./holmes --config ./holmes/settings.yaml
 ```
 to index the data.
 
 5. [Optional] Query locally or globally (commandline):<br>
 ```
-python -m graphrag query --root /workspaces/guidescanner/src/app/graphrag_data/nvidia_new --method local -q "Tell me how Deepstream nvDCF tracker is working and what are its key parameters."
+python -m graphrag query --root /workspaces/guidescanner/src/app/graphrag_data/holmes --method global -q "Tell me about the character of Holmes. What kind of person is he?"
 ```
 
-```
-python -m graphrag query --root /workspaces/guidescanner/src/app/graphrag_data/nvidia_new --method global -q "Tell me about Deepstream trackers"
-```
 This is good for sanity checks.
 
 5. [Optional] Query example from script. Loop and try questioning GraphRAG. <br>
 The results are saved locally. It is good for debugging and comparing changes / improvements to the indexing process (i.e., use the same questions / queries). See `dev/qurey_loop.py`
 ``` 
-python qurey_loop.py --root_dir "/workspaces/guidescanner/graphrag" 
+python qurey_loop.py --root_dir "/workspaces/guidescanner/src/app/graphrag_data/holmes" 
 ```
 
 6. When running the app via docker container, use this to run with the host's azure login
