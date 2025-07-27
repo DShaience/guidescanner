@@ -13,3 +13,5 @@ dev/new_scanner
 src/app/graphrag_data/*
 !src/app/graphrag_data/nvidia_new/
 !src/app/graphrag_data/nvidia_new/input/
+!src/app/graphrag_data/holmes/
+!src/app/graphrag_data/holmes/input/
