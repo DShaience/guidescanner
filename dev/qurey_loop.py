@@ -22,8 +22,13 @@ os.environ["GRAPHRAG_API_KEY"] = token[0]
 
 
 if __name__ == "__main__":
+    # When running locally
+    # default_root_dir = "/home/shay/repos/guidescanner/src/app/graphrag_data/nvidia_new/" 
+    # When running from devcontainer
+    default_root_dir = "/workspaces/guidescanner/src/app/graphrag_data/nvidia_new" 
+
     parser = argparse.ArgumentParser(description="Run query loop with specified ROOT_DIR")
-    parser.add_argument('--root_dir', type=str, default="/workspaces/guidescanner/src/app/graphrag_data/nvidia", help='Root directory for the query loop')
+    parser.add_argument('--root_dir', type=str, default=default_root_dir, help='Root directory for the query loop')
     parser.add_argument('--global_mode', action='store_true', default=True, help='Run the query loop in global mode. Otherwise, run in local mode.')
 
     args = parser.parse_args()
@@ -34,12 +39,12 @@ if __name__ == "__main__":
     config_filepath = ROOT_DIR / "settings.yaml"
     data_dir = ROOT_DIR / "output"
     community_level = 2
-
+    dynamic_community_selection = True
     response_type = "multiple paragraphs"
     streaming = False
     timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-    results_file = f"/workspaces/guidescanner/data/query_results/{ROOT_DIR.name}_{timestamp}.json"               
+    verbose = False
+    # results_file = f"/workspaces/guidescanner/data/query_results/{ROOT_DIR.name}_{timestamp}.json"               
 
     print(f"Running {'global' if global_mode else 'local'} search")
     while True:
@@ -49,13 +54,16 @@ if __name__ == "__main__":
             break
 
         if global_mode:
-            result = run_global_search(config_filepath, data_dir, ROOT_DIR, community_level, response_type, streaming, query)
+            result = run_global_search(config_filepath, data_dir, ROOT_DIR, community_level, 
+                                       dynamic_community_selection, response_type, streaming, query, verbose)
+
         # else:        
         #     result = run_local_search(config_filepath, data_dir, ROOT_DIR, community_level, response_type, streaming, query)
 
-        print("\n")
-        with open(results_file, 'a', encoding='utf-8-sig') as f:
-            json_line = json.dumps({"query": query, "result": result[0]}, indent=4)
-            f.write(json_line + "\n")        
+        # Writing the results to a file
+        # print("\n")
+        # with open(results_file, 'a', encoding='utf-8-sig') as f:
+        #     json_line = json.dumps({"query": query, "result": result[0]}, indent=4)
+        #     f.write(json_line + "\n")        
 
 
