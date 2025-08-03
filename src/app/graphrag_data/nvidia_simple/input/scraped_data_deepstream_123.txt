@@ -1,0 +1,44 @@
+﻿Title: Introduction — DeepStream documentation
+
+Introduction#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+Graph Composer tools reduces the burden of writing code for AI applications. It does this by using Graph Specification for representing a graph and wide array of NVIDIA published extensions.
+DeepStream provided extensions do all the heavy lifting, requiring developers to only implement the core business logic by implementing a few methods of the interfaces/base classes, thus removing the need to learn the underlying framework concepts and its APIs.
+This document starts by describing the basic concepts behind the Graph Specification. The rest of the document is very much oriented towards using DeepStream with Graph Composer, how to create and execute DeepStream based AI Applications using Graph Composer and a guide on developing custom extensions. A section for troubleshooting and frequently asked questions has been added that may help answer queries and issues. Finally, a list of reference DeepStream AI Application graphs released by NVIDIA has been added.
+DeepStream and GStreamer
+DeepStream set of extensions have been created for developing DeepStream based applications. These extensions depends on DeepStream SDK and hence some knowledge of the DeepStream SDK will be helpful. For more information on DeepStreamSDK refer to https://developer.nvidia.com/deepstream-getting-started.
+DeepStreamSDK is based on the GStreamer multimedia framework. DeepStream extensions abstracts away all the complexities of using the GStreamer framework. In most cases, developers will never need to directly refer to GStreamer or call a GStreamer API. However, in a few advanced use cases, access to GStreamer objects being used underneath might be required.
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

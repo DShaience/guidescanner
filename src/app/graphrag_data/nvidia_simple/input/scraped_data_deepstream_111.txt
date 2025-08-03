@@ -1,0 +1,334 @@
+﻿Title: NvDsTranscodeExt — DeepStream documentation
+
+NvDsTranscodeExt#
+Components#
+nvidia::deepstream::NvDsJpegDecoder#
+Parameters#
+nvidia::deepstream::NvDsVideoDecoder#
+Parameters#
+nvidia::deepstream::NvDsH264Encoder#
+Parameters#
+nvidia::deepstream::NvDsH265Encoder#
+Parameters#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+NVIDIA DeepStream components for multimedia decoding and encoding.
+UUID: e5590555-9031-4187-a217-4518c149c2d0
+Version: 1.6.0
+Author: NVIDIA
+License: Proprietary
+Decode images from JPEG format.
+Refer to nvjpegdec plugin
+Component ID: 9d99b73c-ea51-36b8-99d1-92510fae716b
+Base Type: nvidia::deepstream::INvDsElement
+Enableperf
+Enable decode time measurement.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+gpu-id
+Set GPU Device ID for operation.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+idct-method
+The IDCT algorithm to use.
+Valid values:
+0: islow
+1: ifast
+2: float
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 1
+in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supported formats - jpeg.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+max-errors
+Error out after receiving N consecutive decoding errors (-1 = never fail, 0 = automatic, 1 = fail on first error).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+video-out
+Handle to an nvidia::deepstream::NvDsStaticOutput component. Supported formats - video(RGBA).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticOutput
+Decode video streams via V4L2 API.
+Component ID: 08bd1163-214e-3b05-9d15-e42211b4a5fe
+Base Type: nvidia::deepstream::INvDsElement
+capture-io-mode
+Capture I/O mode (matches src pad).
+Valid values:
+0: auto
+2: mmap
+5: dmabuf-import
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+cudadec-memtype
+Set to specify memory type for CUDA decoder buffers.
+Valid values:
+0: memtype_device
+1: memtype_pinned
+2: memtype_unified
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 2
+drop-frame-interval
+Interval to drop the frames. For example - when set to 5, every 5th frame will be given by decoder, all other frames are dropped.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+extra-controls
+Extra v4l2 controls (CIDs) for the device.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+extract-sei-type5-data
+Set to extract and attach SEI type5 unregistered data on output buffer
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+gpu-id
+Set to GPU Device ID for decoder.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+low-latency-mode
+Set low latency mode for bitstreams having I and IPPP frames
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+num-extra-surfaces
+Additional number of surfaces in addition to min decode surfaces given by the v4l2 driver.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+output-io-mode
+Output side I/O mode (matches sink pad).
+Valid values:
+0: auto
+2: mmap
+5: dmabuf-import
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+skip-frames
+Type of frames to skip during decoding.
+Valid values:
+0: decode_all
+1: decode_non_ref
+2: decode_key
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+video-in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supported formats - jpeg;video(h264, h265, divx, vp8, vp9).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+video-out
+Handle to an nvidia::deepstream::NvDsStaticOutput component. Supported formats - video(NV12).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticOutput
+Encode H.264 video streams via V4l2 API.
+Component ID: 199788fe-ee59-36d0-bfcf-3f02f8e4fb51
+Base Type: nvidia::deepstream::INvDsElement
+bitrate
+Set bitrate for v4l2 encode.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 4000000
+capture-io-mode
+Capture I/O mode (matches src pad).
+Valid values:
+0: auto
+2: mmap
+5: dmabuf-import
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+control-rate
+Set control rate for v4l2 encode.
+Valid values:
+0: variable_bitrate
+1: constant_bitrate
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 1
+extended-colorformat
+Set Extended ColorFormat pixel values 0 to 255 in VUI info.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+extra-controls
+Extra v4l2 controls (CIDs) for the device.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+force-idr
+Force an IDR frame.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+force-intra
+Force an INTRA frame.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+gpu-id
+Set to GPU Device ID for Encoder.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+iframeinterval
+Encoding Intra Frame occurrence frequency.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 30
+output-io-mode
+Output side I/O mode (matches sink pad).
+Valid values:
+0: auto
+2: mmap
+5: dmabuf-import
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+profile
+Set profile for v4l2 encode.
+Valid values:
+0: Baseline
+2: Main
+4: High
+7: High444
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+video-in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supported formats - video(I420, NV12, P010_10LE).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+video-out
+Handle to an nvidia::deepstream::NvDsStaticOutput component. Supported formats - video(h264).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticOutput
+Encode H.265 video streams via V4l2 API.
+Component ID: d01cd29f-365f-3716-995d-db15051a8a0b
+Base Type: nvidia::deepstream::INvDsElement
+bitrate
+Set bitrate for v4l2 encode.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 4000000
+capture-io-mode
+Capture I/O mode (matches src pad).
+Valid values:
+0: auto
+2: mmap
+5: dmabuf-import
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+control-rate
+Set control rate for v4l2 encode.
+Valid values:
+0: variable_bitrate
+1: constant_bitrate
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 1
+extended-colorformat
+Set Extended ColorFormat pixel values 0 to 255 in VUI info.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+extra-controls
+Extra v4l2 controls (CIDs) for the device.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+force-idr
+Force an IDR frame.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+force-intra
+Force an INTRA frame.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+Default: False
+gpu-id
+Set to GPU Device ID for Encoder.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 0
+iframeinterval
+Encoding Intra Frame occurrence frequency.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+Default: 30
+output-io-mode
+Output side I/O mode (matches sink pad).
+Valid values:
+0: auto
+2: mmap
+5: dmabuf-import
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+profile
+Set profile for v4l2 encode.
+Valid values:
+0: Main
+1: Main10
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+Default: 0
+video-in
+Handle to an nvidia::deepstream::NvDsStaticInput component. Supported formats - video(I420, NV12, P010_10LE).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+video-out
+Handle to an nvidia::deepstream::NvDsStaticOutput component. Supported formats - video(h265).
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticOutput
+previous
+NvDsTrackerExt
+next
+NvDsTritonExt
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

@@ -1,0 +1,73 @@
+﻿Title: Migrating Traditional Deepstream Apps to Service Maker Apps in Python — DeepStream documentation
+
+Migrating Traditional Deepstream Apps to Service Maker Apps in Python#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+There are two options available for migrating traditional Deepstream applications to Python apps. One option involves using Pipeline APIs with configuration files, while the other option utilizes Flow APIs. Each approach offers its own advantages and can be chosen based on the specific requirements and preferences of the application developers.
+Guidelines for migrating Deepstream applications to Python apps using pipeline APIs remain consistent with those of Service Maker C++ APIs. Thus, this section will focus on how to migrate Deepstream Applications to Python apps using Flow APIs.
+Defining the Video source
+Service Maker uses a Source List YAML file to define inputs, including the source information and input configuration. Specification of source list file can be found in SourceConfig. Once we have a Source List file, we can create a batch capture flow with it:
+Pipeline Customization
+In Flow APIs, each predefined section for pipeline customization in the configuration file for a traditional Deepstream Application corresponds to its respective function:
+DS Configuration
+Flow API Name
+primary-gie
+infer
+secondary-gie
+infer
+tracker
+track
+Sink management
+Flow APIs have corresponding functions for each sink type supported in traditional Deepstream Application:
+DS Sink Type
+Flow API Name
+Fakesink
+render(mode=RenderMode.DISCARD)
+Display
+render(mode=RenderMode.DISPLAY)
+File
+encode(â/tmp/sample.mp4â)
+UDP
+encode(âudp://localhost:5400â)
+RTSP
+encode(ârtsp://localhost:5400â)
+MsgConvBroker
+publish
+To enable multiple-sink, we can just call fork() to fork the current flow and append various sink functions with it (check the âforkâ function in previous sections).
+previous
+Advanced Features
+next
+What is a Deepstream Service Maker Plugin
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

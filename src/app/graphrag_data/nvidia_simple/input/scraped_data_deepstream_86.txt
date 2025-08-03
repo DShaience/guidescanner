@@ -1,0 +1,92 @@
+﻿Title: What is a Deepstream Service Maker Plugin — DeepStream documentation
+
+What is a Deepstream Service Maker Plugin#
+Getting Started with Your Factory and Plugin#
+Incorporating properties to a plugin#
+Sample Plugins#
+Message Metadata Generator#
+KITTI Dump Plugin#
+Framerate Measurement Plugin#
+Latency Measurement Plugin#
+Sample Video Probe Plugin#
+Sample Signal Handler Plugin#
+Sample Video Feeder Plugin#
+Sample Video Receiver Plugin#
+Smart Recording Action Plugin#
+Smart Recording Signal Plugin#
+Plugin Search Path#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+A plugin encapsulates a specialized factory, enabling the creation of user-implemented custom objects through a standardized factory API. Users have the flexibility to define a factory in a plugin with descriptive metadata, including name, version, descriptions, and more, for their custom objects. By loading the plugin, any application gains the ability to create instances of the custom object through the common factory API and facilitates the seamless reuse of user-defined custom objects (e.g., object counter, latency measurement, etc) across multiple applications.
+Prior to encapsulating a factory, it is essential to come up with a custom object that the factory will create. As an illustrative example, letâs consider a simple latency measurement probe. By implementing the IBufferObserver interface for a BufferProbe, we tailor it to serve as a latency measurement tool for video frames:
+Next, you need to encapsulate a factory for this latency measurement probe within a plugin. To achieve this, we can employ macros in the plugin.h file to define both the factory and the plugin, respectively:
+To build the plugin, you need to create a straightforward CMakeLists.txt file with the following content:
+Upon successful completion of the plugin build process, you can seamlessly utilize our latency measurement-customized BufferProbe in any application:
+To further increase the versatility of factory reuse, we can introduce property specification for the objects from the factory. Macros for adding property specification to the factory can be utilized as follows:
+Within the latency measurement implementation, the calculation of frame latency can be confined to a specified stream:
+In the application, you would have the option to specify the precise source ID for latency measurement:
+Sample plugins can be found from the Deepstream installation directory /opt/nvidia/deepstream/deepstream/service-maker/sources/modules, and with the following commands user can build them:
+The Message Metadata Generator is a sample plugin that creates a buffer probe to generate event message metadata. This metadata can be utilized by downstream nvmsgconv to create JSON payloads for transmission to message brokers like Kafka.
+Registered name of the plugin is âadd_message_meta_probeâ.
+The KITTI Dump Plugin is a sample plugin that creates a buffer probe to dump the object metatdata there into a txt file in kitti format. The registered name of the plugin is âktti_dump_probeâ.
+Following parameters are supported:
+kitti-dir: the path for saving kitti files (default: /tmp/kitti).
+The Framerate Measurement Plugin is a sample plugin that creates a framerate measurement probe which measures and prints the current frame rate. The registered name of the plugin is âmeasure_fps_probeâ.
+The Latency Measurement Plugin is a sample plugin that creates a latency measurement probe which measures and prints the current frame latency. The registered name of the plugin is âmeasure_latency_probeâ.
+This plugin creates a sample video probe which constructs the display metadata for downstream osd plugin to show the object counter. The registered name of the plugin is âsample_video_probeâ. The following parameters are supported for customizing the created buffer probe object:
+font-size: an integer to specify the size of the font.
+This plugin creates a sample signal handlers that responds on the âmodel-updatedâ signal from nvinfer plugin. As a sample it prints out the message whenever the model is updated. The registered name of the plugin is âsample_signal_handlerâ.
+This plugin creates a sample video feeder can be attached to an âappsrcâ, thus injects raw video data to the pipeline from a file. The registered name of the plugin is âsample_video_feederâ. The following parameters are supported for customizing the created buffer probe object:
+location: a string to specifies the file as the source of video data
+frame-width: width of the video frame
+frame-height: height of the video frame
+format: format of the video frame, which can be one among RGBA, I420 and NV12
+use-gpu-memory: True for copying data into a GPU memory
+use-external-memory: True for allocating the memory outside the pipeline.
+This plugin creates a sample video receiver to demonstrate how to retrieve the buffer data from an âappsinkâ. The registered name of the plugin is âsample_video_receiverâ.
+This plugin creates a signal emitter object which can attach to ânvurisrcbinâ to trigger smart record and pause it. As a sample plugin it interacts with a remote Kafka server and controls the smart recording based on the messages received from the Kafka server.
+The registered name of the plugin is âsmart_recording_actionâ. The following parameters are supported for customizing the created buffer probe object:
+proto-lib: the path to the shared library that implements the device/cloud communication protocol
+conn-str: string for the connection in the format of âip;portâ
+proto-config-file: path to the config file of the communication protocol
+msgconv-config-file: message converter config file path
+topic-list: list of topics to subscribe
+This plugin creates a sample smart recording signal handler which responds on âsr-doneâ signal from ânvurisrcbinâ with a brief print. The registered name of the plugin is âsmart_recording_signalâ.
+By default the plugins will be searched from the installation path /opt/nvidia/deepstream/deepstream/service-maker/sources/modules. However, users can specify their path by defining them in the NVDS_MODULE_PATH environment variable, and multiple paths can be separated by â:â.
+previous
+Migrating Traditional Deepstream Apps to Service Maker Apps in Python
+next
+DeepStream Libraries (Developer Preview)
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

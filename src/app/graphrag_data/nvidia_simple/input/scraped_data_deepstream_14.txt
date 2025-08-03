@@ -1,0 +1,188 @@
+﻿Title: TAO Toolkit Integration with DeepStream — DeepStream documentation
+
+TAO Toolkit Integration with DeepStream#
+Pre-trained models#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+NVIDIA TAO toolkit is a simple, easy-to-use training toolkit that requires minimal coding to create vision AI models using the userâs own data. Using TAO toolkit, users can transfer learn from NVIDIA pre-trained models to create their own model. Users can add new classes to an existing pre-trained model, or they can re-train the model to adapt to their use case. Users can use model pruning capability to reduce the overall size of the model.
+There are 2 types of pre-trained models that users can start with - purpose-built pre-trained models and meta-architecture vision models. Purpose-built pre-trained models are highly accurate models that are trained on millions of objects for a specific task. The pre-trained weights for meta-architecture vision models merely act as a starting point to build more complex models. These pre-trained weights are trained on Open image dataset and they provide a much better starting point for training versus starting from scratch or starting from random weights. With the latter choice, users can choose from 100+ permutations of model architecture and backbone. See the illustration below.
+The purpose-built models are highly accurate models that are trained on thousands of data inputs for a specific task. These domain-focused models can either be used directly for inference or can be used with TAO for transfer learning on your own dataset. More information about each of these models is available in Computer Vision Model Zoo chapter of TAO toolkit documentation â Computer Vision Model Zoo or in the individual model cards.
+Model Name
+Description
+NGC Instance
+TAO Finetuning
+TrafficCamNet
+4 class object detection network to detect cars in an image.
+nvidia/tao/trafficcamnet
+Yes
+PeopleNet
+3 class object detection network to detect people in an image.
+nvidia/tao/peoplenet
+Yes
+DashCamNet
+4 class object detection network to detect cars in an image.
+nvidia/tao/dashcamnet
+Yes
+VehicleMakeNet
+Resnet18 model to classify a car crop into 1 out 20 car brands.
+nvidia/tao/vehiclemakenet
+Yes
+VehicleTypeNet
+Resnet18 model to classify a car crop into 1 out 6 car types.
+nvidia/tao/vehicletypenet
+Yes
+License Plate Detection
+Object Detection network to detect license plates in an image of a car.
+nvidia/tao/lpdnet
+Yes
+License Plate Recognition
+Model to recognize characters from the image crop of a License Plate.
+nvidia/tao/lprnet
+Yes
+PeopleSemSegNet
+Semantic segmentation of persons in an image.
+nvidia/tao/peoplesemsegnet
+Yes
+CitySemSegFormer
+Semantic segmentation of persons in an image.
+nvidia/tao/citysemsegformer
+Yes
+Optical Character Detection
+Network to detect characters in an image.
+nvidia/tao/ocdnet
+Yes
+Optical Character Recognition
+Model to recognise characters from a preceding OCDNet model.
+nvidia/tao/ocrnet
+Yes
+Retail Object Detection
+DINO (DETR with Improved DeNoising Anchor Boxes) based object detection network to detect retail objects on a checkout counter.
+nvidia/tao/retail_object_detection
+Yes
+Retail Object Recognition
+Embedding generator model to recognize objects on a checkout counter.
+nvidia/tao/retail_object_recognition
+Yes
+ReIdentificationNet
+Re-Identification network to generate embeddings for identifying persons in different scenes.
+nvidia/tao/reidentificationnet
+Yes
+Pose Classification
+Pose classification network to classify poses of people from their skeletons.
+nvidia/tao/poseclassificationnet
+Yes
+PeopleNet Transformer
+3 class object detection network to detect people in an image.
+nvidia/tao/peoplenet_transformer
+Yes
+BodyPose3DNet
+3D human pose estimation network to predict 34 keypoints in 3D of a person in an image.
+nvidia/tao/bodypose3dnet
+Yes
+Most models trained with TAO toolkit are natively integrated for inference with DeepStream. If the model is integrated, it is supported by the reference deepstream-app. If the model is not natively integrated in the SDK, you can find a reference application on the GitHub repo. See the table below for information on the models supported. For models integrated into deepstream-app, we have provided sample config files for each of the networks. The sample config files are available in the https://github.com/NVIDIA-AI-IOT/deepstream_tao_apps/blob/master/deepstream_app_tao_configs/ folder. The table below also lists config files for each model.
+Note
+Refer README in package /opt/nvidia/deepstream/deepstream/samples/configs/tao_pretrained_models/README.md to obtain TAO toolkit config files and models mentioned in following table.
+The TAO toolkit pre-trained models table shows the deployment information of purpose-built pre-trained models.
+Pre-Trained model
+DeepStream reference app
+Config files
+DLA supported
+TrafficCamNet
+deepstream-app
+deepstream_app_source1_trafficcamnet.txt, config_infer_primary_trafficcamnet.txt, labels_trafficnet.txt
+Yes
+PeopleNet
+deepstream-app
+deepstream_app_source1_peoplenet.txt, config_infer_primary_peoplenet.txt, labels_peoplenet.txt
+Yes
+DashCamNet
+deepstream-app
+deepstream_app_source1_dashcamnet_vehiclemakenet_vehicletypenet.txt, config_infer_primary_dashcamnet.txt, labels_dashcamnet.txt
+Yes
+VehicleMakeNet
+deepstream-app
+deepstream_app_source1_dashcamnet_vehiclemakenet_vehicletypenet.txt, config_infer_secondary_vehiclemakenet.txt, labels_vehiclemakenet.txt
+Yes
+VehicleTypeNet
+deepstream-app
+deepstream_app_source1_dashcamnet_vehiclemakenet_vehicletypenet.txt, config_infer_secondary_vehicletypenet.txt, labels_vehicletypenet.txt
+Yes
+CitySemSegFormer
+deepstream_tao_apps
+seg_app_unet.yml, pgie_citysemsegformer_tao_config.txt
+Yes
+License Plate Detection
+deepstream_tao_apps
+No
+License Plate Recognition
+deepstream_tao_apps
+No
+PoseClassificationNet
+deepstream_tao_apps
+No
+BodyPose3DNet
+deepstream_tao_apps
+No
+Retail Object Recognition
+deepstream_tao_apps
+No
+Retail Object Detection
+deepstream_tao_apps
+No
+PeopleNet Transformer Model
+deepstream_tao_apps
+No
+ReIdentificationNet
+deepstream_tao_apps
+No
+Optical Character Detection
+deepstream_tao_apps
+No
+Optical Character Recognition
+deepstream_tao_apps
+No
+PeopleNet Transformer
+deepstream_tao_apps
+det_app_frcnn.yml, pgie_peoplenet_transformer_tao_config.yml
+No
+The TAO toolkit models can be deployed with DeepStream sample applications.
+Learn more about running the TAO models here: NVIDIA-AI-IOT/deepstream_tao_apps
+For more information about TAO and how to deploy TAO models, refer to Integrating TAO Models into DeepStream chapter of TAO toolkit user guide.
+For more information about deployment of architecture specific models with DeepStream, refer to NVIDIA-AI-IOT/deepstream_tao_apps GitHub repo.
+previous
+Implementing a Custom GStreamer Plugin with OpenCV Integration Example
+next
+DeepStream-3D Custom Apps and Libs Tutorials
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

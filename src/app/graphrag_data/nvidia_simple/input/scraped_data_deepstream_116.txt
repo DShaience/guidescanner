@@ -1,0 +1,413 @@
+﻿Title: Pipetuner Guide — DeepStream documentation
+
+Pipetuner Guide#
+Introduction#
+Prerequisites#
+System Requirements#
+NGC Setup#
+Sample Data Setup#
+DeepStream Tuning Case#
+MTMC Tuning Case#
+Quick Start#
+Launch Tuning Process#
+DS Perception Tuning#
+MTMC Tuning with Frozen Perception#
+MTMC E2E Tuning#
+Output#
+Stop PipeTuner#
+Retrieve and Visualize Tuning Results#
+Custom Tuning#
+Understanding PipeTuner Config Path#
+Custom Dataset#
+Create Video Files#
+DS Perception Tuning#
+MTMC Tuning with Frozen Perception#
+MTMC E2E Tuning#
+Create Ground Truth Labels#
+DS Perception Tuning#
+MTMC Tuning with Frozen Perception#
+MTMC E2E Tuning#
+Launch PipeTuner with the New Config File#
+Data Augmentation#
+Video Generation#
+Use in DS Perception Tuning#
+Custom Models#
+Models on NGC#
+Object detector (i.e., PGIE)#
+Re-ID#
+Custom Algorithms#
+Multi-Object Trackers#
+Single-View 3D Tracking#
+MTMC Analytics#
+Customize Parameters#
+Change Accuracy Metric#
+Parameter Search Space#
+Optimizers#
+Optimization Manager Configs#
+Changelog#
+Version 1.0#
+Features#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+Pipelines for AI applications (e.g, intelligent video analytics) typically consist of a set of inference and processing modules, each of which typically has a distinct functionality implemented using corresponding logics and algorithms. Such logics and algorithms may have a number of parameters that determine the behavior and characteristics just like how the coefficients in a polynomial function shape the output of the function.
+When you are trying to define and use a data processing pipeline for your application, such process typically entails a series of evaluations of the pipeline outputs in terms of a set of KPIs with a different set of parameters with respect to the expected outputs. Such a process of differing parameters is to get the best KPI from the pipeline, and it is typically carried out by a tedious manual iterative process in practice or a simple exhaustive/random search might be used, as shown in Figure 1:
+However, such a manual tuning process requires one to have in-depth knowledge on all the relevant data processing modules and their algorithms as well as how each parameter would affect the functionality. If the number of parameters is large in a pipeline, the complexity of the tuning would increase exponentially, and it would become a non-trivial task for ordinary users. In addition, tuning a pipeline for a particular use case or a dataset may negatively affect other use cases or a different dataset. Therefore, the tuning of a pipeline is an essential part of system deployment by users; yet it is one of the biggest challenges and pain points.
+PipeTuner is a tool that efficiently explores the (potentially very high-dimensional) parameter space and automatically finds the optimal parameters for the pipelines, which yields the highest KPI on the dataset provided by the user. An important advantage of using PipeTuner is that the users are not required to have technical knowledge on the pipeline and its parameters. Therefore, PipeTuner can make the seemingly-daunting task of pipeline tuning more accessible to a wider range of users in terms of technical knowledge.
+This document is a complete user guide for PipeTuner and walks users through easy-to-follow step-by-step instructions for tuning complete AI processing pipelines, including DeepStream-based perception pipelines and an end-to-end NVIDIA Metropolis multi-target multi-camera tracking pipeline, which is described in more details below:
+DeepStream perception pipeline:
+Typical DeepStream pipelines employ a detector (i.e., PGIE) and a multi-object tracker (MOT) to perform a perception task for each stream. PipeTuner allows users to optimize the detector and MOT parameters to achieve the highest-attainable perception accuracy KPI automatically based on the KPI metric and the dataset.
+Metropolis Multi-Target Multi-Camera tracking (MTMC) pipeline
+Metropolis MTMC consists of per-camera perception modules and a MTMC analytics module that aggregates the per-camera perception results to yield the global perception results across multiple cameras. The per-camera perception is carried out by DeepStream pipelines, and the perception results are fed to the MTMC analytics module. As the end-to-end MTMC pipeline consists into two parts, users are allowed to perform tuning only a part of the pipeline or the whole end-to-end pipeline as they wish.
+To help users to better understand and set up the PipeTuner workflow, sample data and config files with different detectors and tracking algorithms are provided as a part of the release on NGC. Users then can customize their pipelines and datasets for their own use cases.
+Terms
+Definition
+parameters
+A set of numerical values or discrete choices that determines the behavior of a software or algorithm in terms of  accuracy and performance, typically defined in some configuration files, such as DeepStream or MTMC config files.
+pipeline
+A software that typically consists of multiple modules, each of which potentially has its own set of parameters, performs some processing given input data (e.g., video processing for perception or analytics). The output of a pipeline may include a set of metadata extracted from the input data, which can be evaluated qualitatively and quantitatively.
+accuracy metric
+An evaluation criteria or a method for getting a particular type of accuracy value, such as MOTA, IDF1 or HOTA. Those metrics are typically in the range of 0 and 1.
+optimizer
+An optimizing algorithm or library that is used to search globally optimal parameters in the defined parameter search space
+checkpoint
+A folder that stores the accuracy results and the corresponding parameters of an intermediate step during tuning.
+DS
+NVIDIA DeepStream SDK
+MOT
+Single camera multi-object tracking, requiring NVIDIA DeepStream SDK. The pipeline is DeepStream PGIE + Tracker. The output includes the metadata for target bounding boxes, IDs, frame numbers, etc. The same target is expected to have a unique ID persistently over frames in each camera/stream.
+MTMC
+Multi-target multi-camera tracking, requiring access to NVIDIA Metropolis Microservices. The pipeline consists of DS-based perception and MTMC analytics. The perception module for MTMC provides metadata for each target, including bounding boxes, IDs, and ReID embeddings. Then MTMC aggregates such metadata from multiple cameras and uses them to perform global target association and clustering over multiple cameras, and generates fused location data with globally-unique target IDs.
+PipeTuner supports both NVIDIA DeepStream SDK and Metropolis Microservices. The setup and usage have some differences listed below.
+DeepStream users
+Metropolis Microservices users
+Which user group do I belong to?
+I only want to use DeepStream SDK
+I want to use Metropolis Microservices. I clicked âDownload for Enterprise GPUâ and applied for access
+Containers
+Users have access to DeepStream container
+Users have access to Metropolis Standalone Deployment package and mdx-perception container
+Use Cases
+Only DeepStream perception pipeline tuning is supported
+Both DeepStream perception and MTMC pipeline tuning are supported
+PipeTuner requires the following components on an x86_64 system:
+OS Ubuntu 22.04
+NVIDIA driver 535.104 or 535.161
+Docker - Setup instructions (need to run without sudo privilege - Instructions)
+NVIDIA container toolkit - Setup instructions
+Users need to follow below steps to sign in to an NGC account and get an API key.
+Visit NGC sign in page, Enter your email address and click Next, or Create an Account.
+Choose your organization when prompted for Organization/Team. DeepStream users may use any organization and team; Metropolis Microservice users need to select nv-mdx/mdx-v2-0; Click Sign In.
+Generate an API key following the instructions.
+Log in to the NGC docker registry (nvcr.io) and enter the following credentials:
+where YOUR_NGC_API_KEY corresponds to the key you generated from the previous step.
+Metropolis Microservice users need to install NGC CLI following the instructions, and set ngc config as below. DeepStream users can skip this step.
+The sample data consists of a mini-synthetic dataset with eight 1-minute streams and config files for tuning. You can download the sample files pipe-tuner-sample.zip from NGC web UI.
+Click three-dots under Actions, and click one option to download the file like below.
+Once you download the sample file, unzip the file and run setup.sh to finish sample data for either DeepStream or Metropolis Microservices.
+Once the set-up script is executed, the expected console output of DeepStream setup command would look like below:
+DeepStream users should see docker images like below.
+Also, model files should be under the âmodelsâ folder. They will be mapped into DeepStream containers during tuning.
+Once the setup script is executed like below:
+Metropolis MTMC users should see docker images like below. The âmodelsâ folder is empty because default models in mdx-perception container will be used.
+The final directory under pipe-tuner-sample is like:
+PipeTuner searches the optimal parameters by iterating the following three steps until the accuracy KPI converges or up to the max number of iterations (i.e., epochs) specified:
+ParamSearch
+Given the accuracy KPI score in the previous iteration, make an educated guess on the set of parameters that would yield a higher accuracy KPI. For the very first iteration, a random sampling in the parameter space would be conducted
+PipeExec
+Given the sampled/guessed parameter set, execute the pipeline with the params and generates metadata to allow accuracy evaluation
+PipeEval
+Given the metadata outputs from the pipeline and the dataset, perform the accuracy evaluation based on the accuracy metric and generates accuracy KPI score
+The sample PipeTuner config files are included in pipe-tuner-sample/configs/config_PipeTuner to help users to get familiarized with the workflow, so that later they can come up with their custom pipeline with their own dataset.
+Currently three different types of pipelines are supported for tuning:
+DS-based Perception tuning
+MTMC tuning with frozen perception
+MTMC end-to-end (E2E) tuning
+Users are allowed to choose to employ different neural net models in DeepStream for the first and the third use case, for example,
+Object detector
+ResNet34-based PeopleNet
+Transformer-based PeopleNet
+ReID model
+ResNet50-based TAO ReID model
+SWIN Transformer ReID model
+The multi-object tracking (MOT) in DeepStream can use any of the tracker types in DeepStream, but for the MTMC perception, the NvDCF tracker is used as it has the highest accuracy and also it supports both camera image-based 2D tracking and Single-View 3D Tracking (more info can be found in the DeepStream documentation).
+The instructions with the sample data and pipeline below section are designed to walk through the entire tuning process step-by-step.
+To run the sample pipelines, enter pipe-tuner-sample/scripts:
+Script launch.sh takes in a PipeTuner config file, automatically launches the containers and starts the tuning process. Usage:
+Users can choose to run one config file from below examples.
+Note
+Each sample pipeline can take 3 to 40 hours to finish depending on the model size and GPU type. To reduce the tuning turn-around time, users may choose to use smaller dataset or decrease the max number of iterations (i.e., âmax_iterationâ param in a PipeTuner config file in ../configs/config_PipeTuner/ folder) like in an example below. Itâs currently set as â100â, but users can set it to 5 or 10 for quick experiments. Users can still keep it as 100 and stop it in the middle (how to stop the tuning process in the middle is explained later)
+This use case optimizes DeepStream PGIE (i.e., object detection) and tracker parameters for perception accuracy. The pipeline for PipeExec step is constructed as:
+(file source streams) â Decoder â PGIE â MOTâ (per-stream tracking results)
+PipeEval step is then performed for MOT Eval to generate accuracy KPI scores.
+To launch a pipeline with ResNet34-based PeopleNet model and NvDCF tracker with TAO ReID model, for example, run one of below commands based on your user group:
+For DeepStream users:
+For Metropolis Microservices users:
+To launch a pipeline with Transformer-based PeopleNet model and NvDCF tracker with SWIN-based ReID model and SV3DT enabled, for example, run:
+This use case assumes the metadata from the DS perception pipeline (i.e., MOT results + ReID embeddings) are already generated and stored in JSON format. Only MTMC parameters are searched. The pipeline uses that as fixed input and searches for optimal MTMC parameters that would yield the highest MTMC accuracy. The pipeline for PipeExec step is:
+(MOT results + ReID embeddings) â MTMC analytics â (MTMC results with global IDs)
+To launch the pipeline, run:
+This use case jointly optimizes DS perception (i.g., PGIE and tracker) and MTMC parameters for e2e MTMC accuracy tuning. This provides the highest flexibility for optimization, yet takes the longest time because of the pipeline complexity. The pipeline for PipeExec would look like:
+(file source streams) â Decoder â PGIE â MOTâ (per-stream tracking results) â MTMC analytics â (MTMC results with global IDs)
+To launch the e2e MTMC pipeline with DS perception module consisting of ResNet34-based PeopleNet model and NvDCF tracker with TAO ReID model, for example, run:
+To launch the e2e MTMC pipeline with DS perception module consisting of Transformer-based PeopleNet model and NvDCF tracker with SWIN-based ReID model and SV3DT enabled, for example, run:
+After launching, pipeline outputs are saved in the below directory as an example.
+Explanation:
+log_client_2023-08-23_16-39-36 and log_server_2023-08-23_16-39-36 are log files for the server and client inside the PipeTuner container.
+<PipeTuner config name.yml> stores the automatically generated config files for the tuning
+Each checkpoint folder (e.g. DsAppRun_output_20230823_163959) stores a checkpoint with tuned parameters and accuracy metric of that iteration. Also, the folder has the log file (log_DsAppRun.log) which contains the output of DeepStream app.
+configs_08-23-2023_16-39-57 stores the automatically generated config files for pipeline components such as PGIE, tracker.
+<PipeTuner config name.yml>-2023-08-23_16-39-36_accuracy.csv is a csv file that stores the accuracy metric and parameter values of all the iterations.
+Here shows how the console output would look like:
+Check what containers are running by:
+Note
+TensorRT engine files are generated during the first iteration, so it may take 10 to 30 minutes longer than the next iterations.
+When the optimization ends, â!!!!! Press CTRL+C key to end PipeTuner !!!!!â is displayed on the console. PipeTuner can simply be stopped with pressing CTRL+C key. Pressing CTRL+C key stops the PipeTuner and the running docker containers. Also, the PipeTuner can be stopped with the keys in the middle of the optimization.The tuning results are still saved in the output directory. For example,
+(Optional) The launch.sh stops the docker images, but it doesnât remove them. If users want to remove the The downloaded containers, they can simply be removed with command docker rm -f [container names].
+PipeTuner provides the following features to get the tuned parameters and results.
+Plot accuracy convergence graph
+Retrieve the optimal checkpoint
+All the commands below are executed under pipe-tuner-sample/scripts
+Usage: After launching tuning for a couple of iterations, run below command to retrieve the optimal results from checkpoints already generated:
+$ bash result_analysis.sh <output folder> <metric>
+Here <output folder> is the output directory created in âlaunch tuning processâ step: pipe-tuner-sample/output/<PipeTuner configname.yml>_output, and <metric> should be the same as evaluation metric defined in PipeTuner config among MOTA, IDF1 and HOTA.
+For example, to retrieve the result for SDG_sample_PeopleNet-ResNet34_NvDCF-ResNet50_MOT.yml, users can run the following command:
+$ bash result_analysis.sh ../output/SDG_sample_PeopleNet-ResNet34_NvDCF-ResNet50_MOT.yml_output/ HOTA
+Result analysis is saved in the below directory:
+Explanation:
+The copied checkpoint folder under pipe-tuner-sample/output/SDG_sample_PeopleNet-ResNet34_NvDCF-ResNet50_MOT.yml_output/results/ (e.g. DsAppRun_output_20230823_163959) is the optimal checkpoint with tuned PGIE, tracker, DeepStream configs and accuracy metric, which is good for deployment.
+accuracy_plot.png is the accuracy metric vs iteration figure:
+Console output:
+This section describes how to customize the tuning process, including using new datasets, models and config files. Read the Understanding PipeTuner Config Path section to understand how paths are defined and mapped into docker containers.
+<path>/pipe-tuner-sample/ is the only folder mapped from host to all the containers. All the tuning related files must be placed in this folder when customizing tuning.
+During runtime, rootPath in PipeTuner config is automatically overwritten by the sample data folderâs absolute path <path>/pipe-tuner-sample/.
+In PipeTuner config, all the other paths are the relative path to rootPath. For example, if seqmapPath is data/SDG_1min_utils/SDG_1min_all.txt, its absolute path is <path>/pipe-tuner-sample/data/SDG_1min_utils/SDG_1min_all.txt
+In PGIE and tracker config, all the paths are absolute paths. They need to be manually updated to match the actual paths on the machine.
+Paths in other config files are automatically generated, so no need to change them.
+Steps to use customize dataset in PipeTuner are:
+Create video files
+Create ground truth labels
+Launch PipeTuner with the new config file
+Different use cases require different dataset files. Only need to generate the files for the desired use case. For example, if DS Perception Tuning is the use case, only need to follow âCreate Video Files - DS Perception Tuningâ and âCreate Ground Truth Labels - DS Perception Tuningâ.
+Add videos: Create a new video folder under pipe-tuner-sample/data. It should contain all the videos used for tuning. The videos need to have 1920x1080 resolution in mp4 format.
+pipe-tuner-sample
+data
+<new dataset videos>
+<video0.mp4>
+<video1.mp4>
+â¦
+Create sequence map: Create a new utils folder under pipe-tuner-sample/data. Create a txt file <seqmap.txt> containing all the video names without â.mp4â extension
+pipe-tuner-sample
+data
+<new dataset utils>
+<seqmap.txt>
+The content in <seqmap.txt> is below. The first line should always be ânameâ, and then each line is one video name.
+name
+<video0>
+<video1>
+â¦
+Update PipeTuner Config: Change datasetPath, seqmapPath in PipeTuner config SDG_sample_PeopleNet-ResNet34_NvDCF-ResNet50_MOT.yml to match the path of the new tracker config.
+Add videos: Not required.
+Create sequence map: The same as section âCreate sequence mapâ in DS Perception Tuning.
+Update PipeTuner Config: Change seqmapPath in PipeTuner config SDG_sample_MTMC_only.yml to match the path of the new tracker config.
+seqmapPath: âdata/<new dataset utils>/<seqmap.txt>â
+All the steps are the same as  DS Perception Tuning except the PipeTuner config is in PipeTuner config SDG_sample_PeopleNet-ResNet34_NvDCF-ResNet50_MTMC.yml.
+Create ground truth files in data/<new dataset videos>. For each video, create gt.txt and seqinfo.ini like below
+pipe-tuner-sample
+data
+gt.txt is the DS perception ground truth label file in the MOT format, which is
+Example:
+seqinfo.ini is the sequence information file. Its format is below. The first line must be [Sequence]. There can be multiple parameters, but only seqLength is actually needed.
+The evaluation script automatically finds the above ground truth files in datasetPath, so no need to change PipeTuner config.
+Add MTMC camera calibration file and MTMC ground truth file under pipe-tuner-sample/data/<new dataset utils>. MTMC ground truth file format is
+camera, id, frame, left, top, width, height, x_on_ground, y_on_ground
+Run DeepStream perception pipeline to generate single camera tracking results with Re-ID features as MTMC input. The MTMC input is in JSON format and defined by Kafka schema. Place it under pipe-tuner-sample/data/<new dataset utils>.
+Change mtmcCalibrationPath, mtmcGroundTruthPath and mtmcPlaybackPath in PipeTuner config to match the path of the new tracker config.
+mtmcCalibrationPath: âdata/<new dataset utils>/<calibration.json>â
+mtmcGroundTruthPath: âdata/<new dataset utils>/<MTMC ground truth.txt>â
+mtmcPlaybackPath: âdata/<new dataset utils>/<MTMC input.json>â
+Add MTMC camera calibration file and MTMC ground truth file under pipe-tuner-sample/data/<new dataset utils>. MTMC ground truth file format is
+camera, id, frame, left, top, width, height, x_on_ground, y_on_ground
+Change mtmcCalibrationPath, mtmcGroundTruthPath in PipeTuner config to match the path of the new tracker config.
+mtmcCalibrationPath: âdata/<new dataset utils>/<calibration.json>â
+mtmcGroundTruthPath: âdata/<new dataset utils>/<MTMC ground truth.txt>â
+Review the PipeTuner config file to ensure all the paths are valid. The tuning workflow is the same as the sample dataset.
+Summary
+Below table summarizes the files to include in a new dataset. âvâ means the specific files are required for that use case;
+Dataset components
+Content format requirements
+File name requirements
+Path in the sample dataset
+PipeTuner config
+Single camera MOT tuning
+MTMC tuning with frozen perception
+MTMC E2E tuning
+Video files
+In mp4 format; All the videos have 1920x1080 resolution
+Videos must be stored under datasetPath folder. Video names must match sequence map.
+data/SDG_1min_videos/Retail_Synthetic_Cam01.mp4 data/SDG_1min_videos/Retail_Synthetic_Cam02.mp4
+â¦
+datasetPath
+v
+v
+Sequence map
+Contains all the video names for tuning
+Any name is fine
+data/SDG_1min_utils/SDG_1min_all.txt
+seqmapPath
+v
+v
+v
+MOT ground truth
+MOT ground truth
+<datasetPath>/<video name>/gt/gt.txt
+data/SDG_1min_videos/Retail_Synthetic_Cam01/gt/gt.txt
+data/SDG_1min_videos/Retail_Synthetic_Cam02/gt/gt.txt
+â¦
+datasetPath
+v
+MOT sequence info
+Contains video information
+<datasetPath>/<video_name>/seqinfo.ini
+data/SDG_1min_videos/Retail_Synthetic_Cam01/seqinfo.ini
+datasetPath
+v
+â¦
+â¦
+MTMC camera calibration
+Camera calibration format defined by MDX team
+Any name is fine
+data/SDG_1min_utils/calibration.json
+mtmcCalibrationPath
+v
+v
+MTMC ground truth
+MTMC ground truth defined by MDX team
+Any name is fine
+data/SDG_1min_utils/ground_truth.txt
+mtmcGroundTruthPath
+v
+v
+MTMC sample input
+In JSON format; Messages follow kafka schema defined by MDX team
+Any name is fine
+data/SDG_1min_utils/mtmc_playback_sample.json
+mtmcPlaybackPath
+v
+PipeTuner helps finding the optimal parameters for the dataset used. What if the dataset used for tuning may not be representative of the physical environment that the camera system would be deployed? If the tuned parameters are overfitted to the dataset while the dataset is not general enough, then these tuned parameters may not work well when actually deployed to the test environment.
+To mitigate this issue, PipeTuner provides an additional tool, which augment the dataset by introducing artificial noises or occlusion, so that the tuned params are robust to those variations that may be present in the real test environment.
+Currently the data augmentation tool has very simple occlusion-inducing capability only, but it can be extended to offer wider varieties in the future.
+A sample usage of the data augmentation tool is illustrated in the following sections.
+To generate augmented videos, execute below command under pipe-tuner-sample/scripts:
+$ bash create_aug_videos.sh <input video folder>
+<input video folder>: a folder that contains videos to be used for data augmentation
+Example:
+$ bash create_aug_videos.sh ../data/SDG_1min_videos/
+Augmented videos are saved in the below directory.
+pipe-tuner-sample
+data
+SDG_1min_videos_augmented
+Retail_Synthetic_Cam01.mp4
+Retail_Synthetic_Cam02.mp4
+â¦
+Retail_Synthetic_Cam01/
+Retail_Synthetic_Cam02/
+Interpretation:
+Retail_Synthetic_Cam<num>.mp4 are generated augmented videos like below.
+Folder Retail_Synthetic_Cam<num> contains the single camera MOT labels, which are the same as the original dataset.
+Console output:
+Tune DS perception parameters on the augmented dataset, and use the tuned config files on normal dataset without augmentation. Fewer ID switches and higher accuracy metrics are observed than tuning without augmentation.
+To use an augmentation dataset for DS perception tuning, just change datasetPath in PipeTuner config to match the path of the augmented dataset.
+What the figure below shows is that even if the original dataset does not have such large full-occlusion cases (i.e., the white vertical pole in the middle), if the pipeline is tuned with the augmented dataset with longer full occlusions, then the pipeline is tuned in such a way that the tracking can be done robustly even with the prolonged occlusions which were not present in the original dataset.
+The PGIE and Re-ID models used in sample configs are included in mdx-perception containers already. When using customized PGIE and Re-ID models in PipeTuner, they need to be added in pipe-tuner-sample/models directory on the host machine following the below steps.
+Below PGIE and Re-ID models are used in sample configs, which can be downloaded from NGC.
+Object detector (i.e., PGIE)
+ResNet34-based PeopleNet
+Transformer-based PeopleNet
+ReID model
+ResNet50-based TAO ReID model
+SWIN Transformer ReID model
+Steps to customize a PGIE model and use it in PipeTuner are:
+Refer to how to customize a model in DeepStream. Place all the model resources under pipe-tuner-sample/models, such as label files, model files, model engine and customized libraries, etc.
+pipe-tuner-sample
+models
+labels.txt
+<ETLT file>
+<ONNX file>
+<engine file>
+<Custom library if any>
+â¦
+Create a new PGIE config file as pipe-tuner-sample/configs/config_PGIE/<new PGIE config.txt>, make sure below parameters match the absolute path of the new model.
+Other parameters need changing based on the model architecture as well.
+Change pgiePath in PipeTuner config to match the path of the new PGIE config.
+Steps to customize a Re-ID model and use it in PipeTuner are:
+Refer to customizing a Re-ID model in DeepStream tracker. Place all the model resources under pipe-tuner-sample/models.
+pipe-tuner-sample
+models
+<ETLT file>
+<ONNX file>
+<engine file>
+â¦
+Create a new tracker config file as pipe-tuner-sample/configs/config_Tracker/<new tracker config.yml>, make sure below parameters match the absolute path of the new model.
+Change trackerPath in PipeTuner config to match the path of the new tracker config.
+DeepStream and Metropolis provide multiple algorithms for DS perception and MTMC. Users can enable them by changing the corresponding config files.
+Currently used DeepStream tracker is NvDCF_accuracy, but other algorithms such as NvDeepSORT or NvSORT can also be used. Place the new tracker config file as pipe-tuner-sample/configs/config_Tracker/<new tracker config.yml>, and change trackerPath in PipeTuner config to match the new path.
+Sample config_Tracker/config_tracker_NvDCF_accuracy_ResNet50_3D.yml and config_Tracker/config_tracker_NvDCF_accuracy_SWIN_3D.yml already provide examples for single camera 3D tracking. They use the pre-generated camera matrix configs in config_CameraMatrix directory. When switching to a new dataset, users need to:
+Generate the new camera matrix configs following the steps in DeepStream document
+Update cameraModelFilepath in tracker config with the absolute path of the new camera matrix configs
+Currently used MTMC analytics algorithm config file is pipe-tuner-sample/configs/config_MTMC/config_mtmc_app.json. If some new MTMC config file is needed, place it as pipe-tuner-sample/configs/config_MTMC/<new MTMC config.yml>, and change mtmcPath in PipeTuner config to match the new path.
+Three accuracy metrics are supported for either single camera MOT or MTMC: MOTA, IDF1 and HOTA. It can be changed in PipeTuner config file as:
+There are lots of parameters in PGIE, tracker and MTMC config files. The search space of each parameter is defined in PipeTuner config file as parameter_name: [ lower_bound, upper_bound (included), distribution, data_type ].
+During each iteration, a value is generated in the search range and overwrites the original PGIE, tracker or MTMC config file provided.
+Note
+parameter_name must exist in the original config file. lower_bound, upper_bound must be within the feasible range of a parameter.
+If a parameter appears in the original config file, but not in PipeTuner config, its value will be fixed as the original value.
+Below is an example in PipeTuner config. Different use cases have different parameter search space. Feel free to add, change or remove the search space. More parameters and larger search ranges require more optimizers and longer iterations to run, but can give better results than small range.
+Five optimizers are supported: pysot, tpe, hyper, opentuner and scikit. Different optimizers generate different checkpoints, and the optimal checkpoint is selected from all the optimizers enabled. Uncomment below section in PipeTuner config to enable an optimizer (e.g. tpe). Typically 2 or 3 optimizers can give satisfying results. Change max_iteration to control the number of iterations for each optimizer.
+It is recommended that worker_number is set equal to the number of optimizers used.
+When a DeepStream application could fail to run with errors or output zero KPI score, then the optimization manager can capture the failures or zero scores. If there are too many failures or zero scores from DeepStream application, then the optimization process stops immediately. We can set the thresholds for the number of zero scores and failures.
+threshold_zero_scores: if the number of zero scores from DeepStream application is higher than this parameter, then the process stops.
+threshold_ds_app_fails: if the number of failures of DeepStream application  is higher than this parameter, then the process stops.
+Allow tuning of DeepStream-based perception pipeline
+Allow tuning of end-to-end MTMC pipeline (i.e., DS-perception + MTMC-Analytics)
+Output BBO client log messages to the console and the log file. Log levels are DEBUG, INFO, WARNING, and ERROR. All level messages are logged in the log file, whereas higher than INFO messages are displayed in the console.
+Save DeepStream applicationâs log messages as a file (log_DsAppRun.log) under âcheckpoints/DsAppRun_output__XXXXâ
+Check the DS appâs last log message is âApp run failedâ, then find and show the messages with Error, ERROR, and [Exception] in a console.
+If the number of 0 scores from DS app is higher than a configurable parameter, then output error messages and stop all process
+If the number of DS app fails is higher than a configurable parameter, then output error messages and stop all process
+previous
+GXF Command Line Interface
+next
+FAQ
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

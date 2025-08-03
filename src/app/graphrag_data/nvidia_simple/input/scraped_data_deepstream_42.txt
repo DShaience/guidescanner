@@ -1,0 +1,458 @@
+﻿Title: Gst-nvstreammux New — DeepStream documentation
+
+Gst-nvstreammux New#
+Inputs and Outputs#
+Features#
+Gst Properties#
+Mux Config Properties#
+NvStreamMux Tuning Solutions for specific use cases#
+Aim#
+Important Tuning parameters#
+Video and Audio muxing Use cases#
+Video and Audio muxing - file sources of different fps#
+Video and Audio muxing - RTMP/RTSP sources#
+Troubleshooting#
+GstAggregator plugin -> filesink does not write data into the file#
+nvstreammux WARNING âLot of buffers are being droppedâ#
+Metadata propagation through nvstreammux and nvstreamdemux#
+Adding GstMeta to buffers before nvstreammux#
+Accessing GstMeta post nvstreammux.#
+Adding GstMeta post nvstreammux#
+To access NvDsMeta after nvstreamdemux.src_pad#
+Cascaded Muxing#
+Known Issues with Solutions and FAQ#
+Observing video and/or audio stutter (low framerate)#
+Sink plugin shall not move asynchronously to PAUSED#
+Heterogeneous batching#
+Adaptive Batching#
+Optimizing nvstreammux config for low-latency vs Compute#
+Latency Measurement API Usage guide for audio#
+gst-inspect is not updated properly when switching between legacy and new streammux#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+The Gst-nvstreammux plugin forms a batch of frames from multiple input sources. When connecting a source to nvstreammux (the muxer), a new pad must be requested from the muxer using gst_element_get_request_pad() and the pad template sink_%u. For more information, see link_element_to_streammux_sink_pad() in the DeepStream app source code. The muxer forms a batched buffer of batch-size frames. (batch-size is specified using the gst object property.) The muxer forwards the frames from that source as a part of the muxerâs output batched buffer. The frames are returned to the source when muxer gets back its output buffer.
+The muxer pushes the batch downstream when the batch is filled or the batch formation timeout calculated from the overall and stream specific âfpsâ control configuration keys in provided streammux config file is reached. The timeout starts running when the first buffer for a new batch is collected. The default overall max and min fps for batch generation are 120 and 5 respectively.
+The muxerâs default batching  uses a round-robin algorithm to collect frames from the sources. It tries to collect an average of ( batch-size/num-source ) frames per batch from each source (if all sources are live and their frame rates are all the same). The number varies for each source, though, depending on the sourcesâ frame rates.
+The muxer attaches an NvDsBatchMeta metadata structure to the output batched buffer. This meta contains information about the frames copied into the batch (e.g. source ID of the frame, original resolutions of the input frames, original buffer PTS of the input frames). The source connected to the Sink_N pad will have pad_index N in NvDsBatchMeta.
+The muxer supports addition and deletion of sources at run time. When the muxer receives a buffer from a new source, it sends a GST_NVEVENT_PAD_ADDED event. When a muxer sink pad is removed, the muxer sends a GST_NVEVENT_PAD_DELETED event. Both events contain the source ID of the source being added or removed (see sources/includes/gst-nvevent.h). Downstream elements can reconfigure when they receive these events. Additionally, the muxer also sends a GST_NVEVENT_STREAM_EOS to indicate EOS from the source.
+The muxer supports calculation of NTP timestamps for source frames. It supports two modes. In the system timestamp mode, the muxer attaches the current system time as NTP timestamp. In the RTCP timestamp mode, the muxer uses RTCP Sender Report to calculate NTP timestamp of the frame when the frame was generated at source. The NTP timestamp is set in ntp_timestamp field of NvDsFrameMeta. The mode can be toggled by setting the attach-sys-ts property. For more details, refer to NTP Timestamp in DeepStream.
+Note
+The current nvsteammux shall be employed by default. Users will be able to use the new nvstreammux by setting the environment variable export USE_NEW_NVSTREAMMUX=yes. New nvstreammux is no longer a beta feature.
+In upcoming DeepStream releases, usage of this environment variable and current nvstreammux will be deprecated to load new nvstreammux by default.
+Inputs
+NV12/RGBA buffers from an arbitrary number of sources
+mono S16LE/F32LE audio buffers from an arbitrary number of sources
+Control Parameters
+batch-size
+config-file-path [config-keys detailed below]
+num-surfaces-per-frame
+attach-sys-ts
+frame-duration
+Output
+NV12/RGBA batched video buffer NvBufSurface or batch audio buffer NvBufAudio
+GstNvBatchMeta (meta containing information about individual frames in the batched buffer)
+The following table summarizes the features of the plugin.
+Feature
+Description
+Release
+New streammux with numerous config-keys supported in a separate mux config-file.
+Introducing new streammux
+DS 5.0
+Buffer TimeStamp Synchronization support
+Please check sync-inputs and max-latency property documentation
+DS 6.0
+GstMeta and NvDsMeta copy support
+Supported in both nvstreammux and nvstreamdemux
+DS 6.1
+Batching batched buffers from another nvstreammux instance
+Cascaded nvstreammux usage in a pipeline
+DS 6.1
+Runtime config-file change
+Please check config-file-path property documentation
+DS 6.1
+Latency Measurement support for video and audio buffers
+Supported in both nvstreammux and nvstreamdemux
+DS 6.1
+Note
+New nvstreammux do not scale batched buffers to a single resolution. A batch can have buffers from different streams of different resolutions. So with new mux, a single resolution for the batched buffer is invalid and the muxerâs source-pad-caps is not valid either.
+The following table describes the Gst-nvstreammux pluginâs Gst properties.
+Property
+Meaning
+Type and Range
+Example
+Notes
+batch-size
+Maximum number of frames in a batch.
+Integer,
+0 to 4,294,967,295
+batch-size=30
+batched-push-timeout
+Timeout in microseconds to wait after the first buffer is available to push the batch even if a complete batch is not formed.
+Signed integer,
+-1 to 2,147,483,647
+batched-push-timeout= 40000
+40 msec
+num-surfaces-per-frame
+Maximum number of surfaces per frame. Note: This needs to be set > 1 for dewarper usecases; for more info, please check documentation for nvdewarper plugin
+Integer,
+0 to 4,294,967,295
+num-surfaces-per-frame=1 (Default)
+config-file-path
+Absolute or relative (to DS config-file location) path of configuration file for the Gst-nvstreammux element
+String
+config-file-path=config_mux_source30.txt
+sync-inputs
+Synchronize Inputs. Boolean property to force timestamp sychronization of
+input frames.
+Boolean, 0 or 1
+sync-inputs=0 (Default)
+max-latency
+The maximum upstream latency in nanoseconds. When sync-inputs=1,
+buffers coming in after max-latency shall be dropped.
+Integer, 0 to 
+4,294,967,295
+max-latency=0 (Default)
+frame-duration
+Duration of input frames in milliseconds for use in NTP timestamp correction based on frame rate.
+If set to 0, frame duration is inferred automatically from PTS values seen at RTP jitter buffer.
+When there is change in frame duration between the RTP jitter buffer and the nvstreammux,
+this property can be used to indicate the correct frame rate to the nvstreammux,
+for e.g. when there is an audiobuffersplit GstElement before nvstreammux in the pipeline.
+If set to -1 (GST_CLOCK_TIME_NONE), disables frame rate based NTP timestamp correction. (default)
+Unsigned Integer64, 0 to 18446744073709551615
+frame-duration=10
+drop-pipeline-eos
+Boolean property to control EOS propagation downstream from nvstreammux when all the sink pads are at EOS. (Experimental)
+Boolean
+drop-pipeline-eos=0(default) for dGPU/Jetson
+Differences between default and new streammux with respect to the GStreamer plugin properties are discussed in the table below:
+Default nvstreammux Properties
+New nvstreammux Properties
+batch-size
+batch-size
+num-surfaces-per-frame
+num-surfaces-per-frame
+batched-push-timeout
+batched-push-timeout
+width
+N/A;
+Scaling and color conversion support Deprecated.
+height
+N/A;
+Scaling and color conversion support Deprecated.
+enable-padding
+N/A;
+Scaling and color conversion support Deprecated.
+gpu-id
+N/A;
+Accelerated Scaling and color conversion support Deprecated.
+live-source
+Deprecated
+nvbuf-memory-type
+N/A
+buffer-pool-size
+N/A
+attach-sys-ts
+attach-sys-ts
+N/A
+config-file-path
+sync-inputs
+sync-inputs
+max-latency
+max-latency
+Details on Streammux config-file groups and keys are summarized the following table.
+Group
+config-key
+Description
+[property]
+algorithm-type
+Defines the batching algorithm; uint
+1 : Round-robbin if all sources have same priority key setting. Otherwise higher priority streams will be batched until no more buffers from them.
+Default: 1
+batch-size
+The desired batch size; uint.
+This value will override plugin property and DS config file key âbatch-sizeâ for nvstreammux
+If batch-size not specified in the config-file, plugin property batch-size shall override the default.
+Default: 1 (or == number of sources if adaptive-batching=1)
+overall-max-fps-n
+Numerator of the desired overall muxer output max frame rate fps_n/fps_d; uint
+Default:120/1
+Note: This value needs to be configured to a value >= overall-min-fps even when max-fps-control=0.
+overall-max-fps-d
+Denominator of the desired overall muxer output max frame rate fps_n/fps_d; uint
+overall-min-fps-n
+Numerator of the desired overall muxer output min frame rate fps_n/fps_d; uint
+Default: 5/1
+overall-min-fps-d
+Denominator of the desired overall muxer output max frame rate fps_n/fps_d; uint
+max-same-source-frames
+Max number of any streamâs frames allowed to be muxed per output batch buffer; uint
+The minimum of this value and key (max-num-frames-per-batch) will be used.
+Default: 1
+adaptive-batching
+Enable (1) or disable (0) adaptive batching; uint
+Default: 1
+If enabled, batch-size is == number of sources X num-surfaces-per-frame.
+max-fps-control
+Enable (1) or disable (0) controlling the maximum frame-rate at which nvstreammux
+pushes out batch buffers based on the overall-max-fps-n/d configuration. Default: 0
+[source-config-N]
+max-fps-n
+Numerator of this sourceâs max frame rate fps_n/fps_d. Deprecated (shall remove support from next release). Please use overall-max-fps instead; uint
+Default: 60/1
+max-fps-d
+Denominator of this sourceâs max frame rate fps_n/fps_d. Deprecated (shall remove support from next release). Please use overall-max-fps instead. ; uint
+min-fps-n
+Numerator of this sourceâs min frame rate fps_n/fps_d. Deprecated (shall remove support from next release). Please use overall-min-fps instead; uint
+min-fps-d
+Denominator of this sourceâs min frame rate fps_n/fps_d. Deprecated (shall remove support from next release). Please use overall-min-fps instead; uint
+priority
+The priority of this stream. Deprecated (shall remove support from next release). Please use algorithm-type instead; uint
+Default: 0 (highest priority)
+A higher value is a lower priority.
+max-num-frames-per-batch
+Max number of this streamâs frames allowed to be muxed per output batch buffer; uint
+The minimum of this value and key (max-same-source-frames) will be used.
+nvstreammux provide many knobs to tune the way batching algorithm works. This is essential to support a wide range of applications/use-cases the muxer supports. More documentation is available at Mux Config Properties .
+Tuning nvstreammux for specific use cases that we work with customers are good learning exercises.
+Details discussed here include observations, the configs, pipeline changes, etc that worked well for specific use-cases.
+Users/Contributors - Please feel free to create a New forum Topic with the contribution here.
+To ensure smooth streaming experience, configure/tune the below parameters properly.
+Tuning Use-Case or Mux Config Property used
+Notes
+nvstreammux/sync-inputs
+sync-inputs=1 ensure nvstreammux to queue early buffers. This could be useful in the audio muxer which could be faster than video muxer when reading from files as audio frames are lighter than video frames.
+nvstreammux/config-file-path
+min-overall-fps and max-overall-fps need to be properly set.
+The min-overall-fps shall be set to the highest framerate of all sources.
+b) max-overall-fps shall be >= min-overall-fps
+Check Mux Config Properties for more information.
+nvstreammux/max-latency
+Please set/tune the latency parameter to a value > than 1/fps of the slowest stream. Applicable only when sync-inputs=1
+Inputs with different frame rates
+Highest frame-rate to be considered for overall-min-fps value. e.g. for 2 inputs with 15fps and 30fps each, overall-min-fps=30
+Input with varying frame rate
+Individual streamâs frame-rate may vary based on network condition. Highest possible to be considered for overall-min-fps value.e.g. For single stream with varying frame-rate of 15fps to 30fps, overall-min-fps=30
+Inputs with different bitrates
+Nvstreammux will not need specific handling for individual stream bitrates.
+Inputs with different resolutions
+Please read the section Heterogeneous batching
+Dynamic addition/removal of input stream
+This is supported by adaptive-batching. With adaptive-batching=1, the Gst application needs to create/destroy sinkpads dynamically for addition/removal respectively.
+flvmux/qtmux/latency
+The latency parameter (Gst-Property on these plugins when used) shall be set/tuned to a value > nvstreammux/max-latency.
+The recommended value is 2 X nvstreammux/max-latency
+User could set âlatency=18446744073709551614â (max) to avoid tuning for this parameter.
+When nvstreammux is fed streams with different frame-rates, tuning is necessary to ensure standard muxer behavior. A sample pipeline diagram below illustrates the use of common components like nvstreammux, nvstreamdemux, flv or qtmux, etc., in a video and audio muxing use case for reference.
+When the same pipeline includes two nvstreammux modules to mux video and audio from different sources of different video framerate, depending on the type of sources, behavior could differ. Some of the scenarios and recommended tuning guidance are discussed below.
+In a single pipeline, we could have file sources with different video framerate, but same audio framerate (typical for most camera footages with reduced video framerate to save bandwidth while keeping the less heavy audio sampling rate intact).
+Note
+In this scenario, video buffers might get muxâd slower than audio buffers. When this happens GstAggregator based flvmux or qtmux could block the pipeline when the difference between video and audio buffer-timestamps are higher than the set âlatencyâ parameter.
+When dealing with file sources/ live sources of different framerates, we need nvstreammux tuned for min-overall-fps. Without this, the muxing always happens at the slowest streamâs framerate adding latency to the video buffers.
+When dealing with file sources of different frame rates and RTMP sources of different framerates, we recommend users to turn on sync-inputs=1 on nvstreammux and tune proper max-latency to ensure video and audio buffers from a single source are regulated and are flowing together in the pipeline after streammux. This is essential for the proper working of GstAggregator based muxers like flvmux, qtmux. etc.
+To ensure smooth streaming experience, configure/tune the parameters discussed in Section Important Tuning parameters properly.
+When using live sources:
+make sure that nvstreammux/sync-inputs is set to 1
+When using RTMP sources, in-built upstream latency query does not work. So youâll need to provide/tune a non-zero nvstreammux/max-latency setting.
+Tune for nvstreammux/max-latency and other parameters as discussed in Section Important Tuning parameters.
+To troubleshoot this issue, try increasing the GstAggregator based flvumx/qtmux âlatencyâ setting.
+Try latency=18446744073709551614 - the max value to see if it works and then you could tune for an optimal latency according to the type of media source in use.
+Also, set environment variable export GST_DEBUG=3 for WARNING logs. Also see, nvstreammux WARNING âLot of buffers are being droppedâ.
+To troubleshoot this issue, try increasing the max-latency setting to allow late buffers.
+Also ensure to set min-overall-fps and max-overall-fps with the nvstreammux config file.
+For NvDsMeta propagation through nvstreammux and sample code, please refer to the deepstream reference application supplied at: /opt/nvidia/deepstream/deepstream/sources/apps/sample_apps/deepstream-gst-metadata-test/
+Illustration of GstMeta at Input and Output of nvstreammux:
+Illustration of how GstMeta and NvDsMeta are copied as NvDsUserMeta on the batched bufferâs NvDsBatchMeta after nvstreammux.
+Note
+The same illustration holds good for the NvDsBatchMeta available on the demuxed GstBuffer after nvstreamdemux. Only difference is that the GstMeta wonât be available as NvDsUserMeta anymore - and will be directly copied on to the demuxed GstBuffer.
+Illustration of GstMeta at Input and Output of nvstreammux:
+Users may add probes on nvstreammux sink pads and attach GstMeta to the GstBuffers flowing into nvstreammux.
+GstMeta attached on the GstBuffer pushed into nvstreammux sink pads will be copied and available:
+After nvstreamdemux as GstMeta on the demuxed output GstBuffer.
+After nvstreammux as NvDsUserMeta on the batched GstBufferâs NvDsBatchMeta->NvDsFrameMeta->user_meta_list.
+The GstMeta on input GstBuffers at nvstreammux will be copied into output batch bufferâs NvDsBatchMeta.
+Reference code to dereference the NvDsBatchMeta on nvstreammux source pad with an attached GStreamer probe function or downstream plugin is available below:
+The user could add GstMeta to each sourceâs batched frame into the NvDsFrameMeta->user_meta_list corresponding
+to the sourceâs frame.
+Copy all GstMeta into a newly created empty GstBuffer and leverage the APIâs available at
+/opt/nvidia/deepstream/deepstream/sources/includes/gstnvdsmeta.h (/opt/nvidia/deepstream/deepstream/lib/libnvdsgst_meta.so) :
+For video: nvds_copy_gst_meta_to_frame_meta()
+For audio: nvds_copy_gst_meta_to_audio_frame_meta()
+Reference code to access NvDsMeta after nvstreamdemux.src_pad with an attached GStreamer probe function or downstream plugin is available below:
+New streammux supports batching of batched buffers or cascaded muxers and appropriate debatching by demuxers for audio/video.
+Sample Pipelines:
+Following table summarizes important notes for expected nvstreammux configuration for cascaded usecase:
+S.No
+Configuration Property
+Note
+1
+nvstreammux pad index.
+mux.sink_%d
+Note: The user is responsible for maintaining unique pad_indexes across a single pipeline.
+pad_indexes are assigned by application when requesting sink pads on nvstreammux instances that does raw stream batching.
+This unique pad_index (which translates into NvDsFrameMeta->stream_id) is to avoid duplicate pad_indexes and source_ids.
+2
+Adaptive-batching
+Note: Adaptive batching (ON by default) need to be turned off for an nvstreammux instance downstream from another instance.
+This can be done with the nvstreammux config-file-path setting when using multiple nvstreammux instances in series (batching batched buffers).
+This is because downstream nvstreammux instances does not know how many streams are attached to each of the upstream muxers and we ask user to configure batch-size of the downstream muxer(s) accordingly
+3
+[property]
+algorithm-type=1
+batch-size=4
+overall-max-fps-n=90
+overall-max-fps-d=1
+overall-min-fps-n=5
+overall-min-fps-d=1
+max-same-source-frames=1
+Adaptive-batching=0
+Sample configuration for the nvstreammux instance that is expected to batch already batched buffers
+Sample pipeline here (with cascaded nvstreammux instances: m1,m2,m3) is:
+2 sources ->m1
+2 sources ->m2
+m1 -> m3
+m2 -> m3
+m3 -> demux
+Special nvmessage/EOS Handling Requirement in the application.
+Note
+Only the last nvstreammux instance in the pipeline will send GST_EVENT_EOS. GST_EVENT_EOS from upstream nvstreammux instances will be handled in the downstream nvstreammux instance and will not be forwarded.
+However, if the application utilize nvmessage EOS from nvstreammux, the application will have to make sure it received this message from all nvstreammux instances before tearing down the pipeline. The nvmessage discussed here is the GST_MESSAGE_ELEMENT event application receive on the bus callback ( API used to parse this message is: gst_nvmessage_is_stream_eos() and gst_nvmessage_parse_stream_eos()).
+Solution:
+Youâll need to configure max-latency parameter on nvstreammux when stutters are observed or when pipeline latency is known to be ânon-real-timeâ.
+Solution:
+When using new nvstreammux in a GStreamer pipeline, it is recommended that the sink elements shall be configured to set the plugin property async to false.
+Based on how Application is designed async=1 can cause a hang. Below is the way in which users may use async=1
+Sample pipeline diagram (for n sources):
+BIN_BEFORE_MUX X n -> nvstreammux -> nvstreamdemux -> BIN_AFTER_DEMUX X n
+BIN_BEFORE_MUX is [audiosource]
+BIN_AFTER_MUX is [fakesink]
+However this was needed because of the way app is designed. Sample pipeline/app Design recommended:
+Add stream and remove stream operations shall be mutually exclusive.
+Add stream algorithm/steps:
+create bin_before_muxer and bin_after_demuxer
+add it to pipeline
+move it to PLAYING.
+WAIT for the state change to happen
+Remove stream algorithm/steps:
+move bins before mux and after demux to STATE_NULL.
+WAIT for state change to happen
+remove bin_before_muxer and bin_after_demuxer from pipeline.
+sink plugin async=1 cause the step (1).(d) to block if app is not supplying buffers needed by sink element to PREROLL.
+To fix this, async=0 on sink plugin is required.
+Note
+Users may set async=1 with the app design being able to supply buffers between (1).(c) and (1).(d).
+New nvstreammux does not transform/scale batched buffers to a single color-format/resolution unlike the default nvstreammux.
+A batch can have buffers from different streams of different resolutions and formats.
+So with new mux, a single resolution for this heterogeneous batched buffer is invalid.
+When we have plugins that could transform the input buffers (example: change resolution or color format of video buffers in the batch) between nvstreammux and nvstreamdemux, we need to add support for heterogenous query handling in this transform plugin for proper stream-wise resolution flow in CAPS. Below is sample implementation for reference:
+Work Around:
+Without query implementation, it is necessary to add nvvideoconvert + capsfiler before each nvstreammux sink pad (enforcing same resolution and format of all sources connecting to new nvstreammux).
+This ensure that the heterogeneous nvstreammux batch output have buffers of same caps (resolution and format).
+Example; video use-case:
+Where the fixed caps: â1920 X 1080; NV12â ensure every buffer in the batch is transformed to this same caps.
+Example; audio use-case:
+Where the fixed caps: â48kHz; mono S16LE interleavedâ ensure every buffer in the batch is transformed to this same caps.
+Does nvstreammux support dynamic batching?
+This is in the context of use-cases where we donât know the exact number of inputs initially. Once the pipeline starts, inputs may get connected / disconnected.
+Solution:
+Yes, nvstreammux support dynamic batch-size when adaptive-batching=1,[property] group in the mux config-file. When adaptive-batching is enabled, batch-size is equal to the number of source pads on the muxer. By default this is enabled.
+Refer to Mux Config Properties  for more information.
+You may want to design for use-cases where compute resource (GPU) utilization is more important than throughput.
+On the other hand, there could be use cases where minimum pipeline latency is of utmost importance.
+The following guidance is intended to help in tuning nvstreammux configuration parameters (passed with config-file-path property on nvstreammux) for optimal resource (compute) utilization and low-pipeline-latency.
+Recommended Config params are shared in the table below.
+Optimized config for low-latency (example)
+Optimized config for compute utilization
+Pipeline example:
+32 X udpsrc ! rtpopus depay ! opusdec ! audiobuffersplit output-buffer-duration=1/50 ! queue ! mux.sink_%d
+nvstreammux name=mux ! queue ! nvdsaudiotemplate ! fakesink
+[property]
+algorithm-type=1
+batch-size= 32
+max-fps-control=0
+overall-max-fps-n=50
+overall-max-fps-d=1
+overall-min-fps-n=50
+overall-min-fps-d=1
+max-same-source-frames= 2
+âPipeline example:
+32 X udpsrc ! rtpopus depay ! opusdec ! audiobuffersplit output-buffer-duration=1/50 ! queue ! mux.sink_%d
+nvstreammux name=mux ! queue ! nvdsaudiotemplate ! Fakesink
+[property]
+algorithm-type=1
+batch-size= 32
+max-fps-control=0
+overall-max-fps-n=50
+overall-max-fps-d=1
+overall-min-fps-n= 40
+overall-min-fps-d=1
+max-same-source-frames= 1
+Partial batches possible in this configuration.
+Partial batch is when the batched buffer have less number of buffers than the configured batch-size. (batchBuffer->numFilled < batchBuffer->batchSize)
+Configured to create fully formed batch buffers.
+Full batch is when the batched buffer have configured batch-size number of buffers batched. (batchBuffer->numFilled ==  batchBuffer->batchSize)
+CPU load may be higher (as we operate nvstreammux batching algorithm at a higher overall framerate).
+âCPU load optimized for the rate at which input streams into nvstreammux plugin.â
+Note 1: Here, exact overall-max/min-fps configuration matching input framerate from audiobuffersplit ensure minimum latency inside nvstreammux plugin to create batches.
+Note 2: For this reason, if input throughput falls occasionally (possible), Output batch buffer from nvstreammux will still be created at the configured min-fps. However the batch will be partial (batchBuffer->numFilled could be less than batchBuffer->batchSize).
+Note 1: Here, user could use overall-min-fps less than the input framerate from audiobuffersplit. This way, even if input sources (especially when streamed over network) fall short in framerate, nvstreammux still gets more time to create full-batch (batchBuffer->numFilled == batchBuffer->batchSize).
+Note 3: Users are encouraged to use max-same-source-frames > 1 when input is from the network to control jitter and allow nvstreammux to batch multiple frames from one source when others may fall short during jitter.
+Note 4: User may have to confirm the behavior of plugins that consume batches with max-same-source-frames > 1.
+Example: Certain plugins could introduce additional latency. In such cases, user may configure max-same-source-frames=1.
+Note 2: max-same-source-frames=1 is a good config.max-same-source-frames > 1 can still be used to lower the impact of jitter with network sources.
+A sample pipeline diagram below illustrates the use of common OSS components in an audio pipeline use case for reference, like:
+udpsrc
+audiodecoder
+audiobuffersplit
+udpsink
+And NVIDIA components like nvstreammux, nvdsaudiotemplate.
+For latency measurement of video buffers, please refer to the usage of latency_measurement_buf_prob() probe function in the deepstream reference application implementation at /opt/nvidia/deepstream/deepstream/sources/apps/sample_apps/deepstream-app/deepstream_app.c.
+Assume an audio pipeline viz:
+You may want to measure latency of each buffer from the moment its decoded until the time it reaches final sink plugin in the pipeline. In this example, the latency from opusdecode source pad (output) to fakesink sink pad (input).
+To do this,
+Add a GStreamer buffer probe programmatically on opusdecode source pad following documentation here .
+Inside the probe, call DeepStream API nvds_add_reference_timestamp_meta() at /opt/nvidia/deepstream/deepstream/sources/includes/nvds_latency_meta.h
+Pseudocode reference:
+Next, add a probe on the sink pad of fakesink following documentation here .
+Inside this probe, use API nvds_measure_buffer_latency().
+Pseudocode reference:
+Note
+Latency Measurement relies on NvDsUserMeta that is added to NvDsBatchMeta for every batched buffer post nvstreammux. This metadata and hence latency measurement support is available after an nvstreammux instance until nvstreamdemux instance in the GStreamer pipeline.
+Delete gstreamer cache present by default in home directory (rm ~/.cache/gstreamer-1.0/registry.x86_64.bin) and rerun gst-inspect on the streammux plugin.
+previous
+Gst-nvstreammux
+next
+Gst-nvstreamdemux
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.

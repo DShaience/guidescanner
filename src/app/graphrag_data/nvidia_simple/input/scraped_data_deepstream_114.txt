@@ -1,0 +1,230 @@
+﻿Title: NvDsUdpExt — DeepStream documentation
+
+NvDsUdpExt#
+Components#
+nvidia::deepstream::NvDsUdpSink#
+Parameters#
+nvidia::deepstream::NvDsUdpSrc#
+Parameters#
+
+DeepStream documentation
+DeepStream documentation
+Table of Contents
+DeepStream Getting Started
+DeepStream Samples
+TAO toolkit Integration with DeepStream
+Tutorials and How-to's
+DeepStream Performance
+DeepStream Accuracy
+DeepStream Custom Model
+DeepStream Key Features
+DeepStream Application Migration
+DeepStream Plugin Guide
+DeepStream Troubleshooting and FAQ
+DeepStream On WSL2
+DeepStream API Guide
+DeepStream Service Maker
+Deepstream Libraries
+Graph Composer
+Platforms
+Getting Started
+GXF Internals
+Graph eXecution Engine
+Graph Composer Containers
+GXF Component Interfaces
+GXF Application API's
+GXF Runtime API's
+Extension Manual
+Tools
+FAQ Guide
+DeepStream Legal Information
+DeepStream Feedback
+NVIDIA DeepStream components to transfer data over the network using NVIDIA Rivermax SDK APIs
+UUID: 798c0dca-34b3-4f73-b794-ad5995186601
+Version: 1.6.0
+Author: NVIDIA
+License: Proprietary
+Send data over the network via UDP using NVIDIA Rivermax SDK APIs.
+Refer to nvdsudpsink plugin
+Component ID: 79b6bdc5-07fc-3aa9-95df-3b66a67c3d85
+Base Type: nvidia::deepstream::INvDsElement
+sync
+Sync on the clock
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+max-lateness
+Maximum number of nanoseconds that a buffer can be late before it is dropped (-1 unlimited)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+qos
+Generate Quality-of-Service events upstream
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+async
+Go asynchronously to PAUSED
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+ts-offset
+Timestamp offset in nanoseconds
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+enable-last-sample
+Enable the last-sample property
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+blocksize
+Size in bytes to pull per buffer (0 = default)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+render-delay
+Additional render delay of the sink in nanoseconds
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+throttle-time
+The time to keep between rendered buffers (0 = disabled)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+max-bitrate
+The maximum bits per second to render (0 = disabled)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+processing-deadline
+Maximum processing deadline in nanoseconds
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+local-iface-ip
+IP Address associated with network interface through which to receive the data.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_STRING
+host
+The host/IP/Multicast group to send the packets to
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_STRING
+port
+The port to send the packets to
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_INT64
+payload-size
+Size of payload in RTP / UDP packet
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+chunk-size
+Number of memory chunks to allocate
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+packets-per-chunk
+Number of packets per memory chunk
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+packets-per-line
+Number of packets per line, required for Rivermax media APIs
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+sdp-file
+SDP file to parse the connection details. Set this property to use Rivermax media APIs for transmission. By default Rivermax Generic APIs are used.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_FILE
+auto-multicast
+Automatically join/leave the multicast groups, FALSE means user has to do it himself
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+loop
+Used for setting the multicast loop parameter. TRUE = enable, FALSE = disable
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+close-socket
+Close socket if passed as property on state change
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+in
+Handle to a nvidia::deepstream::NvDsStaticInput component. Supported formats - ANY
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticInput
+Receive data over the network via UDP using NVIDIA Rivermax SDK APIs.
+Refer to nvdsudpsrc plugin
+Component ID: a80d8bbc-dc5a-3daa-85c2-693ced731747
+Base Type: nvidia::deepstream::INvDsElement
+blocksize
+Size in bytes to read per buffer (-1 = default)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+num-buffers
+Number of buffers to output before sending EOS (-1 = unlimited)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+typefind
+Run typefind before negotiating (deprecated, non-functional)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+do-timestamp
+Apply current stream time to buffers
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+port
+The port to receive the packets from, 0=allocate
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_INT64
+payload-size
+Size of payload in RTP / UDP packet
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+header-size
+Size of RTP header
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+num-packets
+Number of packets for which memory to allocate.
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+uri
+URI in the form of udp://multicast_group:port
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+local-iface-ip
+IP Address associated with network interface through which to receive the data.
+Flags: GXF_PARAMETER_FLAGS_NONE
+Type: GXF_PARAMETER_TYPE_STRING
+caps
+The caps of the source pad
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+buffer-size
+Size of the kernel receive buffer in bytes, 0=default
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_INT64
+reuse
+Enable reuse of the port setting this property wonât have any effect. Port will always be reused. It is defined just to avoid warnings with rtspsrc
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+timeout
+Post a message after timeout nanoseconds (0 = disabled)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_UINT64
+address
+Address to receive packets for
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+multicast-iface
+The network interface on which to join the multicast group.This allows multiple interfaces seperated by comma. (âeth0,eth1â)
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_STRING
+auto-multicast
+Automatically join/leave multicast groups
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+loop
+Used for setting the multicast loop parameter. TRUE = enable, FALSE = disable
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_BOOL
+out
+Handle to a nvidia::deepstream::NvDsStaticOutput component. Supported formats - ANY
+Flags: GXF_PARAMETER_FLAGS_OPTIONAL
+Type: GXF_PARAMETER_TYPE_HANDLE
+Handle Type: nvidia::deepstream::NvDsStaticOutput
+previous
+NvDsUcxExt
+next
+NvDsVisualizationExt
+Copyright Â© 2024-2025, NVIDIA Corporation.
+Last updated on Jan 13, 2025.
