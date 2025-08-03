@@ -15,3 +15,6 @@ src/app/graphrag_data/*
 !src/app/graphrag_data/nvidia_new/input/
 !src/app/graphrag_data/holmes/
 !src/app/graphrag_data/holmes/input/
+!src/app/graphrag_data/nvidia_simple/settings.yaml
+!src/app/graphrag_data/nvidia_simple/.env
+!src/app/graphrag_data/nvidia_simple/input/
