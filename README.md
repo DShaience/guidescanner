@@ -1,19 +1,6 @@
 # GuideScanner
 Scraping, indexing (RAG) and querying guides
 
-## Try it out!
-How many times while searching a clue for a game online, have you stumbled on a spoiler? <br>
-Or had a verryyy long manual, that you just wanted to query from time to time, not just CTRL+F.<br>
-Tried to get an answer for one single question but ended up reading 10 pages?<br>
-No more! 
-
-I have indexed guides of several games and software manuals, giving *you* the ability to query them using natural language! <br>
-Available [here](https://guidescanner-app.politebay-d54f15ab.eastus2.azurecontainerapps.io/).
-* https://guidescanner-app.politebay-d54f15ab.eastus2.azurecontainerapps.io/
-
-For example, try selecting DeepStream, and ask: <br>
-`"Please tell me how DeepStream nvDCF tracker works, and what are its key parameters"`
-
 ## Simple GraphRAG Indexing Recipe (without prompt auto-tuning)
 This basic indexing might prove the easiest way to get GraphRAG working.<br>
 Auto-Turning prompts is sometimes very sensitive to types of inputs and internal GraphRAG bits and pieces that are sometimes difficult to pinpoint.<br>
